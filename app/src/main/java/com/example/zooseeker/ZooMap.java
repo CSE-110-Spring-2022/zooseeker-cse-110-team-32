@@ -12,6 +12,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.*;
 import org.jgrapht.nio.json.JSONImporter;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,7 +24,7 @@ public class ZooMap {
     public ZooMap(String json_graph_path){
         try {
             //Reads in graph from JSON file
-            graph = createGraphFromJSON(this,json_graph_path);
+            graph = createGraphFromJSON(json_graph_path);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,15 +32,17 @@ public class ZooMap {
 
     public void calculateShortestPath(Graph<String, DefaultWeightedEdge> g, String node_from, String node_to) {
         GraphPath<String, DefaultWeightedEdge> shortest_path = DijkstraShortestPath.findPathBetween(g, node_from, node_to);
+        System.out.println(shortest_path);
     }
 
-    public static Graph<String, DefaultWeightedEdge> createGraphFromJSON(Context context, String path) throws IOException {
+    public static Graph<String, DefaultWeightedEdge> createGraphFromJSON(String path) throws IOException {
         Graph<String, DefaultWeightedEdge> g = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
         JSONImporter<String, DefaultWeightedEdge> jsonImporter = new JSONImporter<>();
         jsonImporter.setVertexFactory(label -> label);
 
-        InputStream input = context.getAssets().open(path);
+        // InputStream input = context.getAssets().open(path);
+        InputStream input = new FileInputStream(path);
         Reader reader = new InputStreamReader(input);
         jsonImporter.importGraph(g, reader);
 
