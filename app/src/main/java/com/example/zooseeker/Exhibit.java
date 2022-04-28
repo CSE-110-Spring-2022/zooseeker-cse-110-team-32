@@ -1,2 +1,4 @@
-package com.example.zooseeker;public class Exhibit {
+package com.example.zooseeker;
+public class Exhibit {
+
 }
