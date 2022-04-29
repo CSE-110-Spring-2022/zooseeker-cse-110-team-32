@@ -1,19 +1,20 @@
 package com.example.zooseeker;
-public class Exhibit extends Location{
+
+public class Gate extends Location{
     private String id;
     private String kind;
     private String name;
     private String[] tags;
 
-    Exhibit() {
+    Gate() {
         this.id = "";
-        this.kind = "exhibit";
+        this.kind = "gate";
         this.name = "";
         this.tags = null;
     }
-    Exhibit(String id, String name, String[] tags) {
+    Gate(String id, String kind, String name, String[] tags) {
         this.id = id;
-        this.kind = "exhibit";
+        this.kind = "gate";
         this.name = name;
         this.tags = tags;
     }

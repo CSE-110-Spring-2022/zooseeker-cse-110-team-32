@@ -1,20 +1,22 @@
 package com.example.zooseeker;
-public class Exhibit extends Location{
+
+public class Intersection extends Location {
     private String id;
     private String kind;
     private String name;
     private String[] tags;
 
-    Exhibit() {
+    Intersection() {
         this.id = "";
-        this.kind = "exhibit";
+        this.kind = "intersection";
         this.name = "";
         this.tags = null;
+
     }
-    Exhibit(String id, String name, String[] tags) {
+    Intersection(String id, String kind, String name, String[] tags) {
         this.id = id;
-        this.kind = "exhibit";
-        this.name = name;
+        this.kind = kind;
+        this.name = "intersection";
         this.tags = tags;
     }
 
