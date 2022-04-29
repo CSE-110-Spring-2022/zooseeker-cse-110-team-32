@@ -5,12 +5,22 @@ public class Exhibit extends Location{
     private String name;
     private String[] tags;
 
-    Exhibit() throws IllegalAccessException {
-        throw new IllegalAccessException("Include name");
+    Exhibit() {
+        this.id = "";
+        this.kind = "exhibit";
+        this.name = "";
+        this.tags = null;
     }
-    Exhibit(String name) {
+    Exhibit(String id, String name, String[] tags) {
+        this.id = id;
+        this.kind = "exhibit";
         this.name = name;
+        this.tags = tags;
     }
 
-    public String getName() { return this.name; }
+    public String getId() { return this.id; }
+
+    public String getKind() { return this.kind; }
+
+    public String getName() {return this.name; }
 }

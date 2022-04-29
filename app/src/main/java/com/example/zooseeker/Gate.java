@@ -8,13 +8,13 @@ public class Gate extends Location{
 
     Gate() {
         this.id = "";
-        this.kind = "Gate";
+        this.kind = "gate";
         this.name = "";
-        this.tags = new String[];
+        this.tags = null;
     }
     Gate(String id, String kind, String name, String[] tags) {
         this.id = id;
-        this.kind = kind;
+        this.kind = "gate";
         this.name = name;
         this.tags = tags;
     }

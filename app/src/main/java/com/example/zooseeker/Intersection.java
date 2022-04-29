@@ -8,15 +8,15 @@ public class Intersection extends Location {
 
     Intersection() {
         this.id = "";
-        this.kind = "Intersection";
+        this.kind = "intersection";
         this.name = "";
-        this.tags = new String[];
+        this.tags = null;
 
     }
     Intersection(String id, String kind, String name, String[] tags) {
         this.id = id;
         this.kind = kind;
-        this.name = name;
+        this.name = "intersection";
         this.tags = tags;
     }
 
