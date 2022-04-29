@@ -2,6 +2,7 @@ package com.example.zooseeker;
 
 
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,9 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(AndroidJUnit4.class)
 public class ShortestPathUnitTest {
@@ -26,32 +29,42 @@ public class ShortestPathUnitTest {
     @Test
     public void direct_path() {
         Context context = ApplicationProvider.getApplicationContext();
-        ZooMap zooMap = new ZooMap(context,"sample_zoo_graph.json");
+        Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
+        ZooMap zooMap = new ZooMap(graph, vertices, edges);
         String start = "entrance_exit_gate";
         String street_id = "edge-0";
         String street_name = "Entrance Way";
         String end = "entrance_plaza";
-        Directions directions = zooMap.calculateShortestPath(start, end);
+        GraphPath<String, IdentifiedWeightedEdge> directions = zooMap.getShortestPath(start, end);
         double distance = 10.0;
-        assertEquals(start, directions.getStart());
-        assertEquals(end, directions.getEnd());
-        assertEquals(distance, directions.getDistance(), 0.01);
-        List<IdentifiedWeightedEdge> streets = directions.getStreets();
-        assertEquals(street_id, streets.get(0).getId());
+        assertEquals(start, directions.getStartVertex());
+        assertEquals(end, directions.getEndVertex());
+        assertEquals(distance, directions.getWeight(), 0.01);
+        List<String> streets = zooMap.getStreets(start, end);
+        assertEquals(street_name, streets.get(0));
     }
 
     @Test
     public void indirect_path(){
         Context context = ApplicationProvider.getApplicationContext();
-        ZooMap zooMap = new ZooMap(context,"sample_zoo_graph.json");
+        Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
+        ZooMap zooMap = new ZooMap(graph, vertices, edges);
         String start = "entrance_plaza";
+        String street1_name = "Reptile Road";
         String mid = "gators";
+        String street2_name = "Sharp Teeth Shortcut";
         String end = "lions";
-        Directions directions = zooMap.calculateShortestPath(start, end);
+        GraphPath<String, IdentifiedWeightedEdge> directions = zooMap.getShortestPath(start, end);
         double distance = 300.0;
-        assertEquals(start, directions.getStart());
-        assertEquals(mid, directions.getLandmarks().get(1));
-        assertEquals(end, directions.getEnd());
-        assertEquals(distance, directions.getDistance(), 0.01);
+        assertEquals(start, directions.getStartVertex());
+        assertEquals(end, directions.getEndVertex());
+        assertEquals(distance, directions.getWeight(), 0.01);
+        List<String> streets = zooMap.getStreets(start, end);
+        assertEquals(street1_name, streets.get(0));
+        assertEquals(street2_name, streets.get(1));
     }
 }
