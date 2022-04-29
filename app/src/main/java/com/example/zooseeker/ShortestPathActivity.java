@@ -35,12 +35,21 @@ public class ShortestPathActivity extends AppCompatActivity {
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(this, "sample_node_info.json");
         Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(this, "sample_edge_info.json");
         ZooMap zooMap = new ZooMap(graph, vertices, edges);
-        List<String> directions = zooMap.getTextDirections("entrance_exit_gate", "arctic_foxes");
-        System.out.println(directions);
-        TextView textView = findViewById(R.id.path_result);
-        textView.setText("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n"+directions);
-        System.out.println("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n" + /*directions*/"this one!");
+        //List<String> directions = zooMap.getTextDirections("entrance_exit_gate", "arctic_foxes");
+        //These are test values-- real method will be probably called in a directions class?
+        String startNode = "entrance_exit_gate";
+        String endNode = "arctic_foxes";
+        displayTextDirections(startNode, endNode, zooMap);
+        //System.out.println("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n" + directions/*"this one!"*/);
     }
 
-
+    public void displayTextDirections(String startNode, String endNode, ZooMap zooMap){
+        String directions = zooMap.getTextDirections(startNode, endNode);
+        //System.out.println(directions);
+        TextView textView = findViewById(R.id.path_result);
+        textView.setText("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n"+directions);
+        startNode = startNode.replaceAll("[_]"," ");
+        endNode = endNode.replaceAll("[_]", " ");
+        textView.setText("Shortest path from "+startNode+ " to "+ endNode+": \n"+directions);
+    }
 }

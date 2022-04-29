@@ -78,18 +78,26 @@ public class ZooMap {
         return currPath.getWeight();
     }
 
-    public List<String> getTextDirections(String node_from, String node_to){
+    //public List<String> getTextDirections(String node_from, String node_to){
+    public String getTextDirections(String node_from, String node_to){
         if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
         int i = 1;
-        List<String> textDirections = new ArrayList<>();
+        //List<String> textDirections = new ArrayList<>();
+        StringBuilder textDirections = new StringBuilder("");
+
         for (IdentifiedWeightedEdge e : currPath.getEdgeList()) {
-            String textline = Integer.toString(i) + ". Walk " + String.valueOf(graph.getEdgeWeight(e)) + " meters along " + roadEdges.get(e).street + " from " + locVertices.get(graph.getEdgeSource(e).toString()).name + " to " + locVertices.get(graph.getEdgeTarget(e).toString()).name;
-            textDirections.add(textline);
+
+            String textline = Integer.toString(i) + ". Walk " + String.valueOf(graph.getEdgeWeight(e))
+                    + " meters along " + roadEdges.get(e.getId()).street + " from "
+                    + locVertices.get(graph.getEdgeSource(e).toString()).name + " to "
+                    + locVertices.get(graph.getEdgeTarget(e).toString()).name + "\n";
+            //textDirections.add(textline);
+            textDirections.append(textline);
             i++;
         }
-        return textDirections;
+        return textDirections.toString();
     }
 
 }

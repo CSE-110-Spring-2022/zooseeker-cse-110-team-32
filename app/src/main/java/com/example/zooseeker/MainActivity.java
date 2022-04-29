@@ -12,8 +12,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, SearchActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, SearchActivity.class);
+        //startActivity(intent);
         //Can't run two activities at once -- later on this activity will be started elsewhere
         Intent pathIntent = new Intent(this, ShortestPathActivity.class);
         startActivity(pathIntent);
