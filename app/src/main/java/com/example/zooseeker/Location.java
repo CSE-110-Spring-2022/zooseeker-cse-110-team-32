@@ -9,6 +9,7 @@ public abstract class Location {
 
     public Location() {}
 
+
     public String getId(){
         return this.id;
     }
