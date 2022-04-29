@@ -13,6 +13,7 @@ public class PlanList {
         select their current location Default to be 0 when the list is initialized.
      */
     private int currLocationIndex;
+    //adding this ZooMap object for future iteration
     //private ZooMap zooMap;
 
     public PlanList(String json_data) {
