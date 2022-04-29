@@ -42,7 +42,7 @@ public class ZooData {
     }
 
 
-    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context context, String path) throws IOException {
+    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context context, String path){
         try {
             InputStream inputStream = context.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
@@ -69,7 +69,7 @@ public class ZooData {
         }
     }
 
-    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context context, String path) throws IOException {
+    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context context, String path){
         try {
             InputStream inputStream = context.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
