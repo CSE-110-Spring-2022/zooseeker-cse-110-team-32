@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.SearchView;
 
 public class SearchActivity extends AppCompatActivity {
@@ -21,11 +22,18 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             search(query);
-        }
+        }*/
+
+        Button plan = findViewById(R.id.plan_btn);
+        plan.setOnClickListener(view ->{
+            Intent pathIntent = new Intent(this, ShortestPathActivity.class);
+            startActivity(pathIntent);
+        });
+
 
 
 

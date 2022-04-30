@@ -6,19 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".ShortestPathActivity">
 
-    <TextView
-        android:id="@+id/path_result"
+    <ScrollView
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="30dp"
-
-        android:layout_marginRight="5dp"
+        android:layout_height="575dp"
+        android:layout_marginRight="0dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <TextView
+            android:id="@+id/path_result"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="30dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ScrollView>
 
     <Button
         android:id="@+id/back_btn"
@@ -26,12 +37,13 @@
         android:layout_height="wrap_content"
         android:text="BACK"
         android:clickable="false"
+
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.100"
+        app:layout_constraintHorizontal_bias="0.050"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.950" />
+        app:layout_constraintVertical_bias="1.00" />
 
     <Button
         android:id="@+id/next_btn"
@@ -39,9 +51,9 @@
         android:layout_height="wrap_content"
         android:text="NEXT"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.900"
+        app:layout_constraintHorizontal_bias="0.950"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.950" />
+        app:layout_constraintVertical_bias="1.00" />
 </androidx.constraintlayout.widget.ConstraintLayout>
