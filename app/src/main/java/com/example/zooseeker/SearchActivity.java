@@ -1,11 +1,15 @@
 package com.example.zooseeker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -14,7 +18,10 @@ import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.SearchView;
 
+import java.util.List;
+
 public class SearchActivity extends AppCompatActivity {
+    public RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +34,14 @@ public class SearchActivity extends AppCompatActivity {
             search(query);
         }
 
+        DisplayListAdapter adapter = new DisplayListAdapter();
+        adapter.setHasStableIds(true);
 
+        recyclerView = findViewById(R.id.display_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        adapter.setDisplayItems(DisplayListItem.loadJSON(this, "display_demo.json"));
 
     }
 

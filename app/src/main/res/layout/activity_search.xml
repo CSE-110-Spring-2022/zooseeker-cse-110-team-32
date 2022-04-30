@@ -23,14 +23,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/display_list"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/search_bar"
-        app:layout_constraintRight_toRightOf="@+id/search_bar"
+        app:layout_constraintBottom_toTopOf="@+id/plan_btn"
         app:layout_constraintTop_toBottomOf="@+id/search_bar" />
 
     <Button

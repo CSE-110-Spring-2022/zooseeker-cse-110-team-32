@@ -15,8 +15,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
         //Can't run two activities at once -- later on this activity will be started elsewhere
-        Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-        startActivity(pathIntent);
-
+        //Intent pathIntent = new Intent(this, ShortestPathActivity.class);
+        //startActivity(pathIntent);
     }
 }
