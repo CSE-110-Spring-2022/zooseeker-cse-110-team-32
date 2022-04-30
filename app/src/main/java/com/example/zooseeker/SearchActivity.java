@@ -18,6 +18,7 @@ import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.SearchView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
@@ -45,7 +46,10 @@ public class SearchActivity extends AppCompatActivity {
         //after we get the list of exhibits (dynamic), going to grab location names into
         //a separate list to view on display
 
-        //adapter.setDisplayItems(DisplayListItem.loadJSON(this, "display_demo.json"));
+        List<DisplayListItem> list = new ArrayList<DisplayListItem>();
+        DisplayListItem item = new DisplayListItem("Polar Bears");
+        list.add(item);
+        adapter.setDisplayItems(list);
 
     }
 
