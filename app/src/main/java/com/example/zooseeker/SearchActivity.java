@@ -41,7 +41,11 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        adapter.setDisplayItems(DisplayListItem.loadJSON(this, "display_demo.json"));
+        PlanList plan = new PlanList("json");
+        //after we get the list of exhibits (dynamic), going to grab location names into
+        //a separate list to view on display
+
+        //adapter.setDisplayItems(DisplayListItem.loadJSON(this, "display_demo.json"));
 
     }
 
