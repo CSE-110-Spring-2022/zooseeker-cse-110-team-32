@@ -103,7 +103,8 @@ public class ZooData {
         // While this is automatic for vertices, it isn't for edges. We keep the
         // definition of this in the IdentifiedWeightedEdge class for convenience.
         try{
-            importer.addEdgeAttributeConsumer(IdentifiedWeightedEdge::attributeConsumer);InputStream inputStream = context.getAssets().open(path);
+            importer.addEdgeAttributeConsumer(IdentifiedWeightedEdge::attributeConsumer);
+            InputStream inputStream = context.getAssets().open(path);
 
             Reader reader = new InputStreamReader(inputStream);
 
