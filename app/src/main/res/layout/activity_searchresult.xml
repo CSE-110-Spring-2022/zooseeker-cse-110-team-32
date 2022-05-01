@@ -7,13 +7,14 @@
     <!--  Single List Item Design -->
 
     <TextView
-        android:id="@+id/display_list_item"
+        android:id="@+id/search_list_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_margin="16dp"
         android:textSize="20dp"
         android:textColor="@color/black"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

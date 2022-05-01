@@ -42,7 +42,7 @@ public class SearchClassUnitTest {
     @Test
     public void sizeResults(){
         Context context = ApplicationProvider.getApplicationContext();
-        SearchItem searcher = new SearchItem(context, "sample_node_info.json");
+        Search searcher = new Search(context, "sample_node_info.json");
         ArrayList<String> results = searcher.getResults("Lions");
         assertEquals(1, results.size());
     }
@@ -50,7 +50,7 @@ public class SearchClassUnitTest {
     @Test
     public void lionsResults(){
         Context context = ApplicationProvider.getApplicationContext();
-        SearchItem searcher = new SearchItem(context, "sample_node_info.json");
+        Search searcher = new Search(context, "sample_node_info.json");
         ArrayList<String> results = searcher.getResults("Lions");
         assertEquals("Lions", results.get(0));
     }
@@ -58,7 +58,7 @@ public class SearchClassUnitTest {
     @Test
     public void multipleExhbits(){
         Context context = ApplicationProvider.getApplicationContext();
-        SearchItem searcher = new SearchItem(context, "sample_node_info.json");
+        Search searcher = new Search(context, "sample_node_info.json");
         ArrayList<String> results = searcher.getResults("e");
         assertEquals(4, results.size());
     }
