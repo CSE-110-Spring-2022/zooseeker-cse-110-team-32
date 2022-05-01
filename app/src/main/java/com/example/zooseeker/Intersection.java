@@ -1,28 +1,16 @@
 package com.example.zooseeker;
 
-public class Intersection extends Location {
+import java.util.List;
+
+public class Intersection extends Location{
     private String id;
-    private String kind;
+    private ZooData.VertexInfo.Kind kind;
     private String name;
-    private String[] tags;
+    private List<String> tags;
 
-    Intersection() {
-        this.id = "";
-        this.kind = "intersection";
-        this.name = "";
-        this.tags = null;
-
-    }
-    Intersection(String id, String kind, String name, String[] tags) {
-        this.id = id;
-        this.kind = kind;
-        this.name = "intersection";
-        this.tags = tags;
+    Intersection(String id, String name, List<String> tags) {
+        super(id, name, tags);
+        this.kind = ZooData.VertexInfo.Kind.INTERSECTION;
     }
 
-    public String getId() { return this.id; }
-
-    public String getKind() { return this.kind; }
-
-    public String getName() {return this.name; }
 }
