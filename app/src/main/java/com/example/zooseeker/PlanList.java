@@ -21,6 +21,7 @@ public class PlanList {
         //this.zooMap = new ZooMap(json_data);
         this.currLocationIndex = 0;
     }
+    public List<Location> getMyList() { return this.myList; }
 
     public int currExhibitIndex(Exhibit curr) {
         return myList.indexOf(curr);
