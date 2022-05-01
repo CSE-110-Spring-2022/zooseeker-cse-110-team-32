@@ -45,10 +45,12 @@ public class SearchActivity extends AppCompatActivity {
         PlanList plan = new PlanList("json");
         //after we get the list of exhibits (dynamic), going to grab location names into
         //a separate list to view on display
-
         List<DisplayListItem> list = new ArrayList<DisplayListItem>();
-        DisplayListItem item = new DisplayListItem("Polar Bears");
-        list.add(item);
+        for (int i = 0; i < plan.getMyList().size(); i++) {
+            DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
+            list.add(item);
+        }
+
         adapter.setDisplayItems(list);
 
     }
