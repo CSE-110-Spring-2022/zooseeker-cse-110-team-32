@@ -17,6 +17,9 @@ jobs:
       - name: Unit Test
         run: ./gradlew ExampleUnitTest
 
+      - name: Search Unit Test
+        run: ./gradlew SearchClassUnitTest
+
       # Report the results
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
