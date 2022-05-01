@@ -71,7 +71,7 @@ public class DirectionsDisplayTest {
                         childAtPosition(
                                 withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
                                 2)))
-                .atPosition(0);
+                .atPosition(2);
         constraintLayout.perform(click());
 
         DataInteraction constraintLayout2 = onData(anything())
@@ -79,7 +79,7 @@ public class DirectionsDisplayTest {
                         childAtPosition(
                                 withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
                                 2)))
-                .atPosition(3);
+                .atPosition(1);
         constraintLayout2.perform(click());
 
         DataInteraction constraintLayout3 = onData(anything())
@@ -87,7 +87,7 @@ public class DirectionsDisplayTest {
                         childAtPosition(
                                 withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
                                 2)))
-                .atPosition(1);
+                .atPosition(0);
         constraintLayout3.perform(click());
 
         ViewInteraction materialButton = onView(
@@ -101,10 +101,10 @@ public class DirectionsDisplayTest {
         materialButton.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.path_result), withText("From: elephant odyssey\nTo: gorillas\n\n1. Walk 200.0 meters along Africa Rocks Street from Elephant Odyssey to Lions\n2. Walk 200.0 meters along Africa Rocks Street from Lions to Gorillas\n"),
+                allOf(withId(R.id.path_result), withText("From: entrance exit gate\nTo: arctic foxes\n\n1. Walk 10.0 meters along Entrance Way from Entrance and Exit Gate to Entrance Plaza\n2. Walk 300.0 meters along Arctic Avenue from Entrance Plaza to Arctic Foxes\n"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class))),
                         isDisplayed()));
-        textView.check(matches(withText("From: elephant odyssey\nTo: gorillas\n\n1. Walk 200.0 meters along Africa Rocks Street from Elephant Odyssey to Lions\n2. Walk 200.0 meters along Africa Rocks Street from Lions to Gorillas\n")));
+        textView.check(matches(withText("From: entrance exit gate\nTo: arctic foxes\n\n1. Walk 10.0 meters along Entrance Way from Entrance and Exit Gate to Entrance Plaza\n2. Walk 300.0 meters along Arctic Avenue from Entrance Plaza to Arctic Foxes\n")));
 
         ViewInteraction materialButton2 = onView(
                 allOf(withId(R.id.next_btn), withText("NEXT"),
@@ -117,10 +117,26 @@ public class DirectionsDisplayTest {
         materialButton2.perform(click());
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.path_result), withText("From: gorillas\nTo: lions\n\n1. Walk 200.0 meters along Africa Rocks Street from Gorillas to Lions\n"),
+                allOf(withId(R.id.path_result), withText("From: arctic foxes\nTo: lions\n\n1. Walk 300.0 meters along Arctic Avenue from Arctic Foxes to Entrance Plaza\n2. Walk 100.0 meters along Reptile Road from Entrance Plaza to Alligators\n3. Walk 200.0 meters along Sharp Teeth Shortcut from Alligators to Lions\n"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class))),
                         isDisplayed()));
-        textView2.check(matches(withText("From: gorillas\nTo: lions\n\n1. Walk 200.0 meters along Africa Rocks Street from Gorillas to Lions\n")));
+        textView2.check(matches(withText("From: arctic foxes\nTo: lions\n\n1. Walk 300.0 meters along Arctic Avenue from Arctic Foxes to Entrance Plaza\n2. Walk 100.0 meters along Reptile Road from Entrance Plaza to Alligators\n3. Walk 200.0 meters along Sharp Teeth Shortcut from Alligators to Lions\n")));
+
+        ViewInteraction materialButton3 = onView(
+                allOf(withId(R.id.next_btn), withText("NEXT"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                2),
+                        isDisplayed()));
+        materialButton3.perform(click());
+
+        ViewInteraction textView3 = onView(
+                allOf(withId(R.id.path_result), withText("From: lions\nTo: elephant odyssey\n\n1. Walk 200.0 meters along Africa Rocks Street from Lions to Elephant Odyssey\n"),
+                        withParent(withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class))),
+                        isDisplayed()));
+        textView3.check(matches(withText("From: lions\nTo: elephant odyssey\n\n1. Walk 200.0 meters along Africa Rocks Street from Lions to Elephant Odyssey\n")));
     }
 
     private static Matcher<View> childAtPosition(
