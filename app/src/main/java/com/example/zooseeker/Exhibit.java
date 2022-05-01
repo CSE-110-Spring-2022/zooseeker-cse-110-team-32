@@ -1,26 +1,16 @@
 package com.example.zooseeker;
+
+import java.util.List;
+
 public class Exhibit extends Location{
     private String id;
-    private String kind;
+    private ZooData.VertexInfo.Kind kind;
     private String name;
-    private String[] tags;
+    private List<String> tags;
 
-    Exhibit() {
-        this.id = "";
-        this.kind = "exhibit";
-        this.name = "";
-        this.tags = null;
-    }
-    Exhibit(String id, String name, String[] tags) {
-        this.id = id;
-        this.kind = "exhibit";
-        this.name = name;
-        this.tags = tags;
+    Exhibit(String id, String name, List<String> tags) {
+        super(id, name, tags);
+        this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
     }
 
-    public String getId() { return this.id; }
-
-    public String getKind() { return this.kind; }
-
-    public String getName() {return this.name; }
 }

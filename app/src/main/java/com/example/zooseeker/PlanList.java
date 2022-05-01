@@ -26,7 +26,16 @@ public class PlanList {
         return myList.indexOf(curr);
     }
 
+    public int planSize(){
+        return myList.size();
+    }
+
     public Boolean addLocation(Location e) {
+        for (int i=0; i < myList.size(); i++){
+            if (myList.get(i).getId().equals(e.getId())){
+                return false;
+            }
+        }
         return this.myList.add(e);
     }
 
@@ -47,8 +56,12 @@ public class PlanList {
 //        return zooMap.getShortestPath(currId, nextId);
 //    }
 
-    public void advanceLocation() {
+    public Boolean advanceLocation() {
+        if(currLocationIndex+1 >= myList.size()){
+            return false;
+        }
         this.currLocationIndex++;
+        return true;
     }
 
 
