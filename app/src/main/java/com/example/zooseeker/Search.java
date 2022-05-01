@@ -46,7 +46,6 @@ public class Search {
         Collection<ZooData.VertexInfo> valuesCollection = completeMap.values();
         ZooData.VertexInfo[] values = new ZooData.VertexInfo[completeMap.size()];
         valuesCollection.toArray(values);
-        System.out.println(valuesCollection.size());
 
         for (ZooData.VertexInfo vertex: valuesCollection){
             if (vertex.name.contains(exhibitName)){

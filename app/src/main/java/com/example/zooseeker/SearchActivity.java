@@ -93,7 +93,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View v, int position, long id){
                 ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
-                System.out.println(searchItem.id);
                 Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.tags);
                 plan.addLocation(exhibit);
                 //after we get the list of exhibits (dynamic), going to grab location names into

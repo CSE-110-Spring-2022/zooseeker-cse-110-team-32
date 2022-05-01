@@ -2,7 +2,6 @@ package com.example.zooseeker;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.test.core.app.ApplicationProvider;
 
 import android.content.Context;
 import android.os.Build;
