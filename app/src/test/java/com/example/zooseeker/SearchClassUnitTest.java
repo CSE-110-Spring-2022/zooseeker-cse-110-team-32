@@ -76,6 +76,6 @@ public class SearchClassUnitTest {
         Search searcher = new Search(context, "sample_node_info.json");
         assertEquals(searcher.getResults("ape"), searcher.getResults(("gorillas")));
         ArrayList<String> results = searcher.getResults("mammal");
-        //assertEquals(4, results.size());
+        assertEquals(4, results.size());
     }
 }
