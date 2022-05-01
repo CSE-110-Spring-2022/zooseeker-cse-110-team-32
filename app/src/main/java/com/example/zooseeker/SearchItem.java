@@ -19,15 +19,13 @@ public class SearchItem {
         this.context = context;
         //this.exhibitName = exhibitName;
         this.fileName = fileName;
+        //get complete map with ZooData loadVertexInfoJSON method
+        this.completeMap = ZooData.loadVertexInfoJSON(context, fileName);
     }
 
     public ArrayList<String> getResults(String exhibitName){
-
-        //get complete map with ZooData loadVertexInfoJSON method
-        completeMap = ZooData.loadVertexInfoJSON(context, fileName);
-
         //Iterate over map and find matching keys
-        ArrayList<String> results = new ArrayList<String>();
+        ArrayList<String> results = new ArrayList<>();
         
         Collection<ZooData.VertexInfo> valuesCollection = completeMap.values();
         ZooData.VertexInfo[] values = new ZooData.VertexInfo[completeMap.size()];
