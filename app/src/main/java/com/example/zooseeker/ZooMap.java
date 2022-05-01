@@ -86,13 +86,12 @@ public class ZooMap {
         int i = 1;
         //List<String> textDirections = new ArrayList<>();
         StringBuilder textDirections = new StringBuilder("");
-
+        List<String> locations = currPath.getVertexList();
         for (IdentifiedWeightedEdge e : currPath.getEdgeList()) {
-
             String textline = Integer.toString(i) + ". Walk " + String.valueOf(graph.getEdgeWeight(e))
                     + " meters along " + roadEdges.get(e.getId()).street + " from "
-                    + locVertices.get(graph.getEdgeSource(e).toString()).name + " to "
-                    + locVertices.get(graph.getEdgeTarget(e).toString()).name + "\n";
+                    + locVertices.get(locations.get(i-1)).name + " to "
+                    + locVertices.get(locations.get(i)).name + "\n";
             //textDirections.add(textline);
             textDirections.append(textline);
             i++;

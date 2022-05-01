@@ -77,13 +77,15 @@ public class ShortestPathActivity extends AppCompatActivity {
         for(int i = 0; i < list.planSize()-1;i++){
             String startNode = list.getMyList().get(i).getId();
             String endNode = list.getMyList().get(i+1).getId();
+            String start = list.getMyList().get(i).getId();
+            String end = list.getMyList().get(i+1).getId();
             String directions = zooMap.getTextDirections(startNode, endNode);
             //System.out.println(directions);
             //TextView textView = findViewById(R.id.path_result);
             //textView.setText("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n"+directions);
-            startNode = startNode.replaceAll("[_]"," ");
-            endNode = endNode.replaceAll("[_]", " ");
-            directions = "From: " + startNode + "\nTo: " + endNode + "\n\n" + directions;
+            start = start.replaceAll("[_]"," ");
+            end = end.replaceAll("[_]", " ");
+            directions = "From: " + start + "\nTo: " + end + "\n\n" + directions;
             directionsList.add(directions);
             //textView.setText("Shortest path from "+startNode+ " to "+ endNode+": \n"+directions);
         }

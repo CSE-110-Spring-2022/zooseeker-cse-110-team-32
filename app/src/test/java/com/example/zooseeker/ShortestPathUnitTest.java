@@ -67,4 +67,36 @@ public class ShortestPathUnitTest {
         assertEquals(street1_name, streets.get(0));
         assertEquals(street2_name, streets.get(1));
     }
+
+    @Test
+    public void complex_path(){
+        Context context = ApplicationProvider.getApplicationContext();
+        Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
+        ZooMap zooMap = new ZooMap(graph, vertices, edges);
+        String start = "gorillas";
+        String start_stop1 = "Africa Rocks Street";
+        String stop1 = "entrance_plaza";
+        String stop1_mid = "Arctic Avenue";
+        String mid = "arctic_foxes";
+        String end = "elephant_odyssey";
+        GraphPath<String, IdentifiedWeightedEdge> directions = zooMap.getShortestPath(start, mid);
+        List<String> stops = directions.getVertexList();
+        List<String> streets = zooMap.getStreets(start, mid);
+        double distance = 500.0;
+        assertEquals(start, directions.getStartVertex());
+        assertEquals(stop1, stops.get(1));
+        assertEquals(mid, stops.get(2));
+        assertEquals(start_stop1, streets.get(0));
+        assertEquals(stop1_mid, streets.get(1));
+        assertEquals(distance, directions.getWeight(), 0.01);
+        GraphPath<String, IdentifiedWeightedEdge> directions2 = zooMap.getShortestPath(mid, end);
+        List<String> stops2 = directions.getVertexList();
+        List<String> streets2 = zooMap.getStreets(mid, end);
+        double distance2 = 800.0;
+        assertEquals(mid, directions2.getStartVertex());
+        assertEquals(end, directions2.getEndVertex());
+        assertEquals(distance, directions.getWeight(), 0.01);
+    }
 }
