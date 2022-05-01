@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -32,7 +33,12 @@ public class Search {
         System.out.println(valuesCollection.size());
 
         for (ZooData.VertexInfo vertex: valuesCollection){
-            if (vertex.name.contains(exhibitName)){
+            String temp = vertex.name.toLowerCase();
+
+            if (temp.contains(exhibitName.toLowerCase())){
+                results.add(vertex.name);
+            }
+            else if(vertex.tags != null && vertex.tags.contains(exhibitName)){
                 results.add(vertex.name);
             }
         }
@@ -48,7 +54,12 @@ public class Search {
         valuesCollection.toArray(values);
 
         for (ZooData.VertexInfo vertex: valuesCollection){
-            if (vertex.name.contains(exhibitName)){
+            String temp = vertex.name.toLowerCase();
+
+            if (temp.contains(exhibitName)){
+                results.add(vertex);
+            }
+            else if(vertex.tags.contains(exhibitName)){
                 results.add(vertex);
             }
         }

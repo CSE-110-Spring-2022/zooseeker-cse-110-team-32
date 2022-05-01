@@ -62,4 +62,20 @@ public class SearchClassUnitTest {
         ArrayList<String> results = searcher.getResults("e");
         assertEquals(4, results.size());
     }
+
+    @Test
+    public void testCapitalization(){
+        Context context = ApplicationProvider.getApplicationContext();
+        Search searcher = new Search(context, "sample_node_info.json");
+        assertEquals(searcher.getResults("Gorillas"), searcher.getResults(("gorillas")));
+    }
+
+    @Test
+    public void testSearchTags(){
+        Context context = ApplicationProvider.getApplicationContext();
+        Search searcher = new Search(context, "sample_node_info.json");
+        assertEquals(searcher.getResults("ape"), searcher.getResults(("gorillas")));
+        ArrayList<String> results = searcher.getResults("mammal");
+        assertEquals(4, results.size());
+    }
 }

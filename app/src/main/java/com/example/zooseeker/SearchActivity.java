@@ -25,6 +25,7 @@ import android.widget.Toast;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 // https://www.geeksforgeeks.org/android-searchview-with-example/
 
@@ -78,6 +79,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 String text = s;
+                text = text.toLowerCase();
                 searchResults = searcher.getResultsInfo(text);
                 searchAdapter.loadSearchResults(searchResults);
                 return false;
