@@ -17,6 +17,9 @@ jobs:
       - name: Unit Test
         run: ./gradlew testDebugUnitTest
     
+      - name: Instrumentation Tests
+        run: ./gradlew connectedAndroidTest
+
       # Report the results
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
