@@ -18,6 +18,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -31,14 +32,15 @@ import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
-    public RecyclerView recyclerView_plan;
-    public PlanList plan;
     ListView resultsView;
     SearchListAdapter searchAdapter;
     ArrayList<ZooData.VertexInfo> searchResults;
     Search searcher;
     SearchView search_bar;
-    ArrayList<String> search_display_list;
+    public static PlanList planList;
+    public static PlanList getPlan(){
+        return planList;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +110,18 @@ public class SearchActivity extends AppCompatActivity {
                 adapter.setDisplayItems(list);
             }
         });
+
+        planList = plan;
+
+        Button planBtn = findViewById(R.id.plan_btn);
+        planBtn.setOnClickListener(view ->{
+            Intent pathIntent = new Intent(this, ShortestPathActivity.class);
+            //pathIntent.putExtra("PlanList", (Parcelable) planList);
+            //pathIntent.putParcelableArrayListExtra("PlanList", (ArrayList<? extends Parcelable>) planList.getMyList());
+
+            startActivity(pathIntent);
+        });
+
     }
 
 
