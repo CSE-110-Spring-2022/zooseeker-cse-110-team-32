@@ -4,6 +4,7 @@ import android.widget.Button;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -13,22 +14,23 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
+import java.util.Map;
+
 
 @RunWith(AndroidJUnit4.class)
 public class ShortestPathActivityTest {
 
     @Test
     public void selectNext(){
-
-        ExhibitsList list = new ExhibitsList();
-        Exhibit plaza = new Exhibit("entrance_plaza");
-        Exhibit gorillas = new Exhibit("gorillas");
-        Exhibit gators = new Exhibit("gators");
-        list.addExhibit(plaza);
-        list.addExhibit(gorillas);
-        list.addExhibit(gators);
-        int num = 0;
-        assertEquals(1,num);
+        PlanList list = new PlanList("sample_zoo_graph.json");
+        Context context = ApplicationProvider.getApplicationContext();
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Location foxes = new Exhibit("arctic_foxes", "Arctic Foxes", vertices.get("arctic_foxes").tags);
+        Location gorillas = new Exhibit("gorillas", "Gorillas", vertices.get("gorillas").tags);
+        Location gators = new Exhibit("gators", "Alligators", vertices.get("gators").tags);
+        list.addLocation(foxes);
+        list.addLocation(gorillas);
+        list.addLocation(gators);
         ActivityScenario scenario = ActivityScenario.launch(ShortestPathActivity.class);
 
         //scenario.moveToState(Lifecycle.State.CREATED);
@@ -53,15 +55,15 @@ public class ShortestPathActivityTest {
 
     @Test
     public void testClickNextAtEnd(){
-        ExhibitsList list = new ExhibitsList();
-        Exhibit plaza = new Exhibit("entrance_plaza");
-        Exhibit gorillas = new Exhibit("gorillas");
+        PlanList list = new PlanList("sample_zoo_graph.json");
+        Context context = ApplicationProvider.getApplicationContext();
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Location foxes = new Exhibit("arctic_foxes", "Arctic Foxes", vertices.get("arctic_foxes").tags);
+        Location gorillas = new Exhibit("gorillas", "Gorillas", vertices.get("gorillas").tags);
 
-        list.addExhibit(plaza);
-        list.addExhibit(gorillas);
+        list.addLocation(foxes);
+        list.addLocation(gorillas);
 
-        int num = 0;
-        assertEquals(1,num);
         ActivityScenario scenario = ActivityScenario.launch(ShortestPathActivity.class);
 
         //scenario.moveToState(Lifecycle.State.CREATED);
