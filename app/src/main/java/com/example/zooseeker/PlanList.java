@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class PlanList {
@@ -21,13 +23,39 @@ public class PlanList {
      */
     private int currLocationIndex;
     //adding this ZooMap object for future iteration
-    //private ZooMap zooMap;
+    private Context context;
+    private ZooMap zooMap;
 
-    public PlanList(String json_data) {
+    public PlanList(Context context) {
         this.myList = new ArrayList<>();
-        //this.zooMap = new ZooMap(json_data);
+        this.context = context;
+        Graph<String, IdentifiedWeightedEdge> graph =
+                ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
+        Map<String, ZooData.VertexInfo> vertices =
+                ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.EdgeInfo> edges =
+                ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
+        ZooMap zooMap = new ZooMap(graph, vertices, edges);
         this.currLocationIndex = 0;
     }
+
+    public PlanList(Context context, String json_graph, String json_node, String json_edge) {
+        this.myList = new ArrayList<>();
+        this.context = context;
+        Graph<String, IdentifiedWeightedEdge> graph =
+                ZooData.loadZooGraphJSON(context,json_graph);
+        Map<String, ZooData.VertexInfo> vertices =
+                ZooData.loadVertexInfoJSON(context, json_node);
+        Map<String, ZooData.EdgeInfo> edges =
+                ZooData.loadEdgeInfoJSON(context, json_edge);
+        ZooMap zooMap = new ZooMap(graph, vertices, edges);
+        this.currLocationIndex = 0;
+    }
+
+    public void changeContext(Context newContext) {
+        this.context = newContext;
+    }
+
     public List<Location> getMyList() { return this.myList; }
 
     public int currExhibitIndex(Exhibit curr) {
@@ -56,13 +84,13 @@ public class PlanList {
         it will use zooMap object to get the shortest path from current location to the
         next location in the list
      */
-//    public Graph<String, IdentifiedWeightedEdge> getPathToNextLocation() {
-//        Location curr = this.myList.get(currLocationIndex);
-//        String currId = curr.getId();
-//        Location next = this.myList.get(currLocationIndex + 1);
-//        String nextId = next.getId();
-//        return zooMap.getShortestPath(currId, nextId);
-//    }
+    public GraphPath<String, IdentifiedWeightedEdge> getPathToNextLocation() {
+        Location curr = this.myList.get(currLocationIndex);
+        String currId = curr.getId();
+        Location next = this.myList.get(currLocationIndex + 1);
+        String nextId = next.getId();
+        return zooMap.getShortestPath(currId, nextId);
+    }
 
     public Boolean advanceLocation() {
         if(currLocationIndex+1 >= myList.size()){
@@ -80,9 +108,9 @@ public class PlanList {
         I am currently using the second way by converting the arraylist into a set, and then
         put the ID into the set and retrieve the set in the loadList method
      */
-    public void saveList(Context context) {
+    public void saveList() {
         SharedPreferences preferences =
-                context.getSharedPreferences("List_File", Context.MODE_PRIVATE);
+                this.context.getSharedPreferences("List_File", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> saveList = new HashSet<>();
         for (Location e : myList) {
@@ -99,8 +127,8 @@ public class PlanList {
     might be different, we will call sort method in this class to sort the arraylist.
     As you can see outDao will be our future database and sort will be implemented in the future.
      */
-//    public void loadList(Context context) {
-//        SharedPreferences preferences = context.getSharedPreferences("List_File",
+//    public void loadList() {
+//        SharedPreferences preferences = this.context.getSharedPreferences("List_File",
 //                Context.MODE_PRIVATE);
 //        Set<String> retrieveList = preferences.getStringSet("list", null);
 //        ArrayList<Location> newList = new ArrayList<>();
