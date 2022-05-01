@@ -1,13 +1,16 @@
 package com.example.zooseeker;
-public class Exhibit {
-    //most likely will add more stuff later
-    String exhibitName;
 
-    Exhibit(String name){
-        this.exhibitName = name;
+import java.util.List;
+
+public class Exhibit extends Location{
+    private String id;
+    private ZooData.VertexInfo.Kind kind;
+    private String name;
+    private List<String> tags;
+
+    Exhibit(String id, String name, List<String> tags) {
+        super(id, name, tags);
+        this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
     }
 
-    public String toString(){
-        return this.exhibitName;
-    }
 }
