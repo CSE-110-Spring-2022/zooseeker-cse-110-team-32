@@ -27,6 +27,10 @@ public class DisplayListItem {
                 '}';
     }
 
+    public String getName(){
+        return this.name;
+    }
+
     public static List<DisplayListItem> loadJSON(Context context, String path) {
         try  {
             InputStream input = context.getAssets().open(path);
