@@ -20,6 +20,10 @@ public class DisplayListAdapter extends RecyclerView.Adapter<DisplayListAdapter.
         notifyDataSetChanged();
     }
 
+    public List<DisplayListItem> getDisplayItems(){
+        return displayItems;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

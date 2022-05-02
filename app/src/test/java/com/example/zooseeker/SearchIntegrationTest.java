@@ -2,6 +2,7 @@ package com.example.zooseeker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -34,6 +35,18 @@ public class SearchIntegrationTest {
             ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
             assertNotNull(searchFox);
             assertEquals("Arctic Foxes", searchFox.name);
+        });
+    }
+
+    @Test
+    public void testNoResult(){
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+            SearchView searchBar = activity.findViewById(R.id.search_bar);
+            searchBar.setQuery("Liona", true);
+            ListView searchView = activity.findViewById(R.id.search_list);
+            assertEquals(0, searchView.getCount());
         });
     }
 
