@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,20 @@ public class SearchIntegrationTest {
             assertNotNull(searchLion);
             assertEquals("Lions", searchLion.name);
             searchBar.setQuery("fox", true);
+            ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchFox);
+            assertEquals("Arctic Foxes", searchFox.name);
+        });
+    }
+
+    @Test
+    public void testAdd(){
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+            SearchView searchBar = activity.findViewById(R.id.search_bar);
+            searchBar.setQuery("fox", true);
+            ListView searchView = activity.findViewById(R.id.search_list);
             ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
             assertNotNull(searchFox);
             assertEquals("Arctic Foxes", searchFox.name);
