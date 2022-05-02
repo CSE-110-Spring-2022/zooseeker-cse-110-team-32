@@ -20,20 +20,21 @@ public class SearchIntegrationTest {
     ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class);
 
     @Test
-    public void testSearch(){
+    public void testAdd(){
         scenario.moveToState(Lifecycle.State.CREATED);
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("Lions", true);
-            ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchLion = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchLion);
-            assertEquals("Lions", searchLion.name);
             searchBar.setQuery("fox", true);
+            ListView searchView = activity.findViewById(R.id.search_list);
             ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
             assertNotNull(searchFox);
             assertEquals("Arctic Foxes", searchFox.name);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            RecyclerView displayView = activity.recyclerView;
+            DisplayListAdapter displayAdapter = (DisplayListAdapter) displayView.getAdapter();
+            assertEquals(1, displayAdapter.getItemCount());
         });
     }
+
 }
