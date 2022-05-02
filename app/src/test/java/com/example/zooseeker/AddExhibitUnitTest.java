@@ -28,8 +28,8 @@ public class AddExhibitUnitTest {
 
     @Test
     public void addExhibit(){
-        PlanList plan = new PlanList("sample_zoo_graph.json");
         Context context = ApplicationProvider.getApplicationContext();
+        PlanList plan = new PlanList(context);
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
         List<Location> checkList = new ArrayList<>();
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
@@ -48,8 +48,8 @@ public class AddExhibitUnitTest {
 
     @Test
     public void addDuplicate(){
-        PlanList plan = new PlanList("sample_zoo_graph.json");
         Context context = ApplicationProvider.getApplicationContext();
+        PlanList plan = new PlanList(context);
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
         String[] tags = new String[] {"alligator", "reptile", "gator"};
         List<String> tagList = Arrays.asList(tags);
