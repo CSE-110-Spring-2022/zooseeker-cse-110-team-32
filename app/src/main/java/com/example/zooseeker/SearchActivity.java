@@ -61,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        PlanList plan = new PlanList("sample_zoo_graph.json");
+        PlanList plan = new PlanList(this);
 
 
         // Locate the ListView in listview_main.xml
