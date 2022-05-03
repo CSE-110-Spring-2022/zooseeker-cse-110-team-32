@@ -1,6 +1,7 @@
 package com.example.zooseeker;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,13 +34,19 @@ public class Search {
         System.out.println(valuesCollection.size());
 
         for (ZooData.VertexInfo vertex: valuesCollection){
-            String temp = vertex.name.toLowerCase();
+            String queryLowerCase = vertex.name.toLowerCase();
 
-            if (temp.contains(exhibitName.toLowerCase())){
+            if (queryLowerCase.contains(exhibitName.toLowerCase())){
                 results.add(vertex.name);
             }
-            else if(vertex.tags != null && vertex.tags.contains(exhibitName)){
-                results.add(vertex.name);
+            else if(vertex.tags != null){
+                for(String tagName: vertex.tags){
+                    if(tagName.contains(exhibitName.toLowerCase()) || (exhibitName.toLowerCase()).contains(tagName)){
+                        results.add(vertex.name);
+                        break;
+                    }
+                }
+
             }
         }
         return results;
@@ -54,13 +61,19 @@ public class Search {
         valuesCollection.toArray(values);
 
         for (ZooData.VertexInfo vertex: valuesCollection){
-            String temp = vertex.name.toLowerCase();
+            String queryLowerCase = vertex.name.toLowerCase();
 
-            if (temp.contains(exhibitName)){
+            if (queryLowerCase.contains(exhibitName)){
                 results.add(vertex);
             }
-            else if(vertex.tags.contains(exhibitName)){
-                results.add(vertex);
+            else if(vertex.tags != null){
+                for(String tagName: vertex.tags){
+                    if(tagName.contains(exhibitName.toLowerCase()) || (exhibitName.toLowerCase()).contains(tagName)){
+                        results.add(vertex);
+                        break;
+                    }
+                }
+                //results.add(vertex.name);
             }
         }
         return results;

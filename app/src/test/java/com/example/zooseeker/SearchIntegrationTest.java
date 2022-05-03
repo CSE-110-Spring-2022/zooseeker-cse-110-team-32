@@ -33,7 +33,8 @@ public class SearchIntegrationTest {
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             RecyclerView displayView = activity.recyclerView;
             DisplayListAdapter displayAdapter = (DisplayListAdapter) displayView.getAdapter();
-            assertEquals(1, displayAdapter.getItemCount());
+            //SHoudl be 2 even though we only added one thing because it includes starting at entrance
+            assertEquals(2, displayAdapter.getItemCount());
         });
     }
 

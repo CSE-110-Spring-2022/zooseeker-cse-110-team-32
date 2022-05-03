@@ -60,7 +60,7 @@ public class SearchClassUnitTest {
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context, "sample_node_info.json");
         ArrayList<String> results = searcher.getResults("e");
-        assertEquals(4, results.size());
+        assertEquals(6, results.size());
     }
 
     @Test
