@@ -88,6 +88,36 @@ public class PlanList {
         this.currLocationIndex--;
         return true;
     }
+
+    // Right now assumes there is one Gate in the given plan, adds Gate at start and end of new plan
+    public void sort(){
+        List<Location> sortList = new ArrayList<>();
+        Location startEnd;
+        for (int i = 0; i < planSize(); i++){
+            Location stop = myList.get(i);
+            if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
+                startEnd = stop;
+                sortList.add(startEnd);
+                break;
+            }
+        }
+
+        while(myList.size() > 0){
+            Location curr = sortList.get(sortList.size()-1);
+            int smallestInd = 0;
+            double smallestDist = Double.MAX_VALUE;
+            for (int i = 0; i < myList.size(); i++){
+                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
+                if (dist < smallestDist){
+                    smallestDist = dist;
+                    smallestInd = i;
+                }
+            }
+            sortList.add(myList.get(smallestInd));
+            myList.remove(smallestInd);
+        }
+        this.myList = sortList;
+    }
     /*
         These two methods are for saving and loading PlanList, at the moment because
         sharedPreferences cannot store object, it only store strings. There is a way to doing
