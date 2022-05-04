@@ -29,10 +29,10 @@ public class ZooMap {
     GraphPath<String, IdentifiedWeightedEdge> currPath;
     Map<String, ZooData.VertexInfo> locVertices;
     Map<String, ZooData.EdgeInfo> roadEdges;
-    public ZooMap(Graph<String, IdentifiedWeightedEdge> graph, Map<String, ZooData.VertexInfo> locations, Map<String, ZooData.EdgeInfo> roads){
-        this.graph = graph;
-        this.locVertices = locations;
-        this.roadEdges = roads;
+    public ZooMap(Context context){
+        this.graph = ZooData.loadZooGraphJSON(context);
+        this.locVertices = ZooData.loadVertexInfoJSON(context);
+        this.roadEdges = ZooData.loadEdgeInfoJSON(context);
 
     }
 

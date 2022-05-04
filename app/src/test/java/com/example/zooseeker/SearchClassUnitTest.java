@@ -25,14 +25,14 @@ public class SearchClassUnitTest {
     @Test
     public void mapSize(){
         Context context = ApplicationProvider.getApplicationContext();
-        Map<String, ZooData.VertexInfo> completeMap = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.VertexInfo> completeMap = ZooData.loadVertexInfoJSON(context);
         assertEquals(7, completeMap.size());
     }
 
     @Test
     public void arrayCollectionSize(){
         Context context = ApplicationProvider.getApplicationContext();
-        Map<String, ZooData.VertexInfo> completeMap = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.VertexInfo> completeMap = ZooData.loadVertexInfoJSON(context);
         Collection<ZooData.VertexInfo> valuesCollection = completeMap.values();
         ZooData.VertexInfo[] values = new ZooData.VertexInfo[7];
         valuesCollection.toArray(values);
@@ -42,7 +42,7 @@ public class SearchClassUnitTest {
     @Test
     public void sizeResults(){
         Context context = ApplicationProvider.getApplicationContext();
-        Search searcher = new Search(context, "sample_node_info.json");
+        Search searcher = new Search(context);
         ArrayList<String> results = searcher.getResults("Lions");
         assertEquals(1, results.size());
     }
@@ -50,7 +50,7 @@ public class SearchClassUnitTest {
     @Test
     public void lionsResults(){
         Context context = ApplicationProvider.getApplicationContext();
-        Search searcher = new Search(context, "sample_node_info.json");
+        Search searcher = new Search(context);
         ArrayList<String> results = searcher.getResults("Lions");
         assertEquals("Lions", results.get(0));
     }
@@ -58,7 +58,7 @@ public class SearchClassUnitTest {
     @Test
     public void multipleExhbits(){
         Context context = ApplicationProvider.getApplicationContext();
-        Search searcher = new Search(context, "sample_node_info.json");
+        Search searcher = new Search(context);
         ArrayList<String> results = searcher.getResults("e");
         assertEquals(4, results.size());
     }
@@ -66,14 +66,14 @@ public class SearchClassUnitTest {
     @Test
     public void testCapitalization(){
         Context context = ApplicationProvider.getApplicationContext();
-        Search searcher = new Search(context, "sample_node_info.json");
+        Search searcher = new Search(context);
         assertEquals(searcher.getResults("Gorillas"), searcher.getResults(("gorillas")));
     }
 
     @Test
     public void testSearchTags(){
         Context context = ApplicationProvider.getApplicationContext();
-        Search searcher = new Search(context, "sample_node_info.json");
+        Search searcher = new Search(context);
         assertEquals(searcher.getResults("ape"), searcher.getResults(("gorillas")));
         ArrayList<String> results = searcher.getResults("mammal");
         assertEquals(4, results.size());

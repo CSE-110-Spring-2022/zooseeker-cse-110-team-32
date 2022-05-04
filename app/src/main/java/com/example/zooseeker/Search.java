@@ -15,11 +15,11 @@ public class Search {
     Context context;
 
     //Constructor
-    public Search(Context context, String fileName){
+    public Search(Context context){
         this.context = context;
         //this.exhibitName = exhibitName;
         //get complete map with ZooData loadVertexInfoJSON method
-        this.completeMap = ZooData.loadVertexInfoJSON(context, fileName);
+        this.completeMap = ZooData.loadVertexInfoJSON(context);
     }
 
     public ArrayList<String> getResults(String exhibitName){

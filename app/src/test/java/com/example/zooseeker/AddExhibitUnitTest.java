@@ -30,7 +30,7 @@ public class AddExhibitUnitTest {
     public void addExhibit(){
         Context context = ApplicationProvider.getApplicationContext();
         PlanList plan = new PlanList(context);
-        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         List<Location> checkList = new ArrayList<>();
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
             if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)){
@@ -50,7 +50,7 @@ public class AddExhibitUnitTest {
     public void addDuplicate(){
         Context context = ApplicationProvider.getApplicationContext();
         PlanList plan = new PlanList(context);
-        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         String[] tags = new String[] {"alligator", "reptile", "gator"};
         List<String> tagList = Arrays.asList(tags);
         Location exhibit = new Exhibit("gators", "Alligators", tagList);

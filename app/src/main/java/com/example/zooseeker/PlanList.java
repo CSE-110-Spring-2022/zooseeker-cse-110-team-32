@@ -29,26 +29,7 @@ public class PlanList {
     public PlanList(Context context) {
         this.myList = new ArrayList<>();
         this.context = context;
-        Graph<String, IdentifiedWeightedEdge> graph =
-                ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
-        Map<String, ZooData.VertexInfo> vertices =
-                ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
-        Map<String, ZooData.EdgeInfo> edges =
-                ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
-        ZooMap zooMap = new ZooMap(graph, vertices, edges);
-        this.currLocationIndex = 0;
-    }
-
-    public PlanList(Context context, String json_graph, String json_node, String json_edge) {
-        this.myList = new ArrayList<>();
-        this.context = context;
-        Graph<String, IdentifiedWeightedEdge> graph =
-                ZooData.loadZooGraphJSON(context,json_graph);
-        Map<String, ZooData.VertexInfo> vertices =
-                ZooData.loadVertexInfoJSON(context, json_node);
-        Map<String, ZooData.EdgeInfo> edges =
-                ZooData.loadEdgeInfoJSON(context, json_edge);
-        ZooMap zooMap = new ZooMap(graph, vertices, edges);
+        ZooMap zooMap = new ZooMap(context);
         this.currLocationIndex = 0;
     }
 
@@ -97,6 +78,14 @@ public class PlanList {
             return false;
         }
         this.currLocationIndex++;
+        return true;
+    }
+
+    public Boolean previousLocation() {
+        if(currLocationIndex < 1){
+            return false;
+        }
+        this.currLocationIndex--;
         return true;
     }
     /*
