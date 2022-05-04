@@ -21,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Array;
@@ -105,6 +106,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+        TextView num_exhibits = findViewById(R.id.exhibits_num);
         resultsView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View v, int position, long id){
@@ -113,13 +115,13 @@ public class SearchActivity extends AppCompatActivity {
                 plan.addLocation(exhibit);
                 //after we get the list of exhibits (dynamic), going to grab location names into
                 //a separate list to view on display
-                List<DisplayListItem> list = new ArrayList<DisplayListItem>();
+                List<DisplayListItem> list = new ArrayList<>();
                 for (int i = 0; i < plan.getMyList().size(); i++) {
                     DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
                     list.add(item);
                 }
-
                 adapter.setDisplayItems(list);
+                num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()-1));
             }
         });
 
