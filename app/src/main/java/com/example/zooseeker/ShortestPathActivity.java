@@ -44,8 +44,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         //List<String> directions = zooMap.getTextDirections("entrance_exit_gate", "arctic_foxes");
         //These are test values-- real method will be probably called in a directions class?
 
-        ZooMap zooMap = populateMap("sample_zoo_graph.json",
-                "sample_node_info.json","sample_edge_info.json");
+        ZooMap zooMap = new ZooMap(this);
 
         /*String startNode = "entrance_exit_gate";
         String endNode = "elephant_odyssey";
@@ -64,13 +63,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         //System.out.println("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n" + directions/*"this one!"*/);
     }
 
-    public ZooMap populateMap(String graphFile, String verticesFile, String edgeFile){
-        Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(this,graphFile);
-        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(this, verticesFile);
-        Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(this, edgeFile);
-        ZooMap zooMap = new ZooMap(graph, vertices, edges);
-        return zooMap;
-    }
     public void displayTextDirections(PlanList list, ZooMap zooMap){
         List<String> directionsList = new ArrayList<String>();
 

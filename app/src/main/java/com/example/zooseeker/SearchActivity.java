@@ -68,7 +68,7 @@ public class SearchActivity extends AppCompatActivity {
         resultsView = (ListView) findViewById(R.id.search_list);
 
         ArrayList<ZooData.VertexInfo> searchList = new ArrayList<>();
-        searcher = new Search(this,"sample_node_info.json");
+        searcher = new Search(this);
 
         // Pass results to ListViewAdapter Class
         searchAdapter = new SearchListAdapter(this, searchList);

@@ -29,10 +29,7 @@ public class ShortestPathUnitTest {
     @Test
     public void direct_path() {
         Context context = ApplicationProvider.getApplicationContext();
-        Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
-        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
-        Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
-        ZooMap zooMap = new ZooMap(graph, vertices, edges);
+        ZooMap zooMap = new ZooMap(context);
         String start = "entrance_exit_gate";
         String street_id = "edge-0";
         String street_name = "Entrance Way";
@@ -49,10 +46,7 @@ public class ShortestPathUnitTest {
     @Test
     public void indirect_path(){
         Context context = ApplicationProvider.getApplicationContext();
-        Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
-        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
-        Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
-        ZooMap zooMap = new ZooMap(graph, vertices, edges);
+        ZooMap zooMap = new ZooMap(context);
         String start = "entrance_plaza";
         String street1_name = "Reptile Road";
         String mid = "gators";
@@ -71,10 +65,7 @@ public class ShortestPathUnitTest {
     @Test
     public void complex_path(){
         Context context = ApplicationProvider.getApplicationContext();
-        Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
-        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
-        Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(context, "sample_edge_info.json");
-        ZooMap zooMap = new ZooMap(graph, vertices, edges);
+        ZooMap zooMap = new ZooMap(context);
         String start = "gorillas";
         String start_stop1 = "Africa Rocks Street";
         String stop1 = "entrance_plaza";

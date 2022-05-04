@@ -42,12 +42,13 @@ public class ZooData {
     }
 
 
-    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context context, String path){
+    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context context){
         try {
-            InputStream inputStream = context.getAssets().open(path);
-            Reader reader = new InputStreamReader(inputStream);
-
             Gson gson = new Gson();
+            Map<String, String> fileNames = getFileNames(context);
+
+            InputStream inputStream = context.getAssets().open(fileNames.get("nodes"));
+            Reader reader = new InputStreamReader(inputStream);
             Type type = new TypeToken<List<ZooData.VertexInfo>>() {
             }.getType();
             List<ZooData.VertexInfo> zooData = gson.fromJson(reader, type);
@@ -69,12 +70,13 @@ public class ZooData {
         }
     }
 
-    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context context, String path){
+    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context context){
         try {
-            InputStream inputStream = context.getAssets().open(path);
-            Reader reader = new InputStreamReader(inputStream);
-
             Gson gson = new Gson();
+            Map<String, String> fileNames = getFileNames(context);
+
+            InputStream inputStream = context.getAssets().open(fileNames.get("edges"));
+            Reader reader = new InputStreamReader(inputStream);
             Type type = new TypeToken<List<ZooData.EdgeInfo>>() {
             }.getType();
             List<ZooData.EdgeInfo> zooData = gson.fromJson(reader, type);
@@ -89,7 +91,7 @@ public class ZooData {
         }
     }
 
-    public static Graph<String, IdentifiedWeightedEdge> loadZooGraphJSON(Context context, String path){
+    public static Graph<String, IdentifiedWeightedEdge> loadZooGraphJSON(Context context){
         // Create an empty graph to populate.
         Graph<String, IdentifiedWeightedEdge> g = new DefaultUndirectedWeightedGraph<>(IdentifiedWeightedEdge.class);
 
@@ -103,8 +105,10 @@ public class ZooData {
         // While this is automatic for vertices, it isn't for edges. We keep the
         // definition of this in the IdentifiedWeightedEdge class for convenience.
         try{
+            Map<String, String> fileNames = getFileNames(context);
+
             importer.addEdgeAttributeConsumer(IdentifiedWeightedEdge::attributeConsumer);
-            InputStream inputStream = context.getAssets().open(path);
+            InputStream inputStream = context.getAssets().open(fileNames.get("graph"));
 
             Reader reader = new InputStreamReader(inputStream);
 
@@ -114,5 +118,19 @@ public class ZooData {
 
         }
         return g;
+    }
+
+    public static Map<String, String> getFileNames(Context context){
+        try {
+            Gson gson = new Gson();
+            InputStream configInputStream = context.getAssets().open("config.json");
+            Reader configReader = new InputStreamReader(configInputStream);
+            Type configType = new TypeToken<Map<String, String>>() {
+            }.getType();
+            Map<String, String> fileNames = gson.fromJson(configReader, configType);
+            return fileNames;
+        } catch (IOException e) {
+            return new HashMap<>();
+        }
     }
 }
