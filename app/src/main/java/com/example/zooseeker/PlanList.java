@@ -29,7 +29,7 @@ public class PlanList {
     public PlanList(Context context) {
         this.myList = new ArrayList<>();
         this.context = context;
-        ZooMap zooMap = new ZooMap(context);
+        this.zooMap = new ZooMap(context);
         this.currLocationIndex = 0;
     }
 
@@ -41,6 +41,13 @@ public class PlanList {
 
     public int currExhibitIndex(Exhibit curr) {
         return myList.indexOf(curr);
+    }
+
+    public Boolean endReached(){
+        if (currLocationIndex == planSize()-2){
+            return true;
+        }
+        return false;
     }
 
     public int planSize(){
@@ -60,6 +67,13 @@ public class PlanList {
         return this.myList.get(currLocationIndex);
     }
 
+    public Location getNextLocation() {
+        if (currLocationIndex + 1 < planSize()){
+            return this.myList.get(currLocationIndex+1);
+        }
+        return null;
+    }
+
     /*
         This method is to be implemented after the merge with the shortest path branch
         it will use zooMap object to get the shortest path from current location to the
@@ -72,6 +86,15 @@ public class PlanList {
         String nextId = next.getId();
         return zooMap.getShortestPath(currId, nextId);
     }
+
+    public String getDirectionsToNextLocation() {
+        Location curr = this.myList.get(currLocationIndex);
+        String currId = curr.getId();
+        Location next = this.myList.get(currLocationIndex + 1);
+        String nextId = next.getId();
+        return zooMap.getTextDirections(currId, nextId);
+    }
+
 
     public Boolean advanceLocation() {
         if(currLocationIndex+1 >= myList.size()){
