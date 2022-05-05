@@ -56,6 +56,16 @@ public class PlanList {
         return this.myList.add(e);
     }
 
+    public Boolean addGate(Location g){
+        for (int i=0; i < myList.size(); i++){
+            if (myList.get(i).getId().equals(g.getId())){
+                return false;
+            }
+        }
+        myList.add(0, g);
+        return true;
+    }
+
     public Location getCurrentLocation() {
         return this.myList.get(currLocationIndex);
     }
