@@ -25,12 +25,14 @@ public class PlanList {
     //adding this ZooMap object for future iteration
     private Context context;
     private ZooMap zooMap;
+    private Map<String, ZooData.VertexInfo> zooLocs;
 
     public PlanList(Context context) {
         this.myList = new ArrayList<>();
         this.context = context;
         this.zooMap = new ZooMap(context);
         this.currLocationIndex = 0;
+        this.zooLocs = ZooData.loadVertexInfoJSON(context);
     }
 
     public void changeContext(Context newContext) {
@@ -105,6 +107,10 @@ public class PlanList {
         return zooMap.getTextDirections(currId, nextId);
     }
 
+    public double getDistanceToNextLocation(){
+        return getPathToNextLocation().getWeight();
+    }
+
 
     public Boolean advanceLocation() {
         if(currLocationIndex+1 >= myList.size()){
@@ -122,16 +128,30 @@ public class PlanList {
         return true;
     }
 
-    // Right now assumes there is one Gate in the given plan, adds Gate at start and end of new plan
     public void sort(){
         List<Location> sortList = new ArrayList<>();
         Location startEnd;
+        Boolean gateAdded = false;
         for (int i = 0; i < planSize(); i++){
             Location stop = myList.get(i);
             if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
                 startEnd = stop;
-                sortList.add(startEnd);
-                break;
+                if(!gateAdded) {
+                    sortList.add(startEnd);
+                }
+                myList.remove(i);
+                i--;
+                gateAdded = true;
+            }
+        }
+        Location gate = new Gate("","", new ArrayList<>());
+        if(!gateAdded){
+            for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
+                if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
+                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                    sortList.add(gate);
+                    break;
+                }
             }
         }
 
@@ -150,6 +170,7 @@ public class PlanList {
             myList.remove(smallestInd);
         }
         this.myList = sortList;
+        myList.add(gate);
     }
     /*
         These two methods are for saving and loading PlanList, at the moment because

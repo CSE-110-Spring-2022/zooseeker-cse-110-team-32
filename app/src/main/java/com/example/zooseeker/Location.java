@@ -4,10 +4,10 @@ package com.example.zooseeker;
 import java.util.List;
 
 public abstract class Location {
-    private String id;
-    private ZooData.VertexInfo.Kind kind;
-    private String name;
-    private List<String> tags;
+    String id;
+    ZooData.VertexInfo.Kind kind;
+    String name;
+    List<String> tags;
 
     public Location(String id, String name, List<String> tags){
         this.id = id;
