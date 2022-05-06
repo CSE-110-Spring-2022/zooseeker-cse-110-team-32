@@ -25,12 +25,14 @@ public class PlanList {
     //adding this ZooMap object for future iteration
     private Context context;
     private ZooMap zooMap;
+    private Map<String, ZooData.VertexInfo> zooLocs;
 
     public PlanList(Context context) {
         this.myList = new ArrayList<>();
         this.context = context;
         this.zooMap = new ZooMap(context);
         this.currLocationIndex = 0;
+        this.zooLocs = ZooData.loadVertexInfoJSON(context);
     }
 
     public void changeContext(Context newContext) {
@@ -61,6 +63,16 @@ public class PlanList {
             }
         }
         return this.myList.add(e);
+    }
+
+    public Boolean addGate(Location g){
+        for (int i=0; i < myList.size(); i++){
+            if (myList.get(i).getId().equals(g.getId())){
+                return false;
+            }
+        }
+        myList.add(0, g);
+        return true;
     }
 
     public Location getCurrentLocation() {
@@ -95,6 +107,10 @@ public class PlanList {
         return zooMap.getTextDirections(currId, nextId);
     }
 
+    public double getDistanceToNextLocation(){
+        return getPathToNextLocation().getWeight();
+    }
+
 
     public Boolean advanceLocation() {
         if(currLocationIndex+1 >= myList.size()){
@@ -110,6 +126,51 @@ public class PlanList {
         }
         this.currLocationIndex--;
         return true;
+    }
+
+    public void sort(){
+        List<Location> sortList = new ArrayList<>();
+        Location startEnd;
+        Boolean gateAdded = false;
+        for (int i = 0; i < planSize(); i++){
+            Location stop = myList.get(i);
+            if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
+                startEnd = stop;
+                if(!gateAdded) {
+                    sortList.add(startEnd);
+                }
+                myList.remove(i);
+                i--;
+                gateAdded = true;
+            }
+        }
+        Location gate = new Gate("","", new ArrayList<>());
+        if(!gateAdded){
+            for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
+                if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
+                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                    sortList.add(gate);
+                    break;
+                }
+            }
+        }
+
+        while(myList.size() > 0){
+            Location curr = sortList.get(sortList.size()-1);
+            int smallestInd = 0;
+            double smallestDist = Double.MAX_VALUE;
+            for (int i = 0; i < myList.size(); i++){
+                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
+                if (dist < smallestDist){
+                    smallestDist = dist;
+                    smallestInd = i;
+                }
+            }
+            sortList.add(myList.get(smallestInd));
+            myList.remove(smallestInd);
+        }
+        this.myList = sortList;
+        myList.add(gate);
     }
     /*
         These two methods are for saving and loading PlanList, at the moment because

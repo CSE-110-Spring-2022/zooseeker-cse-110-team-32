@@ -53,7 +53,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.path_result);
         Location currLoc = plan.getCurrentLocation();
         Location nextLoc = plan.getNextLocation();
-        System.out.println(currLoc.getId());
         String directions = plan.getDirectionsToNextLocation();
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);

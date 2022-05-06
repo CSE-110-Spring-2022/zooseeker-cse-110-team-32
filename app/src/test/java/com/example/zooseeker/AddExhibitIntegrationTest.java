@@ -35,10 +35,9 @@ public class AddExhibitIntegrationTest {
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             RecyclerView displayView = activity.recyclerView;
             DisplayListAdapter displayAdapter = (DisplayListAdapter) displayView.getAdapter();
-            assertEquals(2, displayAdapter.getItemCount());
+            assertEquals(1, displayAdapter.getItemCount());
             List<DisplayListItem> locations = displayAdapter.getDisplayItems();
-            assertEquals("Entrance and Exit Gate", locations.get(0).getName());
-            assertEquals("Arctic Foxes", locations.get(1).getName());
+            assertEquals("Arctic Foxes", locations.get(0).getName());
 
             searchBar.setQuery("gator", true);
             searchView = activity.findViewById(R.id.search_list);
@@ -46,9 +45,9 @@ public class AddExhibitIntegrationTest {
             assertNotNull(searchGator);
             assertEquals("Alligators", searchGator.name);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
-            assertEquals(3, displayAdapter.getItemCount());
+            assertEquals(2, displayAdapter.getItemCount());
             locations = displayAdapter.getDisplayItems();
-            assertEquals("Alligators", locations.get(2).getName());
+            assertEquals("Alligators", locations.get(1).getName());
         });
     }
 
@@ -67,9 +66,7 @@ public class AddExhibitIntegrationTest {
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             RecyclerView displayView = activity.recyclerView;
             DisplayListAdapter displayAdapter = (DisplayListAdapter) displayView.getAdapter();
-            assertEquals(2, displayAdapter.getItemCount());
-            List<DisplayListItem> locations = displayAdapter.getDisplayItems();
-            assertEquals("Entrance and Exit Gate", locations.get(0).getName());
+            assertEquals(1, displayAdapter.getItemCount());
         });
     }
 

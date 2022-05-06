@@ -88,6 +88,6 @@ public class ShortestPathUnitTest {
         double distance2 = 800.0;
         assertEquals(mid, directions2.getStartVertex());
         assertEquals(end, directions2.getEndVertex());
-        assertEquals(distance, directions.getWeight(), 0.01);
+        assertEquals(distance2, directions2.getWeight(), 0.01);
     }
 }
