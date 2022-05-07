@@ -20,8 +20,13 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
 import org.jgrapht.nio.json.JSONImporter;
 
+/*This class populates the information about the zoo from the given example files
+ */
 public class ZooData {
+    /*Embedded class that contains the information about locations
+     */
     public static class VertexInfo {
+
         public static enum Kind {
             // The SerializedName annotation tells GSON how to convert
             // from the strings in our JSON to this Enum.
@@ -36,12 +41,19 @@ public class ZooData {
         public List<String> tags;
     }
 
+    /*Embedded class that contains information about the streets in between each Location
+     */
     public static class EdgeInfo {
         public String id;
         public String street;
     }
 
 
+    /*Loads information about each Location from given context
+    Tries to load information from context and if it doesn't work, returns empty hashmap
+    @param context = gives information of asset files that need to be loaded
+    @returns a map with zoo Locations acting as map vertices
+     */
     public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context context){
         try {
             Gson gson = new Gson();
@@ -70,6 +82,11 @@ public class ZooData {
         }
     }
 
+    /* Loads information about each street in between Locations from given context
+    tries to load information from context, and if it doesn't work, returns empty HashMap
+    @param context = gives information of asset files that need to be loaded
+    @return map with the streets acting as the edges
+     */
     public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context context){
         try {
             Gson gson = new Gson();
@@ -91,6 +108,10 @@ public class ZooData {
         }
     }
 
+    /*Loads necessary tools for loading info from json files
+    @param context = gives information of asset files that need to be loaded
+    @return graph containing zoo info
+     */
     public static Graph<String, IdentifiedWeightedEdge> loadZooGraphJSON(Context context){
         // Create an empty graph to populate.
         Graph<String, IdentifiedWeightedEdge> g = new DefaultUndirectedWeightedGraph<>(IdentifiedWeightedEdge.class);
@@ -120,6 +141,11 @@ public class ZooData {
         return g;
     }
 
+    /*Gets names of json files from given context
+    Tries to get names of json files from context, if it doesn't work, returns empty HashMap
+    @param context = gives information of asset files that need to be loaded
+    @return map containing file names
+     */
     public static Map<String, String> getFileNames(Context context){
         try {
             Gson gson = new Gson();

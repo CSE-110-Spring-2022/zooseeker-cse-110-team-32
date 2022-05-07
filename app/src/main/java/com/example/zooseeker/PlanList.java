@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/*This class creates a planned route that visits the exhibits the user selected. Based on where in
+the list of exhibits the user is, they can go to the next or previous exhibit or notifies the user
+when their route is over
+ */
 public class PlanList {
     private List<Location> myList;
     /*
@@ -26,6 +30,9 @@ public class PlanList {
     private Context context;
     private ZooMap zooMap;
 
+    /*Constructor that sets the information of the list of planned exhibits using the data passed in
+   @param context = gives information of asset files that need to be loaded
+    */
     public PlanList(Context context) {
         this.myList = new ArrayList<>();
         this.context = context;
@@ -33,16 +40,31 @@ public class PlanList {
         this.currLocationIndex = 0;
     }
 
+    /* Allows for changing the context (ie changing the asset files used for populating the zooMap
+    @param context = gives information of asset files that need to be loaded
+     */
     public void changeContext(Context newContext) {
         this.context = newContext;
     }
 
+    /*returns user's list of planned exhibits
+    @return user's list of exhibits
+     */
     public List<Location> getMyList() { return this.myList; }
 
+    /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
+    exhibit is in their list
+    @param curr = the exhibit the user is currently at
+    @return index indicating where the current exhibit is in their list
+     */
     public int currExhibitIndex(Exhibit curr) {
         return myList.indexOf(curr);
     }
 
+    /*tells whether the end of the exhibit has been reached
+   returns true if the user is at the end of the exhibit and returns false otherwise
+   @return whether or not user is at end of their list
+    */
     public Boolean endReached(){
         if (currLocationIndex == planSize()-2){
             return true;
@@ -50,10 +72,19 @@ public class PlanList {
         return false;
     }
 
+    /*returns the number of exhibits the user plans to see
+   @return number of exhibits user selected
+    */
     public int planSize(){
         return myList.size();
     }
 
+    /*adds exhibit to user's list of planned exhibits.
+   Checks to see if location has already been added. Returns true if location has not been added
+   before now and location was successfully added, and false otherwise.
+   @param e = name of location (can be Exhibit or other) user wants to see
+   @return whether location was successfully added or not
+    */
     public Boolean addLocation(Location e) {
         for (int i=0; i < myList.size(); i++){
             if (myList.get(i).getId().equals(e.getId())){
@@ -63,10 +94,17 @@ public class PlanList {
         return this.myList.add(e);
     }
 
+    /*Returns the location user is currently at
+    @returns user's location
+     */
     public Location getCurrentLocation() {
         return this.myList.get(currLocationIndex);
     }
 
+    /*returns the next location in planned list of exhibits
+    If user has reached the end of their list of exhibits, return null
+    @returns the next location in list or null if there aren't any
+     */
     public Location getNextLocation() {
         if (currLocationIndex + 1 < planSize()){
             return this.myList.get(currLocationIndex+1);
@@ -87,6 +125,9 @@ public class PlanList {
         return zooMap.getShortestPath(currId, nextId);
     }
 
+    /*Returns the directions the user needs to get from their current location to the next one
+   @return locations to next location
+    */
     public String getDirectionsToNextLocation() {
         Location curr = this.myList.get(currLocationIndex);
         String currId = curr.getId();
@@ -96,6 +137,12 @@ public class PlanList {
     }
 
 
+    /*Moves the user (moves the current index indicating user's location to the next one) to the
+    next location in their list
+    Returns true if the user was successfully moved to the next location and false if they reached
+    the end of their list
+    @return whether or not user was moved to next location
+     */
     public Boolean advanceLocation() {
         if(currLocationIndex+1 >= myList.size()){
             return false;
@@ -104,6 +151,10 @@ public class PlanList {
         return true;
     }
 
+    /*Moves user to the previous location from their current one
+   Returns true if user was successfully moved to the previous location and false if the user is at
+   the first location in the list
+    */
     public Boolean previousLocation() {
         if(currLocationIndex < 1){
             return false;

@@ -23,12 +23,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
+/*Class contains and returns information about the Zoo, as well as shortest paths between two exhibits
+ */
 public class ZooMap {
     Graph<String, IdentifiedWeightedEdge> graph;
     GraphPath<String, IdentifiedWeightedEdge> currPath;
     Map<String, ZooData.VertexInfo> locVertices;
     Map<String, ZooData.EdgeInfo> roadEdges;
+
+    /*Constructor that populates zoo info from given context
+    @param context = gives information of asset files that need to be loaded
+     */
     public ZooMap(Context context){
         this.graph = ZooData.loadZooGraphJSON(context);
         this.locVertices = ZooData.loadVertexInfoJSON(context);
@@ -36,19 +41,36 @@ public class ZooMap {
 
     }
 
+    /*Sets the shortest path between two exhibits
+    @param node_from = start Location
+    @param node_to = end Location
+     */
     public void setShortestPath(String node_from, String node_to) {
         currPath = getShortestPath(node_from, node_to);
     }
 
+    /*Sets shortest path using edge information from given graph
+    @param path = edge between two locations in zoo graph
+     */
     public void setShortestPath(GraphPath<String, IdentifiedWeightedEdge> path) {
         currPath = path;
     }
 
+    /*Returns the shortest path between two locations
+    @param node_from = start location
+    @param node_to = end location
+    @return shortest path between the two given locations
+     */
     public GraphPath<String, IdentifiedWeightedEdge> getShortestPath(String node_from, String node_to){
         GraphPath<String, IdentifiedWeightedEdge> shortest_path = DijkstraShortestPath.findPathBetween(graph, node_from, node_to);
         return shortest_path;
     }
 
+    /*Returns list of locations between start and end location
+    @param node_from = start location
+    @param node_to = end location
+    @return list of locations between two points
+     */
     public List<String> getLandmarks(String node_from, String node_to){
         if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
@@ -60,6 +82,11 @@ public class ZooMap {
         return locs;
     }
 
+    /*Returns list of streets between start and end locations that user needs to take
+    @param node_from = start location
+    @param node_to = end location
+    @return list of streets between start and end location
+     */
     public List<String> getStreets(String node_from, String node_to){
         if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
@@ -71,6 +98,11 @@ public class ZooMap {
         return streets;
     }
 
+    /*Returns distance between start location and destination
+    @param node_from = start location
+    @param node_to = end location
+    @return distance between start and finish
+     */
     public double getDistance(String node_from, String node_to){
         if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
@@ -78,13 +110,16 @@ public class ZooMap {
         return currPath.getWeight();
     }
 
-    //public List<String> getTextDirections(String node_from, String node_to){
+    /*Returns list of directions user needs to get from start location to next exhibit
+    @param node_from = start location
+    @param node_to = end location
+    @return set of directions user needs to get from start to finish
+     */
     public String getTextDirections(String node_from, String node_to){
         if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
         int i = 1;
-        //List<String> textDirections = new ArrayList<>();
         StringBuilder textDirections = new StringBuilder("");
         List<String> locations = currPath.getVertexList();
         for (IdentifiedWeightedEdge e : currPath.getEdgeList()) {
@@ -92,7 +127,6 @@ public class ZooMap {
                     + " meters along " + roadEdges.get(e.getId()).street + " from "
                     + locVertices.get(locations.get(i-1)).name + " to "
                     + locVertices.get(locations.get(i)).name + "\n";
-            //textDirections.add(textline);
             textDirections.append(textline);
             i++;
         }

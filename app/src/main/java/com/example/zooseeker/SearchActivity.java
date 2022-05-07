@@ -31,6 +31,9 @@ import java.util.Locale;
 
 // https://www.geeksforgeeks.org/android-searchview-with-example/
 
+/*This class loads the search page including search bar, search results, list of planned exhibits,
+and number of exhibits the user wants to see
+ */
 public class SearchActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     ListView resultsView;
@@ -43,6 +46,9 @@ public class SearchActivity extends AppCompatActivity {
         return planList;
     }
 
+    /*Creates search page and initializes the needed classes and variables to work each component
+    of the search page
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +69,6 @@ public class SearchActivity extends AppCompatActivity {
 
         PlanList plan = new PlanList(this);
 
-
         // Locate the ListView in listview_main.xml
         resultsView = (ListView) findViewById(R.id.search_list);
 
@@ -78,18 +83,18 @@ public class SearchActivity extends AppCompatActivity {
 
         //Initialize plan list with entrance gate
         List<String> tags = new ArrayList<String>();
-        tags.addAll(Arrays.asList("enter",
-                "leave",
-                "start",
-                "begin",
-                "entrance",
-                "exit"));
+        tags.addAll(Arrays.asList("enter", "leave", "start", "begin", "entrance", "exit"));
         Location entrance = new Gate("entrance_exit_gate","Entrance and Exit Gate",tags);
         plan.addLocation(entrance);
 
         // Locate the EditText in listview_main.xml
         search_bar = (SearchView) findViewById(R.id.search_bar);
         search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            /*Submits the user's search query and changes the user's query to be all lowercase, so
+            that search results aren't case sensitive
+            @param s = user's search query
+
+             */
             @Override
             public boolean onQueryTextSubmit(String s) {
                 String text = s;
@@ -99,6 +104,9 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
 
+            /*Not exactly sure what this is
+
+             */
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
@@ -106,6 +114,13 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         resultsView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            /*When one of the exhibits on the results page list is clicked, the exhibit is added to
+            the user's list of exhibits
+            @param adapterView = list of exhibit results
+            @param v = the specific exhibit that's clicked
+            @param position = the position in the list of results the clicked exhibit is at
+            @param id = ID of clicked exhibit
+             */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View v, int position, long id){
                 ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
