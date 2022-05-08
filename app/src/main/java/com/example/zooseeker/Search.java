@@ -28,40 +28,12 @@ public class Search {
         this.completeMap = ZooData.loadVertexInfoJSON(context);
     }
 
-    /*Returns list of locations that matches or contains the user's search query
-    @param exhibitName = name of Exhibit user is searching for
-    @return list of exhibit names (including Gate if applicable) that contain ExhibitName either in the
-    Exhibit's name or list of tags
-     */
-    public ArrayList<String> getResults(String exhibitName){
-
-        //Iterate over map and find matching keys
-        ArrayList<String> results = new ArrayList<>();
-
-        Collection<ZooData.VertexInfo> valuesCollection = completeMap.values();
-        ZooData.VertexInfo[] values = new ZooData.VertexInfo[completeMap.size()];
-        valuesCollection.toArray(values);
-        System.out.println(valuesCollection.size());
-
-        for (ZooData.VertexInfo vertex: valuesCollection){
-            String temp = vertex.name.toLowerCase();
-            if (vertex.kind == ZooData.VertexInfo.Kind.EXHIBIT) {
-                if (temp.contains(exhibitName.toLowerCase())) {
-                    results.add(vertex.name);
-                } else if (vertex.tags != null && vertex.tags.contains(exhibitName)) {
-                    results.add(vertex.name);
-                }
-            }
-        }
-        return results;
-    }
-
     /*Returns a list of information about exhibits that match or contains user's search query
     @param exhibitName = name of Exhibit user is searching for
     @return list of exhibits w/ exhibit info (including Gate if applicable) that contain ExhibitName
     either in the Exhibit's name or list of tags
      */
-    public ArrayList<ZooData.VertexInfo> getResultsInfo(String exhibitName){
+    public ArrayList<ZooData.VertexInfo> getResults(String exhibitName){
         //Iterate over map and find matching keys
         ArrayList<ZooData.VertexInfo> results = new ArrayList<>();
 
@@ -71,11 +43,12 @@ public class Search {
 
         for (ZooData.VertexInfo vertex: valuesCollection){
             String temp = vertex.name.toLowerCase();
+            String searchText = exhibitName.toLowerCase();
 
             if (vertex.kind == ZooData.VertexInfo.Kind.EXHIBIT) {
-                if (temp.contains(exhibitName)) {
+                if (temp.contains(searchText)) {
                     results.add(vertex);
-                } else if (vertex.tags.contains(exhibitName)) {
+                } else if (vertex.tags.contains(searchText)) {
                     results.add(vertex);
                 }
             }

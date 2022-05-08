@@ -87,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String s) {
                 String text = s;
                 text = text.toLowerCase();
-                searchResults = searcher.getResultsInfo(text);
+                searchResults = searcher.getResults(text);
                 searchAdapter.loadSearchResults(searchResults);
                 return false;
             }
