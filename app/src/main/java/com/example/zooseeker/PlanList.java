@@ -16,21 +16,32 @@ import java.util.Set;
 
 public class PlanList {
     private List<Location> myList;
+
+
+    // This is for our exhibitCount Tests since we do not have anything implemented yet//
+    private int exhibitCount;
+
+    public int getExhibitCount() {
+        return exhibitCount;
+    }
+
     /*
-        this currLocationIndex will be referring to which location user is on in the list
-        this currLocation index will be updated when we call sort or when user manually put
-        select their current location Default to be 0 when the list is initialized.
-     */
+                this currLocationIndex will be referring to which location user is on in the list
+                this currLocation index will be updated when we call sort or when user manually put
+                select their current location Default to be 0 when the list is initialized.
+             */
     private int currLocationIndex;
     //adding this ZooMap object for future iteration
     private Context context;
     private ZooMap zooMap;
+    private Map<String, ZooData.VertexInfo> zooLocs;
 
     public PlanList(Context context) {
         this.myList = new ArrayList<>();
         this.context = context;
-        ZooMap zooMap = new ZooMap(context);
+        this.zooMap = new ZooMap(context);
         this.currLocationIndex = 0;
+        this.zooLocs = ZooData.loadVertexInfoJSON(context);
     }
 
     public void changeContext(Context newContext) {
@@ -43,6 +54,13 @@ public class PlanList {
         return myList.indexOf(curr);
     }
 
+    public Boolean endReached(){
+        if (currLocationIndex == planSize()-2){
+            return true;
+        }
+        return false;
+    }
+
     public int planSize(){
         return myList.size();
     }
@@ -53,11 +71,29 @@ public class PlanList {
                 return false;
             }
         }
+        exhibitCount++;
         return this.myList.add(e);
+    }
+
+    public Boolean addGate(Location g){
+        for (int i=0; i < myList.size(); i++){
+            if (myList.get(i).getId().equals(g.getId())){
+                return false;
+            }
+        }
+        myList.add(0, g);
+        return true;
     }
 
     public Location getCurrentLocation() {
         return this.myList.get(currLocationIndex);
+    }
+
+    public Location getNextLocation() {
+        if (currLocationIndex + 1 < planSize()){
+            return this.myList.get(currLocationIndex+1);
+        }
+        return null;
     }
 
     /*
@@ -73,6 +109,19 @@ public class PlanList {
         return zooMap.getShortestPath(currId, nextId);
     }
 
+    public String getDirectionsToNextLocation() {
+        Location curr = this.myList.get(currLocationIndex);
+        String currId = curr.getId();
+        Location next = this.myList.get(currLocationIndex + 1);
+        String nextId = next.getId();
+        return zooMap.getTextDirections(currId, nextId);
+    }
+
+    public double getDistanceToNextLocation(){
+        return getPathToNextLocation().getWeight();
+    }
+
+
     public Boolean advanceLocation() {
         if(currLocationIndex+1 >= myList.size()){
             return false;
@@ -87,6 +136,51 @@ public class PlanList {
         }
         this.currLocationIndex--;
         return true;
+    }
+
+    public void sort(){
+        List<Location> sortList = new ArrayList<>();
+        Location startEnd;
+        Boolean gateAdded = false;
+        for (int i = 0; i < planSize(); i++){
+            Location stop = myList.get(i);
+            if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
+                startEnd = stop;
+                if(!gateAdded) {
+                    sortList.add(startEnd);
+                }
+                myList.remove(i);
+                i--;
+                gateAdded = true;
+            }
+        }
+        Location gate = new Gate("","", new ArrayList<>());
+        if(!gateAdded){
+            for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
+                if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
+                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                    sortList.add(gate);
+                    break;
+                }
+            }
+        }
+
+        while(myList.size() > 0){
+            Location curr = sortList.get(sortList.size()-1);
+            int smallestInd = 0;
+            double smallestDist = Double.MAX_VALUE;
+            for (int i = 0; i < myList.size(); i++){
+                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
+                if (dist < smallestDist){
+                    smallestDist = dist;
+                    smallestInd = i;
+                }
+            }
+            sortList.add(myList.get(smallestInd));
+            myList.remove(smallestInd);
+        }
+        this.myList = sortList;
+        myList.add(gate);
     }
     /*
         These two methods are for saving and loading PlanList, at the moment because

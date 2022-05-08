@@ -36,77 +36,35 @@ public class ShortestPathActivity extends AppCompatActivity {
             back.setVisibility(View.GONE);
         }
         PlanList plan = SearchActivity.getPlan();
-        // I don't know if this works but at least it compiles
-        //Graph<String, IdentifiedWeightedEdge> graph = ZooData.loadZooGraphJSON(this,"sample_zoo_graph.json");
-        //Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(this, "sample_node_info.json");
-        //Map<String, ZooData.EdgeInfo> edges = ZooData.loadEdgeInfoJSON(this, "sample_edge_info.json");
-        //ZooMap zooMap = new ZooMap(graph, vertices, edges);
-        //List<String> directions = zooMap.getTextDirections("entrance_exit_gate", "arctic_foxes");
-        //These are test values-- real method will be probably called in a directions class?
-
-        ZooMap zooMap = new ZooMap(this);
-
-        /*String startNode = "entrance_exit_gate";
-        String endNode = "elephant_odyssey";
-        ExhibitsList exhibits = new ExhibitsList();
-        Exhibit start = new Exhibit(startNode);
-        Exhibit end = new Exhibit(endNode);
-        exhibits.addExhibit(start);
-        exhibits.addExhibit(end);
-
-        Exhibit nextOne = new Exhibit("gorillas");
-        Exhibit afterThat = new Exhibit("elephant_odyssey");
-        exhibits.addExhibit(nextOne);
-        exhibits.addExhibit(afterThat);*/
-
-        displayTextDirections(plan, zooMap);
-        //System.out.println("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n" + directions/*"this one!"*/);
-    }
-
-    public void displayTextDirections(PlanList list, ZooMap zooMap){
-        List<String> directionsList = new ArrayList<String>();
-
-        for(int i = 0; i < list.planSize()-1;i++){
-            String startNode = list.getMyList().get(i).getId();
-            String endNode = list.getMyList().get(i+1).getId();
-            String start = list.getMyList().get(i).getId();
-            String end = list.getMyList().get(i+1).getId();
-            String directions = zooMap.getTextDirections(startNode, endNode);
-            //System.out.println(directions);
-            //TextView textView = findViewById(R.id.path_result);
-            //textView.setText("Shortest path from entranceExitGate1 to arcticFoxViewpoint: \n"+directions);
-            start = start.replaceAll("[_]"," ");
-            end = end.replaceAll("[_]", " ");
-            directions = "From: " + start + "\nTo: " + end + "\n\n" + directions;
-            directionsList.add(directions);
-            //textView.setText("Shortest path from "+startNode+ " to "+ endNode+": \n"+directions);
-        }
 
         Button next = findViewById(R.id.next_btn);
-        if(directionsList.size() > 0){
-            displayNextHelper(next, directionsList);
-
+        if(!plan.endReached()){
+            displayTextDirections(plan);
         }
 
         if(next.isClickable()) {
-
             next.setOnClickListener(view -> {
-                displayNextHelper(next, directionsList);
-
+                displayTextDirections(plan);
             });
         }
-
     }
 
-    public void displayNextHelper(Button next, List<String> directionsList){
+    public void displayTextDirections(PlanList plan){
+        TextView textView = findViewById(R.id.path_result);
+        Location currLoc = plan.getCurrentLocation();
+        Location nextLoc = plan.getNextLocation();
+        String directions = plan.getDirectionsToNextLocation();
+        directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
+        textView.setText(directions);
 
-            TextView textView = findViewById(R.id.path_result);
-            textView.setText(directionsList.get(0));
-            directionsList.remove(0);
-            if(directionsList.size() == 0){
-                next.setClickable(false);
-                next.setVisibility(View.GONE);
-            }
-
+        Button next = findViewById(R.id.next_btn);
+        if(plan.endReached()){
+            next.setClickable(false);
+            next.setVisibility(View.GONE);
+        }
+        else{
+            plan.advanceLocation();
+        }
     }
+
 }

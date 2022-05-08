@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +62,34 @@ public class AddExhibitUnitTest {
         assertEquals(exhibit.getId(), plan.getCurrentLocation().getId());
         assertNotEquals(duplicate.getName(), plan.getCurrentLocation().getName());
         assertEquals(1, plan.planSize());
+    }
+
+    @Test
+    public void exhibitCount(){
+        Context context = ApplicationProvider.getApplicationContext();
+        PlanList plan = new PlanList(context);
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
+        String[] tags = new String[] {"alligator", "reptile", "gator"};
+        List<String> tagList = Arrays.asList(tags);
+        Location exhibit = new Exhibit("gators", "Alligators", tagList);
+        plan.addLocation(exhibit);
+        assertEquals(plan.planSize(), plan.getExhibitCount());
+        assertEquals(1, plan.planSize());
+    }
+
+    @Test
+    public void exhibitCount1(){
+        Context context = ApplicationProvider.getApplicationContext();
+        PlanList plan = new PlanList(context);
+        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
+        String[] tags = new String[] {"alligator", "reptile", "gator"};
+        List<String> tagList = Arrays.asList(tags);
+        Location exhibit = new Exhibit("gators", "Alligators", tagList);
+        plan.addLocation(exhibit);
+        plan.addLocation(exhibit);
+        plan.addLocation(exhibit);
+        assertEquals(plan.planSize(), plan.getExhibitCount());
+        assertNotEquals(3, plan.planSize());
     }
 
 
