@@ -86,6 +86,13 @@ public class PlanList {
         return null;
     }
 
+    public Location getNextNextLocation() {
+        if (currLocationIndex + 2 < planSize()){
+            return this.myList.get(currLocationIndex+2);
+        }
+        return null;
+    }
+
     /*
         This method is to be implemented after the merge with the shortest path branch
         it will use zooMap object to get the shortest path from current location to the
@@ -99,6 +106,14 @@ public class PlanList {
         return zooMap.getShortestPath(currId, nextId);
     }
 
+    public GraphPath<String, IdentifiedWeightedEdge> getPathToNextNextLocation() {
+        Location next = this.myList.get(currLocationIndex + 1);
+        String nextId = next.getId();
+        Location nextNext = this.myList.get(currLocationIndex + 2);
+        String nextNextId = nextNext.getId();
+        return zooMap.getShortestPath(nextId, nextNextId);
+    }
+
     public String getDirectionsToNextLocation() {
         Location curr = this.myList.get(currLocationIndex);
         String currId = curr.getId();
@@ -109,6 +124,10 @@ public class PlanList {
 
     public double getDistanceToNextLocation(){
         return getPathToNextLocation().getWeight();
+    }
+
+    public double getDistanceToNextNextLocation(){
+        return getPathToNextNextLocation().getWeight();
     }
 
 
