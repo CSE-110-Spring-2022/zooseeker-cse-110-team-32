@@ -107,6 +107,9 @@ public class PlanList {
     }
 
     public GraphPath<String, IdentifiedWeightedEdge> getPathToNextNextLocation() {
+        if (currLocationIndex + 2 >= this.myList.size()) {
+            return null;
+        }
         Location next = this.myList.get(currLocationIndex + 1);
         String nextId = next.getId();
         Location nextNext = this.myList.get(currLocationIndex + 2);
