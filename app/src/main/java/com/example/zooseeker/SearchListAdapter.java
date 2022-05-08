@@ -12,7 +12,15 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 
-/* This class creates an adapter that connects Search and BaseAdapter????
+/*
+    Citation: https://abhiandroid.com/ui/searchview
+    Name: SearchView Tutorial With Example In Android Studio
+    Date: 05-01-2022
+    Use: Followed given tutorial with multiple alterations to fit our needs
+    Teammate who cited: Clair Ma
+ */
+
+/* This class allows us to control displaying the search results
  *
  */
 public class SearchListAdapter extends BaseAdapter {
@@ -51,7 +59,7 @@ public class SearchListAdapter extends BaseAdapter {
     }
 
     /*Returns exhibit's ID
-    @param = exhibit's position
+    @param position = exhibit's position
     @return exhibit's ID
      */
     @Override
@@ -59,8 +67,11 @@ public class SearchListAdapter extends BaseAdapter {
         return position;
     }
 
-    /*not entirely sure what this does???
-
+    /*Displays the list of search results in the ListView
+     @param position = position of item in ListView
+     @param view = view of item
+     @param parent = ViewGroup containing item Views
+     @return view = created or provided view of item
      */
     public View getView(final int position, View view, ViewGroup parent) {
         final ViewHolder holder;
@@ -78,7 +89,7 @@ public class SearchListAdapter extends BaseAdapter {
         return view;
     }
 
-    // Filter Class
+    // Can be used later for autocomplete suggestions
 //    public void add(String charText) {
 //        list.add(charText);
 //        notifyDataSetChanged();

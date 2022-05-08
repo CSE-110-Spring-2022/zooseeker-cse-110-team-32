@@ -29,8 +29,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-// https://www.geeksforgeeks.org/android-searchview-with-example/
-
 /*This class loads the search page including search bar, search results, list of planned exhibits,
 and number of exhibits the user wants to see
  */
@@ -54,11 +52,6 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            search(query);
-        }
 
         DisplayListAdapter adapter = new DisplayListAdapter();
         adapter.setHasStableIds(true);
@@ -88,7 +81,6 @@ public class SearchActivity extends AppCompatActivity {
             /*Submits the user's search query and changes the user's query to be all lowercase, so
             that search results aren't case sensitive
             @param s = user's search query
-
              */
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -99,7 +91,7 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
 
-            /*Not exactly sure what this is
+            /*Detects when text in search bar is updated, currently does nothing with this
 
              */
             @Override
@@ -123,7 +115,7 @@ public class SearchActivity extends AppCompatActivity {
                 plan.addLocation(exhibit);
                 //after we get the list of exhibits (dynamic), going to grab location names into
                 //a separate list to view on display
-                List<DisplayListItem> list = new ArrayList<DisplayListItem>();
+                List<DisplayListItem> list = new ArrayList<>();
                 for (int i = 0; i < plan.getMyList().size(); i++) {
                     DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
                     list.add(item);
@@ -138,18 +130,12 @@ public class SearchActivity extends AppCompatActivity {
         Button planBtn = findViewById(R.id.plan_btn);
         planBtn.setOnClickListener(view ->{
             Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-            //pathIntent.putExtra("PlanList", (Parcelable) planList);
-            //pathIntent.putParcelableArrayListExtra("PlanList", (ArrayList<? extends Parcelable>) planList.getMyList());
             plan.sort();
             startActivity(pathIntent);
         });
 
     }
 
-
-    public void search(String query) {
-
-    }
 
 
 }
