@@ -16,11 +16,20 @@ import java.util.Set;
 
 public class PlanList {
     private List<Location> myList;
+
+
+    // This is for our exhibitCount Tests since we do not have anything implemented yet//
+    private int exhibitCount;
+
+    public int getExhibitCount() {
+        return exhibitCount;
+    }
+
     /*
-        this currLocationIndex will be referring to which location user is on in the list
-        this currLocation index will be updated when we call sort or when user manually put
-        select their current location Default to be 0 when the list is initialized.
-     */
+                this currLocationIndex will be referring to which location user is on in the list
+                this currLocation index will be updated when we call sort or when user manually put
+                select their current location Default to be 0 when the list is initialized.
+             */
     private int currLocationIndex;
     //adding this ZooMap object for future iteration
     private Context context;
@@ -62,6 +71,7 @@ public class PlanList {
                 return false;
             }
         }
+        exhibitCount++;
         return this.myList.add(e);
     }
 
