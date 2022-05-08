@@ -71,7 +71,7 @@ public class DirectionsDisplayTest {
                         childAtPosition(
                                 withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
                                 2)))
-                .atPosition(2);
+                .atPosition(0);
         constraintLayout.perform(click());
 
         DataInteraction constraintLayout2 = onData(anything())
@@ -87,8 +87,16 @@ public class DirectionsDisplayTest {
                         childAtPosition(
                                 withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
                                 2)))
-                .atPosition(0);
+                .atPosition(2);
         constraintLayout3.perform(click());
+
+        DataInteraction constraintLayout4 = onData(anything())
+                .inAdapterView(allOf(withId(R.id.search_list),
+                        childAtPosition(
+                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                2)))
+                .atPosition(3);
+        constraintLayout4.perform(click());
 
         ViewInteraction materialButton = onView(
                 allOf(withId(R.id.plan_btn), withText("plan"),
@@ -101,10 +109,10 @@ public class DirectionsDisplayTest {
         materialButton.perform(click());
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.path_result), withText("From: Entrance and Exit Gate\nTo: Arctic Foxes\n\n1. Walk 10.0 meters along Entrance Way from Entrance and Exit Gate to Entrance Plaza\n2. Walk 300.0 meters along Arctic Avenue from Entrance Plaza to Arctic Foxes\n"),
+                allOf(withId(R.id.path_result), withText("From: Entrance and Exit Gate\nTo: Gorillas\n\n1. Walk 10.0 meters along Entrance Way from Entrance and Exit Gate to Entrance Plaza\n2. Walk 200.0 meters along Africa Rocks Street from Entrance Plaza to Gorillas\n"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class))),
                         isDisplayed()));
-        textView.check(matches(withText("From: Entrance and Exit Gate\nTo: Arctic Foxes\n\n1. Walk 10.0 meters along Entrance Way from Entrance and Exit Gate to Entrance Plaza\n2. Walk 300.0 meters along Arctic Avenue from Entrance Plaza to Arctic Foxes\n")));
+        textView.check(matches(withText("From: Entrance and Exit Gate\nTo: Gorillas\n\n1. Walk 10.0 meters along Entrance Way from Entrance and Exit Gate to Entrance Plaza\n2. Walk 200.0 meters along Africa Rocks Street from Entrance Plaza to Gorillas\n")));
 
         ViewInteraction materialButton2 = onView(
                 allOf(withId(R.id.next_btn), withText("NEXT"),
@@ -117,10 +125,10 @@ public class DirectionsDisplayTest {
         materialButton2.perform(click());
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.path_result), withText("From: Arctic Foxes\nTo: Lions\n\n1. Walk 300.0 meters along Arctic Avenue from Arctic Foxes to Entrance Plaza\n2. Walk 100.0 meters along Reptile Road from Entrance Plaza to Alligators\n3. Walk 200.0 meters along Sharp Teeth Shortcut from Alligators to Lions\n"),
+                allOf(withId(R.id.path_result), withText("From: Gorillas\nTo: Lions\n\n1. Walk 200.0 meters along Africa Rocks Street from Gorillas to Lions\n"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class))),
                         isDisplayed()));
-        textView2.check(matches(withText("From: Arctic Foxes\nTo: Lions\n\n1. Walk 300.0 meters along Arctic Avenue from Arctic Foxes to Entrance Plaza\n2. Walk 100.0 meters along Reptile Road from Entrance Plaza to Alligators\n3. Walk 200.0 meters along Sharp Teeth Shortcut from Alligators to Lions\n")));
+        textView2.check(matches(withText("From: Gorillas\nTo: Lions\n\n1. Walk 200.0 meters along Africa Rocks Street from Gorillas to Lions\n")));
 
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.next_btn), withText("NEXT"),
@@ -132,11 +140,31 @@ public class DirectionsDisplayTest {
                         isDisplayed()));
         materialButton3.perform(click());
 
+        ViewInteraction materialButton4 = onView(
+                allOf(withId(R.id.next_btn), withText("NEXT"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                2),
+                        isDisplayed()));
+        materialButton4.perform(click());
+
+        ViewInteraction materialButton5 = onView(
+                allOf(withId(R.id.next_btn), withText("NEXT"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                2),
+                        isDisplayed()));
+        materialButton5.perform(click());
+
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.path_result), withText("From: Lions\nTo: Elephant Odyssey\n\n1. Walk 200.0 meters along Africa Rocks Street from Lions to Elephant Odyssey\n"),
+                allOf(withId(R.id.path_result), withText("From: Arctic Foxes\nTo: Entrance and Exit Gate\n\n1. Walk 300.0 meters along Arctic Avenue from Arctic Foxes to Entrance Plaza\n2. Walk 10.0 meters along Entrance Way from Entrance Plaza to Entrance and Exit Gate\n"),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class))),
                         isDisplayed()));
-        textView3.check(matches(withText("From: Lions\nTo: Elephant Odyssey\n\n1. Walk 200.0 meters along Africa Rocks Street from Lions to Elephant Odyssey\n")));
+        textView3.check(matches(withText("From: Arctic Foxes\nTo: Entrance and Exit Gate\n\n1. Walk 300.0 meters along Arctic Avenue from Arctic Foxes to Entrance Plaza\n2. Walk 10.0 meters along Entrance Way from Entrance Plaza to Entrance and Exit Gate\n")));
     }
 
     private static Matcher<View> childAtPosition(

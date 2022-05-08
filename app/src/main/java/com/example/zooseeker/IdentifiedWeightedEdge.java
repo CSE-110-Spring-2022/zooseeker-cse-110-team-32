@@ -28,11 +28,10 @@ public class IdentifiedWeightedEdge extends DefaultWeightedEdge {
         return "(" + getSource() + " :" + id + ": " + getTarget() + ")";
     }
 
-    /* CHECK THIS ONE!!!
-     Collects attribute info about an IdentifiedEdgeWeight and sets the edge's id to the Attribute's
+    /* Collects attribute info about an IdentifiedEdgeWeight and sets the edge's id to the Attribute's
     value if the second element in the given pair is "id"
-    @param pair = pair of edge and ...
-    @param attr = ...
+    @param pair = pair of edge and label describing the attribute
+    @param attr = attribute containing the edge id
      */
     public static void attributeConsumer(Pair<IdentifiedWeightedEdge, String> pair, Attribute attr) {
         IdentifiedWeightedEdge edge = pair.getFirst();

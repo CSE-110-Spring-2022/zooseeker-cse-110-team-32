@@ -7,10 +7,10 @@ import java.util.List;
 from. It stores the location's information such as name, id, type of location, and tags
  */
 public abstract class Location {
-    private String id;
-    private ZooData.VertexInfo.Kind kind;
-    private String name;
-    private List<String> tags;
+    String id;
+    ZooData.VertexInfo.Kind kind;
+    String name;
+    List<String> tags;
 
     /*Constructor for location that sets the given information of a Location based on the data that
       is passed in

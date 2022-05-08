@@ -6,11 +6,6 @@ import java.util.List;
   This is how the different animal exhibit's information will be stored
  */
 public class Exhibit extends Location{
-    private String id;
-    private ZooData.VertexInfo.Kind kind;
-    private String name;
-    private List<String> tags;
-
     /*Constructor for Exhibit that tells the name, list of tags, id, and other info about a specific
    exhibit
    @param id = ID name of exhibit

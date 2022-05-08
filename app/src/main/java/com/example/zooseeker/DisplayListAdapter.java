@@ -34,7 +34,10 @@ public class DisplayListAdapter extends RecyclerView.Adapter<DisplayListAdapter.
         return displayItems;
     }
 
-    /*Not super sure what this does tbh
+    /* Creates new ViewHolder to represent an item
+       @param: parent = ViewGroup into which new View will be added
+       @param: viewType = view type of new View
+       @return: new ViewHolder(view) = the new ViewHolder with a View to represent some item
      */
     @NonNull
     @Override
@@ -45,6 +48,10 @@ public class DisplayListAdapter extends RecyclerView.Adapter<DisplayListAdapter.
         return new ViewHolder(view);
     }
 
+    /* Displays data at given position
+       @param: holder = ViewHolder in which item will be set
+       @param: position = position of item that will be set
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.setDisplayItem(displayItems.get(position));
@@ -58,7 +65,7 @@ public class DisplayListAdapter extends RecyclerView.Adapter<DisplayListAdapter.
         return displayItems.size();
     }
 
-    /* Again not super sure what this does tbh
+    /* Embedded class that adds functionality to the ViewHolder for each item it displays
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;

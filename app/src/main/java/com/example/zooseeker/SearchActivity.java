@@ -81,11 +81,6 @@ public class SearchActivity extends AppCompatActivity {
         // Binds the Adapter to the ListView
         resultsView.setAdapter(searchAdapter);
 
-        //Initialize plan list with entrance gate
-        List<String> tags = new ArrayList<String>();
-        tags.addAll(Arrays.asList("enter", "leave", "start", "begin", "entrance", "exit"));
-        Location entrance = new Gate("entrance_exit_gate","Entrance and Exit Gate",tags);
-        plan.addLocation(entrance);
 
         // Locate the EditText in listview_main.xml
         search_bar = (SearchView) findViewById(R.id.search_bar);
@@ -145,7 +140,7 @@ public class SearchActivity extends AppCompatActivity {
             Intent pathIntent = new Intent(this, ShortestPathActivity.class);
             //pathIntent.putExtra("PlanList", (Parcelable) planList);
             //pathIntent.putParcelableArrayListExtra("PlanList", (ArrayList<? extends Parcelable>) planList.getMyList());
-
+            plan.sort();
             startActivity(pathIntent);
         });
 

@@ -6,10 +6,6 @@ import java.util.List;
   This is how the entrance/exit gate's information will be stored
  */
 public class Gate extends Location{
-    private String id;
-    private ZooData.VertexInfo.Kind kind;
-    private String name;
-    private List<String> tags;
 
     /*Constructor for the Gate class that stores the name, ID, and associated tags of the specific
     gate
@@ -19,7 +15,7 @@ public class Gate extends Location{
      */
     Gate(String id, String name, List<String> tags) {
         super(id, name, tags);
-        this.kind = ZooData.VertexInfo.Kind.GATE;
+        super.kind = ZooData.VertexInfo.Kind.GATE;
     }
 
 }

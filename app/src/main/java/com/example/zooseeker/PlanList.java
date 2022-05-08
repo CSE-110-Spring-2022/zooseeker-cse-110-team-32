@@ -20,15 +20,25 @@ when their route is over
  */
 public class PlanList {
     private List<Location> myList;
+
+
+    // This is for our exhibitCount Tests since we do not have anything implemented yet//
+    private int exhibitCount;
+
+    public int getExhibitCount() {
+        return exhibitCount;
+    }
+
     /*
-        this currLocationIndex will be referring to which location user is on in the list
-        this currLocation index will be updated when we call sort or when user manually put
-        select their current location Default to be 0 when the list is initialized.
-     */
+                this currLocationIndex will be referring to which location user is on in the list
+                this currLocation index will be updated when we call sort or when user manually put
+                select their current location Default to be 0 when the list is initialized.
+             */
     private int currLocationIndex;
     //adding this ZooMap object for future iteration
     private Context context;
     private ZooMap zooMap;
+    private Map<String, ZooData.VertexInfo> zooLocs;
 
     /*Constructor that sets the information of the list of planned exhibits using the data passed in
    @param context = gives information of asset files that need to be loaded
@@ -38,6 +48,7 @@ public class PlanList {
         this.context = context;
         this.zooMap = new ZooMap(context);
         this.currLocationIndex = 0;
+        this.zooLocs = ZooData.loadVertexInfoJSON(context);
     }
 
     /* Allows for changing the context (ie changing the asset files used for populating the zooMap
@@ -91,12 +102,23 @@ public class PlanList {
                 return false;
             }
         }
+        exhibitCount++;
         return this.myList.add(e);
     }
 
     /*Returns the location user is currently at
     @returns user's location
      */
+    public Boolean addGate(Location g){
+        for (int i=0; i < myList.size(); i++){
+            if (myList.get(i).getId().equals(g.getId())){
+                return false;
+            }
+        }
+        myList.add(0, g);
+        return true;
+    }
+
     public Location getCurrentLocation() {
         return this.myList.get(currLocationIndex);
     }
@@ -136,6 +158,10 @@ public class PlanList {
         return zooMap.getTextDirections(currId, nextId);
     }
 
+    public double getDistanceToNextLocation(){
+        return getPathToNextLocation().getWeight();
+    }
+
 
     /*Moves the user (moves the current index indicating user's location to the next one) to the
     next location in their list
@@ -161,6 +187,51 @@ public class PlanList {
         }
         this.currLocationIndex--;
         return true;
+    }
+
+    public void sort(){
+        List<Location> sortList = new ArrayList<>();
+        Location startEnd;
+        Boolean gateAdded = false;
+        for (int i = 0; i < planSize(); i++){
+            Location stop = myList.get(i);
+            if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
+                startEnd = stop;
+                if(!gateAdded) {
+                    sortList.add(startEnd);
+                }
+                myList.remove(i);
+                i--;
+                gateAdded = true;
+            }
+        }
+        Location gate = new Gate("","", new ArrayList<>());
+        if(!gateAdded){
+            for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
+                if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
+                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                    sortList.add(gate);
+                    break;
+                }
+            }
+        }
+
+        while(myList.size() > 0){
+            Location curr = sortList.get(sortList.size()-1);
+            int smallestInd = 0;
+            double smallestDist = Double.MAX_VALUE;
+            for (int i = 0; i < myList.size(); i++){
+                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
+                if (dist < smallestDist){
+                    smallestDist = dist;
+                    smallestInd = i;
+                }
+            }
+            sortList.add(myList.get(smallestInd));
+            myList.remove(smallestInd);
+        }
+        this.myList = sortList;
+        myList.add(gate);
     }
     /*
         These two methods are for saving and loading PlanList, at the moment because
