@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -57,18 +58,24 @@ public class ShortestPathActivity extends AppCompatActivity {
         String directions = plan.getDirectionsToNextLocation();
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
-        if (!nextLoc.id.equals("entrance_exit_gate")) {
-            nextNextView.setText(plan.getNextNextLocation().getName() +
-                    ", " + plan.getPathToNextNextLocation().getWeight());
-        }
 
         Button next = findViewById(R.id.next_btn);
+        Button finish = findViewById(R.id.finish_btn);
         if(plan.endReached()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
             nextNextView.setVisibility(View.GONE);
+
+            Intent intent = new Intent(this, SearchActivity.class);
+            finish.setClickable(true);
+            finish.setVisibility(View.VISIBLE);
+            finish.setOnClickListener(view -> {
+                startActivity(intent);
+            });
         }
         else{
+            nextNextView.setText(plan.getNextNextLocation().getName() +
+                    ", " + plan.getPathToNextNextLocation().getWeight());
             plan.advanceLocation();
         }
     }
