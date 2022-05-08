@@ -226,12 +226,18 @@ public class PlanList {
 
     /*
     debug method for planList: print out the current Location in the list with its name and kind
+    useful during unit testing, scroll down in the output screen until you see the word printing
+    list:, and followed by all the items inside the list with its id and kind, when finished
+    it will show Finish printing.
+
      */
     public void printList() {
+        System.out.println("printing list:");
         for (Location loc : myList) {
             System.out.print("id: " + loc.getKind() + "kind: ");
             System.out.println(loc.getKind());
         }
+        System.out.println("Finish printing.");
     }
 
 }
