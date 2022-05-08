@@ -57,7 +57,7 @@
         app:layout_constraintVertical_bias="1.00" />
 
     <TextView
-        android:id="@+id/nextNext"
+        android:id="@+id/next_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""

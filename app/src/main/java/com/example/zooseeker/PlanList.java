@@ -93,28 +93,25 @@ public class PlanList {
         return null;
     }
 
-    /*
-        This method is to be implemented after the merge with the shortest path branch
-        it will use zooMap object to get the shortest path from current location to the
-        next location in the list
-     */
+
     public GraphPath<String, IdentifiedWeightedEdge> getPathToNextLocation() {
-        Location curr = this.myList.get(currLocationIndex);
-        String currId = curr.getId();
-        Location next = this.myList.get(currLocationIndex + 1);
-        String nextId = next.getId();
-        return zooMap.getShortestPath(currId, nextId);
+        return getPlanPath(0);
     }
 
     public GraphPath<String, IdentifiedWeightedEdge> getPathToNextNextLocation() {
-        if (currLocationIndex + 2 >= this.myList.size()) {
+        return getPlanPath(1);
+    }
+
+    public GraphPath<String, IdentifiedWeightedEdge> getPlanPath(int offset) {
+        int currInd = currLocationIndex + offset;
+        if (currInd < 0 || currInd > planSize()){
             return null;
         }
-        Location next = this.myList.get(currLocationIndex + 1);
+        Location curr = this.myList.get(currInd);
+        String currId = curr.getId();
+        Location next = this.myList.get(currInd + 1);
         String nextId = next.getId();
-        Location nextNext = this.myList.get(currLocationIndex + 2);
-        String nextNextId = nextNext.getId();
-        return zooMap.getShortestPath(nextId, nextNextId);
+        return zooMap.getShortestPath(currId, nextId);
     }
 
     public String getDirectionsToNextLocation() {

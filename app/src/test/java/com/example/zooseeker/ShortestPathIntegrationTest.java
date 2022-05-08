@@ -52,9 +52,11 @@ public class ShortestPathIntegrationTest {
             pathScenario.moveToState(Lifecycle.State.CREATED);
             pathScenario.onActivity(activity1 -> {
                 TextView directions = activity1.findViewById(R.id.path_result);
+                TextView nextLabel = activity1.findViewById(R.id.next_lbl);
                 assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
                 assertEquals(true, ((String) directions.getText()).contains("To: Arctic Foxes"));
                 assertEquals(true, ((String) directions.getText()).contains("1. Walk 10.0 meters"));
+                assertEquals("Elephant Odyssey, 800.0", nextLabel.getText());
                 Button nextBtn = activity1.findViewById(R.id.next_btn);
                 assertTrue(nextBtn.isClickable());
                 assertEquals(VISIBLE, nextBtn.getVisibility());
@@ -63,6 +65,8 @@ public class ShortestPathIntegrationTest {
                 assertEquals(true, ((String) directions.getText()).contains("To: Elephant Odyssey"));
                 assertEquals(true, ((String) directions.getText()).contains("Arctic Avenue"));
                 assertEquals(true, ((String) directions.getText()).contains("4. Walk 200.0 meters"));
+                assertEquals("Entrance and Exit Gate, 510.0", nextLabel.getText());
+
             });
 
 
@@ -91,20 +95,15 @@ public class ShortestPathIntegrationTest {
             pathScenario.moveToState(Lifecycle.State.CREATED);
             pathScenario.onActivity(activity1 -> {
                 TextView directions = activity1.findViewById(R.id.path_result);
-                assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Arctic Foxes"));
-                assertEquals(true, ((String) directions.getText()).contains("1. Walk 10.0 meters"));
                 Button nextBtn = activity1.findViewById(R.id.next_btn);
+                TextView nextLabel = activity1.findViewById(R.id.next_lbl);
                 assertTrue(nextBtn.isClickable());
                 assertEquals(VISIBLE, nextBtn.getVisibility());
                 nextBtn.performClick();
-                assertEquals(true, ((String) directions.getText()).contains("From: Arctic Foxes"));
-                System.out.println(directions.getText());
-                assertEquals(true, ((String) directions.getText()).contains("To: Elephant Odyssey"));
-                assertEquals(true, ((String) directions.getText()).contains("Arctic Avenue"));
-                assertEquals(true, ((String) directions.getText()).contains("4. Walk 200.0 meters"));
                 nextBtn.performClick();
                 nextBtn.performClick();
+                assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
+                assertEquals(GONE, nextLabel.getVisibility());
                 assertFalse(nextBtn.isClickable());
                 assertEquals(GONE, nextBtn.getVisibility());
             });
