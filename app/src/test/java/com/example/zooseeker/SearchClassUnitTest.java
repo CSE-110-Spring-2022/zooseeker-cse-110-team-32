@@ -64,7 +64,7 @@ public class SearchClassUnitTest {
     }
 
     @Test
-    public void multipleExhbits(){
+    public void multipleExhibits(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
         ArrayList<String> results = searcher.getResults("e");
