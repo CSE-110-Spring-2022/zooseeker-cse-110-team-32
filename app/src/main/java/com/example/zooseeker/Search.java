@@ -45,12 +45,12 @@ public class Search {
 
         for (ZooData.VertexInfo vertex: valuesCollection){
             String temp = vertex.name.toLowerCase();
-
-            if (temp.contains(exhibitName.toLowerCase())){
-                results.add(vertex.name);
-            }
-            else if(vertex.tags != null && vertex.tags.contains(exhibitName)){
-                results.add(vertex.name);
+            if (vertex.kind == ZooData.VertexInfo.Kind.EXHIBIT) {
+                if (temp.contains(exhibitName.toLowerCase())) {
+                    results.add(vertex.name);
+                } else if (vertex.tags != null && vertex.tags.contains(exhibitName)) {
+                    results.add(vertex.name);
+                }
             }
         }
         return results;
@@ -72,11 +72,12 @@ public class Search {
         for (ZooData.VertexInfo vertex: valuesCollection){
             String temp = vertex.name.toLowerCase();
 
-            if (temp.contains(exhibitName)){
-                results.add(vertex);
-            }
-            else if(vertex.tags.contains(exhibitName)){
-                results.add(vertex);
+            if (vertex.kind == ZooData.VertexInfo.Kind.EXHIBIT) {
+                if (temp.contains(exhibitName)) {
+                    results.add(vertex);
+                } else if (vertex.tags.contains(exhibitName)) {
+                    results.add(vertex);
+                }
             }
         }
         return results;
