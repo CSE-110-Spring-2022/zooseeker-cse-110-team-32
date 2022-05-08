@@ -106,19 +106,11 @@ public class PlanList {
         return this.myList.add(e);
     }
 
+
+
     /*Returns the location user is currently at
     @returns user's location
      */
-    public Boolean addGate(Location g){
-        for (int i=0; i < myList.size(); i++){
-            if (myList.get(i).getId().equals(g.getId())){
-                return false;
-            }
-        }
-        myList.add(0, g);
-        return true;
-    }
-
     public Location getCurrentLocation() {
         return this.myList.get(currLocationIndex);
     }
@@ -189,6 +181,10 @@ public class PlanList {
         return true;
     }
 
+    /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
+    with the shortest distance to go next, repeating until all Exhibits have been added. Also
+    appends the gate at the end
+     */
     public void sort(){
         List<Location> sortList = new ArrayList<>();
         Location startEnd;
@@ -275,6 +271,5 @@ public class PlanList {
 //
 //    }
 
-    //toImplement sort
 
 }
