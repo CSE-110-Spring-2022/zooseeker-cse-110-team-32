@@ -56,11 +56,19 @@ public class SearchClassUnitTest {
     }
 
     @Test
+    public void gateResults(){
+        Context context = ApplicationProvider.getApplicationContext();
+        Search searcher = new Search(context);
+        ArrayList<String> results = searcher.getResults("Gate");
+        assertEquals(0, results.size());
+    }
+
+    @Test
     public void multipleExhbits(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
         ArrayList<String> results = searcher.getResults("e");
-        assertEquals(4, results.size());
+        assertEquals(2, results.size());
     }
 
     @Test
