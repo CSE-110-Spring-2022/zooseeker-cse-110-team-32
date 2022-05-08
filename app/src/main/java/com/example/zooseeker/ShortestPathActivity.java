@@ -58,10 +58,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         String directions = plan.getDirectionsToNextLocation();
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
-        if (!nextLoc.id.equals("entrance_exit_gate")) {
-            nextNextView.setText(plan.getNextNextLocation().getName() +
-                    ", " + plan.getPathToNextNextLocation().getWeight());
-        }
 
         Button next = findViewById(R.id.next_btn);
         Button finish = findViewById(R.id.finish_btn);
@@ -78,6 +74,8 @@ public class ShortestPathActivity extends AppCompatActivity {
             });
         }
         else{
+            nextNextView.setText(plan.getNextNextLocation().getName() +
+                    ", " + plan.getPathToNextNextLocation().getWeight());
             plan.advanceLocation();
         }
     }
