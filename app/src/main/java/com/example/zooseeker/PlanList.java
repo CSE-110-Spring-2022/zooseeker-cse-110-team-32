@@ -224,6 +224,14 @@ public class PlanList {
 //
 //    }
 
-    //toImplement sort
+    /*
+    debug method for planList: print out the current Location in the list with its name and kind
+     */
+    public void printList() {
+        for (Location loc : myList) {
+            System.out.print("id: " + loc.getKind() + "kind: ");
+            System.out.println(loc.getKind());
+        }
+    }
 
 }
