@@ -118,15 +118,30 @@ public class PlanList {
         return null;
     }
 
-    /*
-        This method is to be implemented after the merge with the shortest path branch
-        it will use zooMap object to get the shortest path from current location to the
-        next location in the list
-     */
+    public Location getNextNextLocation() {
+        if (currLocationIndex + 2 < planSize()){
+            return this.myList.get(currLocationIndex+2);
+        }
+        return null;
+    }
+
+
     public GraphPath<String, IdentifiedWeightedEdge> getPathToNextLocation() {
-        Location curr = this.myList.get(currLocationIndex);
+        return getPlanPath(0);
+    }
+
+    public GraphPath<String, IdentifiedWeightedEdge> getPathToNextNextLocation() {
+        return getPlanPath(1);
+    }
+
+    public GraphPath<String, IdentifiedWeightedEdge> getPlanPath(int offset) {
+        int currInd = currLocationIndex + offset;
+        if (currInd < 0 || currInd > planSize()){
+            return null;
+        }
+        Location curr = this.myList.get(currInd);
         String currId = curr.getId();
-        Location next = this.myList.get(currLocationIndex + 1);
+        Location next = this.myList.get(currInd + 1);
         String nextId = next.getId();
         return zooMap.getShortestPath(currId, nextId);
     }
@@ -144,6 +159,10 @@ public class PlanList {
 
     public double getDistanceToNextLocation(){
         return getPathToNextLocation().getWeight();
+    }
+
+    public double getDistanceToNextNextLocation(){
+        return getPathToNextNextLocation().getWeight();
     }
 
 

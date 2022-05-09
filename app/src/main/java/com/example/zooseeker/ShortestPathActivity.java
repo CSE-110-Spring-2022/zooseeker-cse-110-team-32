@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -59,6 +60,7 @@ public class ShortestPathActivity extends AppCompatActivity {
      */
     public void displayTextDirections(PlanList plan){
         TextView textView = findViewById(R.id.path_result);
+        TextView nextNextView = findViewById(R.id.next_lbl);
         Location currLoc = plan.getCurrentLocation();
         Location nextLoc = plan.getNextLocation();
         String directions = plan.getDirectionsToNextLocation();
@@ -66,11 +68,22 @@ public class ShortestPathActivity extends AppCompatActivity {
         textView.setText(directions);
 
         Button next = findViewById(R.id.next_btn);
+        Button finish = findViewById(R.id.finish_btn);
         if(plan.endReached()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
+            nextNextView.setVisibility(View.GONE);
+
+            Intent intent = new Intent(this, SearchActivity.class);
+            finish.setClickable(true);
+            finish.setVisibility(View.VISIBLE);
+            finish.setOnClickListener(view -> {
+                startActivity(intent);
+            });
         }
         else{
+            nextNextView.setText(plan.getNextNextLocation().getName() +
+                    ", " + plan.getPathToNextNextLocation().getWeight());
             plan.advanceLocation();
         }
     }
