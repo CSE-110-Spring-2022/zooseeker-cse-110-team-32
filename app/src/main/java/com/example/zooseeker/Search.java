@@ -45,26 +45,12 @@ public class Search {
             String temp = vertex.name.toLowerCase();
             String searchText = exhibitName.toLowerCase();
 
-<<<<<<< HEAD
-            if (temp.contains(exhibitName)){
-                results.add(vertex);
-            }
-            else if(vertex.tags != null){
-                for(String tagName: vertex.tags){
-                    if(tagName.contains(exhibitName.toLowerCase()) || (exhibitName.toLowerCase()).contains(tagName)){
-                        results.add(vertex);
-                        break;
-                    }
-                }
-
-=======
             if (vertex.kind == ZooData.VertexInfo.Kind.EXHIBIT) {
                 if (temp.contains(searchText)) {
                     results.add(vertex);
                 } else if (vertex.tags.contains(searchText)) {
                     results.add(vertex);
                 }
->>>>>>> ec12b2836fe3a2cab80c5bed80d2ce3682c11288
             }
         }
         return results;

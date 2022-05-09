@@ -2,12 +2,21 @@ package com.example.zooseeker;
 
 import org.jgrapht.GraphPath;
 
+/*This class navigates through the user's list of planned exhibits and gives directions to each exhibit
+starting from the entrance gate
+ */
 public class NavigatePlannedList {
+
     private PlanList planList;
     private int currLocationIndex;
-    NavigatePlannedList(PlanList pl){
-        this.planList = pl;
+
+    /*Constructor that sets the PlanList to use based on what's passed in
+    @param plan = plan to navigate through
+     */
+    NavigatePlannedList(PlanList plan){
+        this.planList = plan;
         this.currLocationIndex = 0;
+
     }
 
     /*tells whether the end of the exhibit has been reached
@@ -15,17 +24,26 @@ public class NavigatePlannedList {
    @return whether or not user is at end of their list
     */
     public Boolean endReached(){
-        if ( this.currLocationIndex== this.planList.planSize()-2){
+        if (currLocationIndex == this.planList.planSize()-2){
             return true;
         }
         return false;
     }
 
-    /*Return user's current location
-   @return user's current location
-    */
+    /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
+    exhibit is in their list
+    @param curr = the exhibit the user is currently at
+    @return index indicating where the current exhibit is in their list
+     */
+    public int currExhibitIndex(Exhibit curr) {
+        return this.planList.getMyList().indexOf(curr);
+    }
+
+    /*Returns user's current location
+    @return current location
+     */
     public Location getCurrentLocation() {
-        return this.planList.getMyList().get(this.currLocationIndex);
+        return this.planList.getMyList().get(currLocationIndex);
     }
 
     /*returns the next location in planned list of exhibits
@@ -33,21 +51,47 @@ public class NavigatePlannedList {
     @returns the next location in list or null if there aren't any
      */
     public Location getNextLocation() {
-        if (this.currLocationIndex + 1 < this.planList.planSize()){
-            return this.planList.getMyList().get(this.currLocationIndex+1);
+        if (currLocationIndex + 1 < this.planList.planSize()){
+            return this.planList.getMyList().get(currLocationIndex+1);
         }
         return null;
     }
 
-    /*
-        This method is to be implemented after the merge with the shortest path branch
-        it will use zooMap object to get the shortest path from current location to the
-        next location in the list
+    /*Returns location after the next location
+    @return location after next
+     */
+    public Location getNextNextLocation() {
+        if (currLocationIndex + 2 < this.planList.planSize()){
+            return this.planList.getMyList().get(currLocationIndex+2);
+        }
+        return null;
+    }
+
+    /*Returns path to next location
+    @return path to next location
      */
     public GraphPath<String, IdentifiedWeightedEdge> getPathToNextLocation() {
-        Location curr = this.planList.getMyList().get(this.currLocationIndex);
+        return getPlanPath(0);
+    }
+
+    /*Returns path to location after next location
+    @return path to next next location
+     */
+    public GraphPath<String, IdentifiedWeightedEdge> getPathToNextNextLocation() {
+        return getPlanPath(1);
+    }
+
+    /*Returns the path through the zoo graph (not directions) user needs to take to get to exhibit
+    @return graph showing path to take
+     */
+    public GraphPath<String, IdentifiedWeightedEdge> getPlanPath(int offset) {
+        int currInd = currLocationIndex + offset;
+        if (currInd < 0 || currInd > this.planList.planSize()){
+            return null;
+        }
+        Location curr = this.planList.getMyList().get(currInd);
         String currId = curr.getId();
-        Location next = this.planList.getMyList().get(this.currLocationIndex + 1);
+        Location next = this.planList.getMyList().get(currInd + 1);
         String nextId = next.getId();
         return this.planList.getZooMap().getShortestPath(currId, nextId);
     }
@@ -56,20 +100,26 @@ public class NavigatePlannedList {
    @return locations to next location
     */
     public String getDirectionsToNextLocation() {
-        Location curr = this.planList.getMyList().get(this.currLocationIndex);
+        Location curr = this.planList.getMyList().get(currLocationIndex);
         String currId = curr.getId();
-        Location next = this.planList.getMyList().get(this.currLocationIndex + 1);
+        Location next = this.planList.getMyList().get(currLocationIndex + 1);
         String nextId = next.getId();
         return this.planList.getZooMap().getTextDirections(currId, nextId);
     }
 
-    /*Returns distance from current location to next location in user's list
-    @return distance between user's location and next planned location
+    /*returns distance from current location to next location
+    @return distance to next location
      */
     public double getDistanceToNextLocation(){
         return getPathToNextLocation().getWeight();
     }
 
+    /*Returns distance to location after the next location
+    @return distance to next next location
+     */
+    public double getDistanceToNextNextLocation(){
+        return getPathToNextNextLocation().getWeight();
+    }
 
     /*Moves the user (moves the current index indicating user's location to the next one) to the
     next location in their list
@@ -78,7 +128,7 @@ public class NavigatePlannedList {
     @return whether or not user was moved to next location
      */
     public Boolean advanceLocation() {
-        if(endReached()){
+        if(currLocationIndex+1 >= planList.getMyList().size()){
             return false;
         }
         this.currLocationIndex++;
@@ -90,7 +140,7 @@ public class NavigatePlannedList {
    the first location in the list
     */
     public Boolean previousLocation() {
-        if(this.currLocationIndex < 1){
+        if(currLocationIndex < 1){
             return false;
         }
         this.currLocationIndex--;
