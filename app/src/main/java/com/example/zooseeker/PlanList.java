@@ -101,9 +101,12 @@ public class PlanList {
         return this.myList.add(e);
     }
 
+
+
     /*Returns the location user is currently at
     @returns user's location
      */
+<<<<<<< HEAD
     public Boolean addGate(Location g){
         for (int i=0; i < myList.size(); i++){
             if (myList.get(i).getId().equals(g.getId())){
@@ -114,6 +117,82 @@ public class PlanList {
         return true;
     }
 
+=======
+    public Location getCurrentLocation() {
+        return this.myList.get(currLocationIndex);
+    }
+
+    /*returns the next location in planned list of exhibits
+    If user has reached the end of their list of exhibits, return null
+    @returns the next location in list or null if there aren't any
+     */
+    public Location getNextLocation() {
+        if (currLocationIndex + 1 < planSize()){
+            return this.myList.get(currLocationIndex+1);
+        }
+        return null;
+    }
+
+    /*
+        This method is to be implemented after the merge with the shortest path branch
+        it will use zooMap object to get the shortest path from current location to the
+        next location in the list
+     */
+    public GraphPath<String, IdentifiedWeightedEdge> getPathToNextLocation() {
+        Location curr = this.myList.get(currLocationIndex);
+        String currId = curr.getId();
+        Location next = this.myList.get(currLocationIndex + 1);
+        String nextId = next.getId();
+        return zooMap.getShortestPath(currId, nextId);
+    }
+
+    /*Returns the directions the user needs to get from their current location to the next one
+   @return locations to next location
+    */
+    public String getDirectionsToNextLocation() {
+        Location curr = this.myList.get(currLocationIndex);
+        String currId = curr.getId();
+        Location next = this.myList.get(currLocationIndex + 1);
+        String nextId = next.getId();
+        return zooMap.getTextDirections(currId, nextId);
+    }
+
+    public double getDistanceToNextLocation(){
+        return getPathToNextLocation().getWeight();
+    }
+
+
+    /*Moves the user (moves the current index indicating user's location to the next one) to the
+    next location in their list
+    Returns true if the user was successfully moved to the next location and false if they reached
+    the end of their list
+    @return whether or not user was moved to next location
+     */
+    public Boolean advanceLocation() {
+        if(currLocationIndex+1 >= myList.size()){
+            return false;
+        }
+        this.currLocationIndex++;
+        return true;
+    }
+
+    /*Moves user to the previous location from their current one
+   Returns true if user was successfully moved to the previous location and false if the user is at
+   the first location in the list
+    */
+    public Boolean previousLocation() {
+        if(currLocationIndex < 1){
+            return false;
+        }
+        this.currLocationIndex--;
+        return true;
+    }
+
+    /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
+    with the shortest distance to go next, repeating until all Exhibits have been added. Also
+    appends the gate at the end
+     */
+>>>>>>> ec12b2836fe3a2cab80c5bed80d2ce3682c11288
     public void sort(){
         List<Location> sortList = new ArrayList<>();
         Location startEnd;
@@ -200,6 +279,5 @@ public class PlanList {
 //
 //    }
 
-    //toImplement sort
 
 }

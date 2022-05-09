@@ -21,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Array;
@@ -86,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String s) {
                 String text = s;
                 text = text.toLowerCase();
-                searchResults = searcher.getResultsInfo(text);
+                searchResults = searcher.getResults(text);
                 searchAdapter.loadSearchResults(searchResults);
                 return false;
             }
@@ -100,29 +101,21 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        resultsView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            /*When one of the exhibits on the results page list is clicked, the exhibit is added to
-            the user's list of exhibits
-            @param adapterView = list of exhibit results
-            @param v = the specific exhibit that's clicked
-            @param position = the position in the list of results the clicked exhibit is at
-            @param id = ID of clicked exhibit
-             */
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View v, int position, long id){
-                ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
-                Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.tags);
-                plan.addLocation(exhibit);
-                //after we get the list of exhibits (dynamic), going to grab location names into
-                //a separate list to view on display
-                List<DisplayListItem> list = new ArrayList<>();
-                for (int i = 0; i < plan.getMyList().size(); i++) {
-                    DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
-                    list.add(item);
-                }
 
-                adapter.setDisplayItems(list);
+        TextView num_exhibits = findViewById(R.id.exhibits_num);
+        resultsView.setOnItemClickListener((adapterView, v, position, id) -> {
+            ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
+            Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.tags);
+            plan.addLocation(exhibit);
+            //after we get the list of exhibits (dynamic), going to grab location names into
+            //a separate list to view on display
+            List<DisplayListItem> list = new ArrayList<>();
+            for (int i = 0; i < plan.getMyList().size(); i++) {
+                DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
+                list.add(item);
             }
+            adapter.setDisplayItems(list);
+            num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()));
         });
 
         planList = plan;

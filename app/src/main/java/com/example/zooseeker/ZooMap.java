@@ -41,7 +41,7 @@ public class ZooMap {
 
     }
 
-    /*Sets the shortest path between two exhibits
+    /*Sets stored shortest path between two exhibits for faster runtime
     @param node_from = start Location
     @param node_to = end Location
      */
@@ -49,12 +49,6 @@ public class ZooMap {
         currPath = getShortestPath(node_from, node_to);
     }
 
-    /*Sets shortest path using edge information from given graph
-    @param path = edge between two locations in zoo graph
-     */
-    public void setShortestPath(GraphPath<String, IdentifiedWeightedEdge> path) {
-        currPath = path;
-    }
 
     /*Returns the shortest path between two locations
     @param node_from = start location
