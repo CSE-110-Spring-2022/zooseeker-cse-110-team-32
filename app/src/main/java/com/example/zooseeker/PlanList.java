@@ -21,10 +21,10 @@ when their route is over
 public class PlanList {
     private List<Location> myList;
 
-    /*
-       this currLocationIndex will be referring to which location user is on in the list
-       this currLocation index will be updated when we call sort or when user manually put
-       select their current location Default to be 0 when the list is initialized.
+    /*this currLocationIndex will be referring to which location user is on in the list
+      this currLocation index will be updated when we call sort or when user manually put
+      select their current location Default to be 0 when the list is initialized.
+
     */
     private int currLocationIndex;
     //adding this ZooMap object for future iteration
@@ -55,17 +55,27 @@ public class PlanList {
      */
     public List<Location> getMyList() { return this.myList; }
 
-    /*Returns the map for the zoo
-    @return map for zoo
+    /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
+    exhibit is in their list
+    @param curr = the exhibit the user is currently at
+    @return index indicating where the current exhibit is in their list
      */
-    public ZooMap getZooMap(){
-        return this.zooMap;
+    public int currExhibitIndex(Exhibit curr) {
+        return myList.indexOf(curr);
     }
+
     /*returns the number of exhibits the user plans to see
    @return number of exhibits user selected
     */
     public int planSize(){
         return myList.size();
+    }
+
+    /*Returns map of zoo
+    @return map of zoo
+     */
+    public ZooMap getZooMap(){
+        return this.zooMap;
     }
 
     /*adds exhibit to user's list of planned exhibits.
@@ -82,8 +92,6 @@ public class PlanList {
         }
         return this.myList.add(e);
     }
-
-
 
     /*Returns the location user is currently at
     @returns user's location
@@ -102,7 +110,6 @@ public class PlanList {
     with the shortest distance to go next, repeating until all Exhibits have been added. Also
     appends the gate at the end
      */
-
     public void sort(){
         List<Location> sortList = new ArrayList<>();
         Location startEnd;

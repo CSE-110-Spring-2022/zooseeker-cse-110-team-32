@@ -81,6 +81,4 @@ public class AddExhibitUnitTest {
         assertEquals(1, plan.planSize());
     }
 
-
 }
-
