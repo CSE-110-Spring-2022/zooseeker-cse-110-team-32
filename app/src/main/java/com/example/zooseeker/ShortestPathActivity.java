@@ -41,37 +41,41 @@ public class ShortestPathActivity extends AppCompatActivity {
             back.setVisibility(View.GONE);
         }
         PlanList plan = SearchActivity.getPlan();
-
+        NavigatePlannedList navList = new NavigatePlannedList(plan);
         Button next = findViewById(R.id.next_btn);
-        if(!plan.endReached()){
-            displayTextDirections(plan);
+        if(!navList.endReached()){
+            displayTextDirections(navList);
         }
 
         if(next.isClickable()) {
             next.setOnClickListener(view -> {
-                displayTextDirections(plan);
+                displayTextDirections(navList);
             });
+        }
+        else{
+            next.setVisibility(View.GONE);
         }
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
     @param plan = user's planned exhibits
      */
-    public void displayTextDirections(PlanList plan){
+    public void displayTextDirections(NavigatePlannedList navList){
         TextView textView = findViewById(R.id.path_result);
-        Location currLoc = plan.getCurrentLocation();
-        Location nextLoc = plan.getNextLocation();
-        String directions = plan.getDirectionsToNextLocation();
+        Location currLoc = navList.getCurrentLocation();
+        Location nextLoc = navList.getNextLocation();
+        String directions = navList.getDirectionsToNextLocation();
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
 
         Button next = findViewById(R.id.next_btn);
-        if(plan.endReached()){
+
+        if(navList.endReached()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
         }
         else{
-            plan.advanceLocation();
+            navList.advanceLocation();
         }
     }
 

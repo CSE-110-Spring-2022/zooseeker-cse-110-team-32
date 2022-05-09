@@ -29,6 +29,7 @@ public class AddExhibitUnitTest {
     public void addExhibit(){
         Context context = ApplicationProvider.getApplicationContext();
         PlanList plan = new PlanList(context);
+        NavigatePlannedList navList = new NavigatePlannedList(plan);
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         List<Location> checkList = new ArrayList<>();
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
@@ -39,9 +40,9 @@ public class AddExhibitUnitTest {
             }
         }
         for (int i = 0; i < checkList.size(); i++){
-            String id = plan.getCurrentLocation().getId();
+            String id = navList.getCurrentLocation().getId();
             assertEquals(checkList.get(i).getId(), id);
-            plan.advanceLocation();
+            navList.advanceLocation();
         }
     }
 
@@ -49,6 +50,7 @@ public class AddExhibitUnitTest {
     public void addDuplicate(){
         Context context = ApplicationProvider.getApplicationContext();
         PlanList plan = new PlanList(context);
+        NavigatePlannedList navList = new NavigatePlannedList(plan);
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         String[] tags = new String[] {"alligator", "reptile", "gator"};
         List<String> tagList = Arrays.asList(tags);
@@ -56,11 +58,11 @@ public class AddExhibitUnitTest {
         Location duplicate = new Exhibit("gators", "alligators", tagList);
         plan.addLocation(exhibit);
         plan.addLocation(duplicate);
-        assertEquals(exhibit.getId(), plan.getCurrentLocation().getId());
-        assertEquals(exhibit.getName(), plan.getCurrentLocation().getName());
-        assertFalse(plan.advanceLocation());
-        assertEquals(exhibit.getId(), plan.getCurrentLocation().getId());
-        assertNotEquals(duplicate.getName(), plan.getCurrentLocation().getName());
+        assertEquals(exhibit.getId(), navList.getCurrentLocation().getId());
+        assertEquals(exhibit.getName(), navList.getCurrentLocation().getName());
+        assertFalse(navList.advanceLocation());
+        assertEquals(exhibit.getId(), navList.getCurrentLocation().getId());
+        assertNotEquals(duplicate.getName(), navList.getCurrentLocation().getName());
         assertEquals(1, plan.planSize());
     }
 

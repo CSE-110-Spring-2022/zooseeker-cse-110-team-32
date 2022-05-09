@@ -75,8 +75,14 @@ public class Search {
             if (temp.contains(exhibitName)){
                 results.add(vertex);
             }
-            else if(vertex.tags.contains(exhibitName)){
-                results.add(vertex);
+            else if(vertex.tags != null){
+                for(String tagName: vertex.tags){
+                    if(tagName.contains(exhibitName.toLowerCase()) || (exhibitName.toLowerCase()).contains(tagName)){
+                        results.add(vertex);
+                        break;
+                    }
+                }
+
             }
         }
         return results;

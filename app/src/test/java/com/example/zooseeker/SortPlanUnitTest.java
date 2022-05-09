@@ -24,12 +24,14 @@ public class SortPlanUnitTest {
     Map<String, ZooData.VertexInfo> vertices;
     List<Location> planList;
     ZooMap zooMap;
+    NavigatePlannedList navList;
 
     @Before
     public void loadPlan(){
         Context context = ApplicationProvider.getApplicationContext();
         zooMap = new ZooMap(context);
         plan = new PlanList(context);
+        navList = new NavigatePlannedList(plan);
         vertices = ZooData.loadVertexInfoJSON(context);
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
             if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)){
@@ -70,12 +72,12 @@ public class SortPlanUnitTest {
         // For each stop, check that distance to next stop is less than distance to all remaining stops
         for (int i=0; i < planList.size()-1; i++){
             Location curr = planList.get(i);
-            double dist = plan.getDistanceToNextLocation();
+            double dist = navList.getDistanceToNextLocation();
             for(int j=i+2; j<planList.size(); j++){
                 Location alt = planList.get(j);
                 assertTrue(dist <= zooMap.getDistance(curr.getId(), alt.getId()));
             }
-            plan.advanceLocation();
+            navList.advanceLocation();
         }
     }
 
