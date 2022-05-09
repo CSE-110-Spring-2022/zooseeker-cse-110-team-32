@@ -97,11 +97,14 @@ public class PlanList {
     @returns user's location
      */
 
-    public Boolean addGate(Location g){
-        for (int i=0; i < myList.size(); i++){
-            if (myList.get(i).getId().equals(g.getId())){
+    public Boolean addGate(Location g) {
+        for (int i = 0; i < myList.size(); i++) {
+            if (myList.get(i).getId().equals(g.getId())) {
                 return false;
             }
+        }
+        return this.myList.add(g);
+    }
 
 
     /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
