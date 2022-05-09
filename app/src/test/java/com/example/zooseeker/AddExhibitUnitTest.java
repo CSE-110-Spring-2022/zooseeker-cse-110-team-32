@@ -73,25 +73,11 @@ public class AddExhibitUnitTest {
         List<String> tagList = Arrays.asList(tags);
         Location exhibit = new Exhibit("gators", "Alligators", tagList);
         plan.addLocation(exhibit);
-        assertEquals(plan.planSize(), plan.getExhibitCount());
+        assertEquals(1, plan.planSize());
+        plan.addLocation(exhibit);
+        plan.addLocation(exhibit);
         assertEquals(1, plan.planSize());
     }
-
-    @Test
-    public void exhibitCount1(){
-        Context context = ApplicationProvider.getApplicationContext();
-        PlanList plan = new PlanList(context);
-        Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
-        String[] tags = new String[] {"alligator", "reptile", "gator"};
-        List<String> tagList = Arrays.asList(tags);
-        Location exhibit = new Exhibit("gators", "Alligators", tagList);
-        plan.addLocation(exhibit);
-        plan.addLocation(exhibit);
-        plan.addLocation(exhibit);
-        assertEquals(plan.planSize(), plan.getExhibitCount());
-        assertNotEquals(3, plan.planSize());
-    }
-
 
 }
 
