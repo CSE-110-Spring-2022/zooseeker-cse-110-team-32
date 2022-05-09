@@ -53,9 +53,6 @@ public class ShortestPathActivity extends AppCompatActivity {
                 displayTextDirections(navList);
             });
         }
-        else{
-            next.setVisibility(View.GONE);
-        }
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
@@ -63,7 +60,6 @@ public class ShortestPathActivity extends AppCompatActivity {
      */
     public void displayTextDirections(NavigatePlannedList navList){
         TextView textView = findViewById(R.id.path_result);
-
         TextView nextNextView = findViewById(R.id.next_lbl);
         Location currLoc = navList.getCurrentLocation();
         Location nextLoc = navList.getNextLocation();
@@ -72,7 +68,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         textView.setText(directions);
 
         Button next = findViewById(R.id.next_btn);
-
         Button finish = findViewById(R.id.finish_btn);
         if(navList.endReached()){
             next.setClickable(false);
@@ -87,10 +82,9 @@ public class ShortestPathActivity extends AppCompatActivity {
             });
         }
         else{
-            navList.advanceLocation();
             nextNextView.setText(navList.getNextNextLocation().getName() +
                     ", " + navList.getPathToNextNextLocation().getWeight());
-
+            navList.advanceLocation();
         }
     }
 
