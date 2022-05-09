@@ -43,7 +43,7 @@ public class SearchClassUnitTest {
     public void sizeResults(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
-        ArrayList<String> results = searcher.getResults("Lions");
+        ArrayList<ZooData.VertexInfo> results = searcher.getResults("Lions");
         assertEquals(1, results.size());
     }
 
@@ -51,15 +51,15 @@ public class SearchClassUnitTest {
     public void lionsResults(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
-        ArrayList<String> results = searcher.getResults("Lions");
-        assertEquals("Lions", results.get(0));
+        ArrayList<ZooData.VertexInfo> results = searcher.getResults("Lions");
+        assertEquals("Lions", results.get(0).name);
     }
 
     @Test
     public void gateResults(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
-        ArrayList<String> results = searcher.getResults("Gate");
+        ArrayList<ZooData.VertexInfo> results = searcher.getResults("Gate");
         assertEquals(0, results.size());
     }
 
@@ -67,7 +67,7 @@ public class SearchClassUnitTest {
     public void multipleExhibits(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
-        ArrayList<String> results = searcher.getResults("e");
+        ArrayList<ZooData.VertexInfo> results = searcher.getResults("e");
         assertEquals(2, results.size());
     }
 
@@ -83,7 +83,7 @@ public class SearchClassUnitTest {
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
         assertEquals(searcher.getResults("ape"), searcher.getResults(("gorillas")));
-        ArrayList<String> results = searcher.getResults("mammal");
+        ArrayList<ZooData.VertexInfo> results = searcher.getResults("mammal");
         assertEquals(4, results.size());
     }
 }
