@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+/*This class loads the first activity of the app, the search page, where users can search for
+  exhibits
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
-        //Can't run two activities at once -- later on this activity will be started elsewhere
-        //Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-        //startActivity(pathIntent);
+
     }
 }

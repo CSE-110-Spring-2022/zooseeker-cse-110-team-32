@@ -23,9 +23,14 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+/*This class loads the pages that display the directions from your current location to the next
+exhibit with a next button (back button to be added) that is clicked when the user wants to go to
+the next exhibit.
+ */
 public class ShortestPathActivity extends AppCompatActivity {
 
+    /*Loads directions page and initializes necessary classes and variables for each component
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,9 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
+    /*Displays the directions from user's current location to the next closes exhibit in their list
+    @param plan = user's planned exhibits
+     */
     public void displayTextDirections(PlanList plan){
         TextView textView = findViewById(R.id.path_result);
         TextView nextNextView = findViewById(R.id.next_lbl);

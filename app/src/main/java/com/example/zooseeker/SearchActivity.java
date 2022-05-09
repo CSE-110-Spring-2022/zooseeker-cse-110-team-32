@@ -30,8 +30,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-// https://www.geeksforgeeks.org/android-searchview-with-example/
-
+/*This class loads the search page including search bar, search results, list of planned exhibits,
+and number of exhibits the user wants to see
+ */
 public class SearchActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     ListView resultsView;
@@ -44,16 +45,14 @@ public class SearchActivity extends AppCompatActivity {
         return planList;
     }
 
+    /*Creates search page and initializes the needed classes and variables to work each component
+    of the search page
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            search(query);
-        }
 
         DisplayListAdapter adapter = new DisplayListAdapter();
         adapter.setHasStableIds(true);
@@ -63,7 +62,6 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         PlanList plan = new PlanList(this);
-
 
         // Locate the ListView in listview_main.xml
         resultsView = (ListView) findViewById(R.id.search_list);
@@ -77,23 +75,32 @@ public class SearchActivity extends AppCompatActivity {
         // Binds the Adapter to the ListView
         resultsView.setAdapter(searchAdapter);
 
+
         // Locate the EditText in listview_main.xml
         search_bar = (SearchView) findViewById(R.id.search_bar);
         search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            /*Submits the user's search query and changes the user's query to be all lowercase, so
+            that search results aren't case sensitive
+            @param s = user's search query
+             */
             @Override
             public boolean onQueryTextSubmit(String s) {
                 String text = s;
                 text = text.toLowerCase();
-                searchResults = searcher.getResultsInfo(text);
+                searchResults = searcher.getResults(text);
                 searchAdapter.loadSearchResults(searchResults);
                 return false;
             }
 
+            /*Detects when text in search bar is updated, currently does nothing with this
+
+             */
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
             }
         });
+
 
         TextView num_exhibits = findViewById(R.id.exhibits_num);
         resultsView.setOnItemClickListener((adapterView, v, position, id) -> {
@@ -116,18 +123,12 @@ public class SearchActivity extends AppCompatActivity {
         Button planBtn = findViewById(R.id.plan_btn);
         planBtn.setOnClickListener(view ->{
             Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-            //pathIntent.putExtra("PlanList", (Parcelable) planList);
-            //pathIntent.putParcelableArrayListExtra("PlanList", (ArrayList<? extends Parcelable>) planList.getMyList());
             plan.sort();
             startActivity(pathIntent);
         });
 
     }
 
-
-    public void search(String query) {
-
-    }
 
 
 }
