@@ -76,9 +76,12 @@ public class AddExhibitUnitTest {
         Location exhibit = new Exhibit("gators", "Alligators", tagList);
         plan.addLocation(exhibit);
         assertEquals(1, plan.planSize());
+
         plan.addLocation(exhibit);
         plan.addLocation(exhibit);
         assertEquals(1, plan.planSize());
     }
 
 }
+
+
