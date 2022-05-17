@@ -163,6 +163,10 @@ public class PlanList {
         string name as query to fetch the data from the database
         I am currently using the second way by converting the arraylist into a set, and then
         put the ID into the set and retrieve the set in the loadList method
+        OR
+        We can just use the data base specifically for storing exhibits in the planList. Then we can
+        just store the entire exhibits of the PlanList into the database and call it from there
+        It might be easier with using preferences
      */
     public void saveList() {
         SharedPreferences preferences =
@@ -182,6 +186,8 @@ public class PlanList {
     object from the database and add them to the PlanList(aka the arraylist). Since the ordering
     might be different, we will call sort method in this class to sort the arraylist.
     As you can see outDao will be our future database and sort will be implemented in the future.
+    OR
+    Just load all the exhibits from the database and add the entrance and exit gates in the end
      */
 //    public void loadList() {
 //        SharedPreferences preferences = this.context.getSharedPreferences("List_File",
@@ -198,4 +204,18 @@ public class PlanList {
 //    }
 
 
+    /*
+    debug method for planList: print out the current Location in the list with its name and kind
+    useful during unit testing, scroll down in the output screen until you see the word printing
+    list:, and followed by all the items inside the list with its id and kind, when finished
+    it will show Finish printing.
+     */
+    public void printList() {
+        System.out.println("printing list:");
+        for (Location loc : myList) {
+            System.out.print("id: " + loc.getKind() + "kind: ");
+            System.out.println(loc.getKind());
+        }
+        System.out.println("Finish printing.");
+    }
 }
