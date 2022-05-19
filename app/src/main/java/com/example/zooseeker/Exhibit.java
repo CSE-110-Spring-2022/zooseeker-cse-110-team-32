@@ -3,6 +3,7 @@ package com.example.zooseeker;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.util.List;
 
@@ -18,16 +19,23 @@ public class Exhibit extends Location{
    @param tags = list of tags/categories associated with the exhibit
     */
     @PrimaryKey
+    @NonNull
     public String id;
+
+    @TypeConverters(TagConverter.class)
+    public List<String> tags;
 
     @NonNull
     public String name;
-    public List<String> tags;
     public ZooData.VertexInfo.Kind kind;
 
     Exhibit(String id, String name, List<String> tags) {
         super(id, name, tags);
         this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
+    }
+
+    public List<String> getTags() {
+        return this.tags;
     }
 
 }
