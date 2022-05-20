@@ -47,8 +47,10 @@ public class DBtest {
         Exhibit exhibit1 = new Exhibit("gators", "Alligators", tagList);
         Exhibit exhibit2 = new Exhibit("gorillas", "gorillas", tagList);
 
-        String id1 = dao.insert(exhibit1);
-        String id2 = dao.insert(exhibit2);
+        System.out.println(exhibit1.id);
+
+        long id1 = dao.insert(exhibit1);
+        long id2 = dao.insert(exhibit2);
 
         assertNotEquals(id1, id2);
     }
@@ -59,10 +61,10 @@ public class DBtest {
         List<String> tagList = Arrays.asList(tags);
 
         Exhibit exhibit1 = new Exhibit("gators", "Alligators", tagList);
-        String id = dao.insert(exhibit1);
+        long id = dao.insert(exhibit1);
 
         Exhibit item = dao.get(id);
-        assertEquals(id, item.id);
+        assertEquals(id, item.Uid);
         assertEquals(exhibit1.id, item.id);
         assertEquals(exhibit1.name, item.name);
         assertEquals(exhibit1.tags, item.tags);
@@ -74,7 +76,7 @@ public class DBtest {
         List<String> tagList = Arrays.asList(tags);
 
         Exhibit exhibit1 = new Exhibit("gators", "Alligators", tagList);
-        String id = dao.insert(exhibit1);
+        long id = dao.insert(exhibit1);
 
         Exhibit item = dao.get(id);
         item.name = "Photos of Spider-Man";
@@ -92,7 +94,7 @@ public class DBtest {
         List<String> tagList = Arrays.asList(tags);
 
         Exhibit exhibit1 = new Exhibit("gators", "Alligators", tagList);
-        String id = dao.insert(exhibit1);
+        long id = dao.insert(exhibit1);
 
         Exhibit item = dao.get(id);
         int itemsDeleted = dao.delete(item);

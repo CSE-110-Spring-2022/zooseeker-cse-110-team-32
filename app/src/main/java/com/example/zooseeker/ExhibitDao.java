@@ -17,13 +17,13 @@ import java.util.List;
 @Dao
 public interface ExhibitDao {
     @Insert
-    String insert(Exhibit exhibit);
+    long insert(Exhibit exhibit);
 
     @Insert
     List<Long> insertAll(List<Exhibit> planList);
 
-    @Query("SELECT * FROM `exhibits` WHERE `id`=:id")
-    Exhibit get(String id);
+    @Query("SELECT * FROM `exhibits` WHERE `Uid`=:Uid")
+    Exhibit get(long Uid);
 
     @Query("SELECT * FROM `exhibits`")
     List<Exhibit> getAll();
