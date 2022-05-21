@@ -30,20 +30,11 @@ public class NavigatePlannedList {
         return false;
     }
 
-    /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
-    exhibit is in their list
-    @param curr = the exhibit the user is currently at
-    @return index indicating where the current exhibit is in their list
-     */
-    public int currExhibitIndex(Exhibit curr) {
-        return this.planList.getMyList().indexOf(curr);
-    }
-
     /*Returns user's current location
     @return current location
      */
     public Location getCurrentLocation() {
-        return this.planList.getMyList().get(currLocationIndex);
+        return this.planList.get(currLocationIndex);
     }
 
     /*returns the next location in planned list of exhibits
@@ -52,7 +43,7 @@ public class NavigatePlannedList {
      */
     public Location getNextLocation() {
         if (currLocationIndex + 1 < this.planList.planSize()){
-            return this.planList.getMyList().get(currLocationIndex+1);
+            return this.planList.get(currLocationIndex+1);
         }
         return null;
     }
@@ -62,7 +53,7 @@ public class NavigatePlannedList {
      */
     public Location getNextNextLocation() {
         if (currLocationIndex + 2 < this.planList.planSize()){
-            return this.planList.getMyList().get(currLocationIndex+2);
+            return this.planList.get(currLocationIndex+2);
         }
         return null;
     }
@@ -89,9 +80,9 @@ public class NavigatePlannedList {
         if (currInd < 0 || currInd > this.planList.planSize()){
             return null;
         }
-        Location curr = this.planList.getMyList().get(currInd);
+        Location curr = this.planList.get(currInd);
         String currId = curr.getId();
-        Location next = this.planList.getMyList().get(currInd + 1);
+        Location next = this.planList.get(currInd + 1);
         String nextId = next.getId();
         return this.planList.getZooMap().getShortestPath(currId, nextId);
     }
@@ -100,9 +91,9 @@ public class NavigatePlannedList {
    @return locations to next location
     */
     public String getDirectionsToNextLocation() {
-        Location curr = this.planList.getMyList().get(currLocationIndex);
+        Location curr = this.planList.get(currLocationIndex);
         String currId = curr.getId();
-        Location next = this.planList.getMyList().get(currLocationIndex + 1);
+        Location next = this.planList.get(currLocationIndex + 1);
         String nextId = next.getId();
         return this.planList.getZooMap().getTextDirections(currId, nextId);
     }
@@ -128,7 +119,7 @@ public class NavigatePlannedList {
     @return whether or not user was moved to next location
      */
     public Boolean advanceLocation() {
-        if(currLocationIndex+1 >= planList.getMyList().size()){
+        if(currLocationIndex+1 >= planList.planSize()){
             return false;
         }
         this.currLocationIndex++;
@@ -144,6 +135,14 @@ public class NavigatePlannedList {
             return false;
         }
         this.currLocationIndex--;
+        return true;
+    }
+
+    public Boolean skip(){
+        if(currLocationIndex+1 >= planList.planSize()){
+            return false;
+        }
+        this.planList.deleteLocation(this.currLocationIndex+1);
         return true;
     }
 }

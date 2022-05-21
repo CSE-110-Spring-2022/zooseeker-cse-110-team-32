@@ -50,10 +50,17 @@ public class PlanList {
         this.context = newContext;
     }
 
-    /*returns user's list of planned exhibits
+    /*returns user's list of planned exhibits, only used for testing purposes
     @return user's list of exhibits
      */
     public List<Location> getMyList() { return this.myList; }
+
+    /*returns location at given index
+    @return location at given index
+     */
+    public Location get(int i){
+        return myList.get(i);
+    }
 
     /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
     exhibit is in their list
@@ -93,17 +100,8 @@ public class PlanList {
         return this.myList.add(e);
     }
 
-    /*Returns the location user is currently at
-    @returns user's location
-     */
-
-    public Boolean addGate(Location g) {
-        for (int i = 0; i < myList.size(); i++) {
-            if (myList.get(i).getId().equals(g.getId())) {
-                return false;
-            }
-        }
-        return this.myList.add(g);
+    public void deleteLocation(int i){
+        this.myList.remove(i);
     }
 
 

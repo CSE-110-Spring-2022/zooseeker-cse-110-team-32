@@ -44,15 +44,26 @@ public class ShortestPathActivity extends AppCompatActivity {
         PlanList plan = SearchActivity.getPlan();
         NavigatePlannedList navList = new NavigatePlannedList(plan);
         Button next = findViewById(R.id.next_btn);
+        Button skip = findViewById(R.id.skip_btn);
         if(!navList.endReached()){
             displayTextDirections(navList);
         }
 
         if(next.isClickable()) {
             next.setOnClickListener(view -> {
+                navList.advanceLocation();
                 displayTextDirections(navList);
+                buttonVisibility(navList);
             });
         }
+        if(skip.isClickable()) {
+            skip.setOnClickListener(view -> {
+                navList.skip();
+                displayTextDirections(navList);
+                buttonVisibility(navList);
+            });
+        }
+
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
@@ -67,12 +78,23 @@ public class ShortestPathActivity extends AppCompatActivity {
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
 
+        if(navList.endReached()){
+            nextNextView.setVisibility(View.GONE);
+        }
+        else{
+            nextNextView.setText(String.format("%s, %s", navList.getNextNextLocation().getName(), navList.getPathToNextNextLocation().getWeight()));
+        }
+    }
+
+    public void buttonVisibility(NavigatePlannedList navList){
         Button next = findViewById(R.id.next_btn);
+        Button skip = findViewById(R.id.skip_btn);
         Button finish = findViewById(R.id.finish_btn);
         if(navList.endReached()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
-            nextNextView.setVisibility(View.GONE);
+            skip.setClickable(false);
+            skip.setVisibility(View.GONE);
 
             Intent intent = new Intent(this, SearchActivity.class);
             finish.setClickable(true);
@@ -80,11 +102,6 @@ public class ShortestPathActivity extends AppCompatActivity {
             finish.setOnClickListener(view -> {
                 startActivity(intent);
             });
-        }
-        else{
-            nextNextView.setText(navList.getNextNextLocation().getName() +
-                    ", " + navList.getPathToNextNextLocation().getWeight());
-            navList.advanceLocation();
         }
     }
 
