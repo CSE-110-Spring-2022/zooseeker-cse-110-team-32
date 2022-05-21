@@ -48,8 +48,13 @@ public class Search {
             if (vertex.kind == ZooData.VertexInfo.Kind.EXHIBIT) {
                 if (temp.contains(searchText)) {
                     results.add(vertex);
-                } else if (vertex.tags.contains(searchText)) {
-                    results.add(vertex);
+                } else{
+                    for (String tag: vertex.tags) {
+                        if (tag.contains(searchText)) {
+                            results.add(vertex);
+                            break;
+                        }
+                    }
                 }
             }
         }
