@@ -68,7 +68,7 @@ public class SearchClassUnitTest {
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
         ArrayList<ZooData.VertexInfo> results = searcher.getResults("e");
-        assertEquals(2, results.size());
+        assertEquals(4, results.size());
     }
 
     @Test
