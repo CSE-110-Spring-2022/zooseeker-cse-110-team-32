@@ -1,12 +1,21 @@
 package com.example.zooseeker;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 /*This class loads the pages that display the directions from your current location to the next
@@ -28,6 +38,14 @@ exhibit with a next button (back button to be added) that is clicked when the us
 the next exhibit.
  */
 public class ShortestPathActivity extends AppCompatActivity {
+
+    private final ActivityResultLauncher<String[]> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), perms -> {
+                perms.forEach((perm, isGranted) -> {
+                    Log.i("Zooseeker", String.format("Permission %s granted: %s", perm, isGranted));
+                });
+            });
+
 
     /*Loads directions page and initializes necessary classes and variables for each component
      */
@@ -52,6 +70,33 @@ public class ShortestPathActivity extends AppCompatActivity {
             next.setOnClickListener(view -> {
                 displayTextDirections(navList);
             });
+        }
+        // Permissions setup
+        {
+            String[] requiredPermissions = new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            };
+
+            Boolean hasNoLocationPerms = Arrays.stream(requiredPermissions)
+                    .map(perm -> ContextCompat.checkSelfPermission(this, perm))
+                    .allMatch(status -> status == PackageManager.PERMISSION_DENIED);
+            if (hasNoLocationPerms){
+                requestPermissionLauncher.launch(requiredPermissions);
+                return;
+            }
+        }
+        // Listen for location updates
+        {
+            String provider = LocationManager.GPS_PROVIDER;
+            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            LocationListener locationListener = new LocationListener(){
+              @Override
+              public void onLocationChanged(@NonNull android.location.Location location){
+                  Log.d("Zooseeker", String.format("Location changed: %s", location));
+              }
+            };
+            locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
         }
     }
 
