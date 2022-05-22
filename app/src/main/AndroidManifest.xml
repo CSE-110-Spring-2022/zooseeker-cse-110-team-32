@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ZooSeeker">
         <activity
+            android:name=".PlanSummaryActivity"
+            android:exported="false" />
+        <activity
             android:name=".ShortestPathActivity"
             android:exported="false" />
         <activity
