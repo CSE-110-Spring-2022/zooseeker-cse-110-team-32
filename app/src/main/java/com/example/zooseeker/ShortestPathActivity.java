@@ -109,7 +109,11 @@ public class ShortestPathActivity extends AppCompatActivity {
         Location currLoc = navList.getCurrentLocation();
         Location nextLoc = navList.getNextLocation();
         String directions = navList.getDirectionsToNextLocation();
-        directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
+        String animalsList = "";
+        if (nextLoc.getKind() == ZooData.VertexInfo.Kind.EXHIBIT_GROUP){
+            animalsList = " (" + ((ExhibitGroup) nextLoc).getAnimalNameText() + ")";
+        }
+        directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + animalsList + "\n\n" + directions;
         textView.setText(directions);
 
         Button next = findViewById(R.id.next_btn);

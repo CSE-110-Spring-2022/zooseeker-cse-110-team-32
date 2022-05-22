@@ -24,4 +24,13 @@ public class ExhibitGroup extends Location{
     public Map<String, String> getAnimals(){
         return animals;
     }
+
+    public String getAnimalNameText(){
+        StringBuilder text = new StringBuilder();
+        for (String name: animals.values()){
+            text.append(name).append(", ");
+        }
+        text.delete(text.length()-2, text.length());
+        return text.toString();
+    }
 }

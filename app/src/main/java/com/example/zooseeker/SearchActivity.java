@@ -46,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         PlanList plan = new PlanList(this);
+        PlanManager planManager = new PlanManager(this, plan);
 
         // Locate the ListView in listview_main.xml
         resultsView = (ListView) findViewById(R.id.search_list);
@@ -87,27 +88,28 @@ public class SearchActivity extends AppCompatActivity {
 
 
         TextView num_exhibits = findViewById(R.id.exhibits_num);
+        List<String> exhibitList = new ArrayList();
         resultsView.setOnItemClickListener((adapterView, v, position, id) -> {
             ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
-            Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.lat, searchItem.lng);
-            plan.addLocation(exhibit);
+            planManager.addLocation(searchItem);
+            if (!exhibitList.contains(searchItem.name)) {
+                exhibitList.add(searchItem.name);
+            }
             //after we get the list of exhibits (dynamic), going to grab location names into
             //a separate list to view on display
             List<DisplayListItem> list = new ArrayList<>();
-            for (int i = 0; i < plan.getMyList().size(); i++) {
-                DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
+            for (int i = 0; i < exhibitList.size(); i++) {
+                DisplayListItem item = new DisplayListItem(exhibitList.get(i));
                 list.add(item);
             }
             adapter.setDisplayItems(list);
-            num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()));
+            num_exhibits.setText("Number of exhibits: "+ Integer.toString(exhibitList.size()));
         });
-
-        planList = plan;
 
         Button planBtn = findViewById(R.id.plan_btn);
         planBtn.setOnClickListener(view ->{
             Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-            plan.sort();
+            planList = planManager.getFinalPlan();
             startActivity(pathIntent);
         });
 

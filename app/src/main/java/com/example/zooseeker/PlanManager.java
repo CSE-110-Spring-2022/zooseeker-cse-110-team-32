@@ -35,4 +35,13 @@ public class PlanManager {
         }
     }
 
+    public PlanList getFinalPlan(){
+        plan.sort();
+        return plan;
+    }
+
+    public PlanList getPlan(){
+        return plan;
+    }
+
 }
