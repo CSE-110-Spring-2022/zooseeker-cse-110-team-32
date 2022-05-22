@@ -38,7 +38,9 @@ exhibit with a next button (back button to be added) that is clicked when the us
 the next exhibit.
  */
 public class ShortestPathActivity extends AppCompatActivity {
-
+    PlanList plan;
+    NavigatePlannedList navList;
+    LocationTracker locTracker;
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), perms -> {
                 perms.forEach((perm, isGranted) -> {
@@ -59,16 +61,18 @@ public class ShortestPathActivity extends AppCompatActivity {
         if(!back.isClickable()){
             back.setVisibility(View.GONE);
         }
-        PlanList plan = SearchActivity.getPlan();
-        NavigatePlannedList navList = new NavigatePlannedList(plan);
+        this.plan = SearchActivity.getPlan();
+        this.navList = new NavigatePlannedList(plan);
         Button next = findViewById(R.id.next_btn);
         if(!navList.endReached()){
-            displayTextDirections(navList);
+            displayTextDirections();
         }
 
         if(next.isClickable()) {
             next.setOnClickListener(view -> {
-                displayTextDirections(navList);
+                navList.advanceLocation();
+                displayTextDirections();
+                buttonVisibility();
             });
         }
         // Permissions setup
@@ -88,12 +92,16 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
         // Listen for location updates
         {
+            this.locTracker = new LocationTracker(this, plan);
             String provider = LocationManager.GPS_PROVIDER;
             LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             LocationListener locationListener = new LocationListener(){
               @Override
               public void onLocationChanged(@NonNull android.location.Location location){
                   Log.d("Zooseeker", String.format("Location changed: %s", location));
+                  locTracker.setLat(location.getLatitude());
+                  locTracker.setLng(location.getLongitude());
+                  reroute();
               }
             };
             locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
@@ -103,25 +111,45 @@ public class ShortestPathActivity extends AppCompatActivity {
     /*Displays the directions from user's current location to the next closes exhibit in their list
     @param plan = user's planned exhibits
      */
-    public void displayTextDirections(NavigatePlannedList navList){
+    public void displayTextDirections(){
         TextView textView = findViewById(R.id.path_result);
         TextView nextNextView = findViewById(R.id.next_lbl);
         Location currLoc = navList.getCurrentLocation();
         Location nextLoc = navList.getNextLocation();
         String directions = navList.getDirectionsToNextLocation();
-        String animalsList = "";
-        if (nextLoc.getKind() == ZooData.VertexInfo.Kind.EXHIBIT_GROUP){
-            animalsList = " (" + ((ExhibitGroup) nextLoc).getAnimalNameText() + ")";
-        }
-        directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + animalsList + "\n\n" + directions;
+        directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
 
+        if(navList.endReached()){
+            nextNextView.setVisibility(View.GONE);
+        }
+        else{
+            nextNextView.setText(String.format("%s, %s", navList.getNextNextLocation().getName(), navList.getPathToNextNextLocation().getWeight()));
+        }
+    }
+
+    public void reroute(){
+        TextView textView = findViewById(R.id.path_result);
+        Location currLoc = navList.getCurrentLocation();
+        Location nextLoc = navList.getNextLocation();
+        GraphPath<String, IdentifiedWeightedEdge> currPath = plan.getZooMap().getShortestPath(currLoc.getId(), nextLoc.getId());
+        String newRoute = locTracker.reroute(currPath);
+        if (newRoute != null) {
+            String animalsList = "";
+            if (nextLoc.getKind() == ZooData.VertexInfo.Kind.EXHIBIT_GROUP) {
+                animalsList = " (" + ((ExhibitGroup) nextLoc).getAnimalNameText() + ")";
+            }
+            String directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + animalsList + "\n\n" + newRoute;
+            textView.setText(directions);
+        }
+    }
+
+    public void buttonVisibility(){
         Button next = findViewById(R.id.next_btn);
         Button finish = findViewById(R.id.finish_btn);
         if(navList.endReached()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
-            nextNextView.setVisibility(View.GONE);
 
             Intent intent = new Intent(this, SearchActivity.class);
             finish.setClickable(true);
@@ -129,11 +157,6 @@ public class ShortestPathActivity extends AppCompatActivity {
             finish.setOnClickListener(view -> {
                 startActivity(intent);
             });
-        }
-        else{
-            nextNextView.setText(navList.getNextNextLocation().getName() +
-                    ", " + navList.getPathToNextNextLocation().getWeight());
-            navList.advanceLocation();
         }
     }
 
