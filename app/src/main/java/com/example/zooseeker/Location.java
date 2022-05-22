@@ -11,6 +11,8 @@ public abstract class Location {
     ZooData.VertexInfo.Kind kind;
     String name;
     List<String> tags;
+    double lat;
+    double lng;
 
     /*Constructor for location that sets the given information of a Location based on the data that
       is passed in
@@ -18,10 +20,11 @@ public abstract class Location {
       @param name = name of the location
       @param tags = list of associated tags/categories of the given location
      */
-    public Location(String id, String name, List<String> tags){
+    public Location(String id, String name, double lat, double lng){
         this.id = id;
         this.name = name;
-        this.tags = tags;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     /*returns location's ID

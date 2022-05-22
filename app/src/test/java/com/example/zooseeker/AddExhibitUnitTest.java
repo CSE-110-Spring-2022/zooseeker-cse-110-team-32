@@ -34,7 +34,7 @@ public class AddExhibitUnitTest {
         List<Location> checkList = new ArrayList<>();
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
             if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)){
-                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                 plan.addLocation(exhibit);
                 checkList.add(exhibit);
             }
@@ -54,8 +54,8 @@ public class AddExhibitUnitTest {
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         String[] tags = new String[] {"alligator", "reptile", "gator"};
         List<String> tagList = Arrays.asList(tags);
-        Location exhibit = new Exhibit("gators", "Alligators", tagList);
-        Location duplicate = new Exhibit("gators", "alligators", tagList);
+        Location exhibit = new Exhibit("gators", "Alligators", 0, 0);
+        Location duplicate = new Exhibit("gators", "alligators", 0, 0);
         plan.addLocation(exhibit);
         plan.addLocation(duplicate);
         assertEquals(exhibit.getId(), navList.getCurrentLocation().getId());
@@ -73,7 +73,7 @@ public class AddExhibitUnitTest {
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         String[] tags = new String[] {"alligator", "reptile", "gator"};
         List<String> tagList = Arrays.asList(tags);
-        Location exhibit = new Exhibit("gators", "Alligators", tagList);
+        Location exhibit = new Exhibit("gators", "Alligators", 0, 0);
         plan.addLocation(exhibit);
         assertEquals(1, plan.planSize());
 

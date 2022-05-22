@@ -4,31 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 /*This class loads the search page including search bar, search results, list of planned exhibits,
 and number of exhibits the user wants to see
@@ -105,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
         TextView num_exhibits = findViewById(R.id.exhibits_num);
         resultsView.setOnItemClickListener((adapterView, v, position, id) -> {
             ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
-            Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.tags);
+            Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.lat, searchItem.lng);
             plan.addLocation(exhibit);
             //after we get the list of exhibits (dynamic), going to grab location names into
             //a separate list to view on display
