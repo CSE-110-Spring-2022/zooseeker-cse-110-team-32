@@ -41,18 +41,48 @@ public class ShortestPathActivity extends AppCompatActivity {
         if(!back.isClickable()){
             back.setVisibility(View.GONE);
         }
+
         PlanList plan = SearchActivity.getPlan();
         NavigatePlannedList navList = new NavigatePlannedList(plan);
-        Button next = findViewById(R.id.next_btn);
-        if(!navList.endReached()){
+        //Button next = findViewById(R.id.next_btn);
+        /*if(!navList.endReached()){
+            displayTextDirections(navList);
+        }*/
+
+        if(navList.atStart()){
             displayTextDirections(navList);
         }
 
+        /*
+        back = findViewById(R.id.back_btn);
+        if (!navList.atFirst()){
+            back.setClickable(true);
+            back.setVisibility(View.VISIBLE);
+        }
+        if(back.isClickable()) {
+            back.setOnClickListener(view -> {
+                displayTextDirections(navList);
+            });
+        }
+         */
+
+        Button next = findViewById(R.id.next_btn);
+        if (!navList.endReached()){
+            next.setClickable(true);
+            next.setVisibility(View.VISIBLE);
+        }
         if(next.isClickable()) {
             next.setOnClickListener(view -> {
                 displayTextDirections(navList);
             });
         }
+
+        /*
+        if(next.isClickable()) {
+            next.setOnClickListener(view -> {
+                displayTextDirections(navList);
+            });
+        }*/
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
@@ -64,10 +94,37 @@ public class ShortestPathActivity extends AppCompatActivity {
         Location currLoc = navList.getCurrentLocation();
         Location nextLoc = navList.getNextLocation();
         String directions = navList.getDirectionsToNextLocation();
+
+
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
 
+
+        Button back = findViewById(R.id.back_btn);
+        if (!navList.atStart()){
+            back.setClickable(true);
+            back.setVisibility(View.VISIBLE);
+        }
+        if(back.isClickable()) {
+            back.setOnClickListener(view -> {
+                displayPrevTextDirections(navList);
+            });
+        }
+
+
         Button next = findViewById(R.id.next_btn);
+        if (!navList.endReached()){
+            next.setClickable(true);
+            next.setVisibility(View.VISIBLE);
+        }
+        if(next.isClickable()) {
+            next.setOnClickListener(view -> {
+                displayTextDirections(navList);
+            });
+        }
+
+
+        //Button next = findViewById(R.id.next_btn);
         Button finish = findViewById(R.id.finish_btn);
         if(navList.endReached()){
             next.setClickable(false);
@@ -80,6 +137,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             finish.setOnClickListener(view -> {
                 startActivity(intent);
             });
+
         }
         else{
             nextNextView.setText(navList.getNextNextLocation().getName() +
@@ -88,4 +146,50 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
+    public void displayPrevTextDirections(NavigatePlannedList navList){
+        TextView textView = findViewById(R.id.path_result);
+        TextView nextNextView = findViewById(R.id.next_lbl);
+        Location prevLoc = navList.getPrevLocation();
+        Location currLoc = navList.getCurrentLocation();
+        String prevDirections = navList.getDirectionsToPreviousLocation();
+        prevDirections = "From: " + currLoc.getName() + "\nTo: " + prevLoc.getName() + "\n\n" + prevDirections;
+        textView.setText(prevDirections);
+
+        nextNextView.setText(navList.getNextLocation().getName() +
+                ", " + navList.getPathToNextLocation().getWeight());
+
+        //Button back = findViewById(R.id.back_btn);
+        /*
+        if (navList.atFirst()){
+            back.setClickable(false);
+            back.setVisibility(View.GONE);
+        }
+        if(back.isClickable()) {
+            back.setOnClickListener(view -> {
+                displayPrevTextDirections(navList);
+                navList.previousLocation();
+            });
+        }
+         */
+
+        Button next = findViewById(R.id.next_btn);
+        Button finish = findViewById(R.id.finish_btn);
+        if (!navList.endReached()){
+            next.setClickable(true);
+            next.setVisibility(View.VISIBLE);
+
+            nextNextView.setVisibility(View.VISIBLE);
+
+            finish.setClickable(false);
+            finish.setVisibility(View.GONE);
+        }
+
+        if(next.isClickable()) {
+            next.setOnClickListener(view -> {
+                displayTextDirections(navList);
+            });
+        }
+
+        navList.previousLocation();
+    }
 }

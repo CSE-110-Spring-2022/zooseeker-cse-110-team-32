@@ -19,6 +19,24 @@ public class NavigatePlannedList {
 
     }
 
+    /*tells whether the user is at the entrance gate
+   returns true if the user is at the entrance gate and hasn't seen any exhibits and returns false otherwise
+   @return whether or not user is at beginning of their list
+     */
+    public Boolean atStart(){
+        if (currLocationIndex == 0){
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean atFirst(){
+        if (currLocationIndex == 1){
+            return true;
+        }
+        return false;
+    }
+
     /*tells whether the end of the exhibit has been reached
    returns true if the user is at the end of the exhibit and returns false otherwise
    @return whether or not user is at end of their list
@@ -53,6 +71,13 @@ public class NavigatePlannedList {
     public Location getNextLocation() {
         if (currLocationIndex + 1 < this.planList.planSize()){
             return this.planList.getMyList().get(currLocationIndex+1);
+        }
+        return null;
+    }
+
+    public Location getPrevLocation() {
+        if (currLocationIndex - 1 > 0){
+            return this.planList.getMyList().get(currLocationIndex-1);
         }
         return null;
     }
@@ -105,6 +130,17 @@ public class NavigatePlannedList {
         Location next = this.planList.getMyList().get(currLocationIndex + 1);
         String nextId = next.getId();
         return this.planList.getZooMap().getTextDirections(currId, nextId);
+    }
+
+    /*Returns the directions the user needs to get from their current location to the previous one
+   @return locations to previous location
+    */
+    public String getDirectionsToPreviousLocation() {
+        Location curr = this.planList.getMyList().get(currLocationIndex);
+        String currId = curr.getId();
+        Location prev = this.planList.getMyList().get(currLocationIndex-1);
+        String prevId = prev.getId();
+        return this.planList.getZooMap().getTextDirections(currId, prevId);
     }
 
     /*returns distance from current location to next location
