@@ -41,48 +41,18 @@ public class ShortestPathActivity extends AppCompatActivity {
         if(!back.isClickable()){
             back.setVisibility(View.GONE);
         }
-
         PlanList plan = SearchActivity.getPlan();
         NavigatePlannedList navList = new NavigatePlannedList(plan);
-        //Button next = findViewById(R.id.next_btn);
-        /*if(!navList.endReached()){
-            displayTextDirections(navList);
-        }*/
-
-        if(navList.atStart()){
-            displayTextDirections(navList);
-        }
-
-        /*
-        back = findViewById(R.id.back_btn);
-        if (!navList.atFirst()){
-            back.setClickable(true);
-            back.setVisibility(View.VISIBLE);
-        }
-        if(back.isClickable()) {
-            back.setOnClickListener(view -> {
-                displayTextDirections(navList);
-            });
-        }
-         */
-
         Button next = findViewById(R.id.next_btn);
-        if (!navList.endReached()){
-            next.setClickable(true);
-            next.setVisibility(View.VISIBLE);
-        }
-        if(next.isClickable()) {
-            next.setOnClickListener(view -> {
-                displayTextDirections(navList);
-            });
+        if(!navList.endReached()){
+            displayTextDirections(navList);
         }
 
-        /*
         if(next.isClickable()) {
             next.setOnClickListener(view -> {
                 displayTextDirections(navList);
             });
-        }*/
+        }
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
@@ -94,37 +64,11 @@ public class ShortestPathActivity extends AppCompatActivity {
         Location currLoc = navList.getCurrentLocation();
         Location nextLoc = navList.getNextLocation();
         String directions = navList.getDirectionsToNextLocation();
-
-
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
+
         textView.setText(directions);
 
-
-        Button back = findViewById(R.id.back_btn);
-        if (!navList.atStart()){
-            back.setClickable(true);
-            back.setVisibility(View.VISIBLE);
-        }
-        if(back.isClickable()) {
-            back.setOnClickListener(view -> {
-                displayPrevTextDirections(navList);
-            });
-        }
-
-
         Button next = findViewById(R.id.next_btn);
-        if (!navList.endReached()){
-            next.setClickable(true);
-            next.setVisibility(View.VISIBLE);
-        }
-        if(next.isClickable()) {
-            next.setOnClickListener(view -> {
-                displayTextDirections(navList);
-            });
-        }
-
-
-        //Button next = findViewById(R.id.next_btn);
         Button finish = findViewById(R.id.finish_btn);
         if(navList.endReached()){
             next.setClickable(false);
@@ -137,12 +81,20 @@ public class ShortestPathActivity extends AppCompatActivity {
             finish.setOnClickListener(view -> {
                 startActivity(intent);
             });
-
         }
         else{
             nextNextView.setText(navList.getNextNextLocation().getName() +
                     ", " + navList.getPathToNextNextLocation().getWeight());
-            navList.advanceLocation();
+        }
+        navList.advanceLocation();
+
+        Button back = findViewById(R.id.back_btn);
+        if (!navList.atStart()){
+            back.setVisibility(View.VISIBLE);
+            back.setClickable(true);
+            back.setOnClickListener(view -> {
+                displayPrevTextDirections(navList);
+            });
         }
     }
 
@@ -151,45 +103,38 @@ public class ShortestPathActivity extends AppCompatActivity {
         TextView nextNextView = findViewById(R.id.next_lbl);
         Location prevLoc = navList.getPrevLocation();
         Location currLoc = navList.getCurrentLocation();
-        String prevDirections = navList.getDirectionsToPreviousLocation();
-        prevDirections = "From: " + currLoc.getName() + "\nTo: " + prevLoc.getName() + "\n\n" + prevDirections;
-        textView.setText(prevDirections);
+        Location nextLoc = navList.getNextLocation();
+        String directions = navList.getDirectionsToPreviousLocation();
+        directions = "*Going Backwards\n\n" + "From: " + currLoc.getName() + "\nTo: "
+                + prevLoc.getName() + "\n\n" + directions;
+        textView.setText(directions);
 
-        nextNextView.setText(navList.getNextLocation().getName() +
-                ", " + navList.getPathToNextLocation().getWeight());
-
-        //Button back = findViewById(R.id.back_btn);
-        /*
+        Button back = findViewById(R.id.back_btn);
         if (navList.atFirst()){
             back.setClickable(false);
             back.setVisibility(View.GONE);
         }
-        if(back.isClickable()) {
-            back.setOnClickListener(view -> {
-                displayPrevTextDirections(navList);
-                navList.previousLocation();
-            });
-        }
-         */
+
+        navList.previousLocation();
 
         Button next = findViewById(R.id.next_btn);
         Button finish = findViewById(R.id.finish_btn);
+
+        finish.setClickable(false);
+        finish.setVisibility(View.GONE);
+
+        next.setVisibility(View.VISIBLE);
+        next.setClickable(true);
+        next.setOnClickListener(view -> {
+            displayTextDirections(navList);
+        });
+
         if (!navList.endReached()){
-            next.setClickable(true);
-            next.setVisibility(View.VISIBLE);
-
             nextNextView.setVisibility(View.VISIBLE);
-
-            finish.setClickable(false);
-            finish.setVisibility(View.GONE);
+            nextNextView.setText(navList.getNextNextLocation().getName() +
+                    ", " + navList.getPathToNextNextLocation().getWeight());
         }
 
-        if(next.isClickable()) {
-            next.setOnClickListener(view -> {
-                displayTextDirections(navList);
-            });
-        }
-
-        navList.previousLocation();
     }
+
 }

@@ -76,7 +76,7 @@ public class NavigatePlannedList {
     }
 
     public Location getPrevLocation() {
-        if (currLocationIndex - 1 > 0){
+        if (currLocationIndex - 1 >= 0){
             return this.planList.getMyList().get(currLocationIndex-1);
         }
         return null;
@@ -164,7 +164,7 @@ public class NavigatePlannedList {
     @return whether or not user was moved to next location
      */
     public Boolean advanceLocation() {
-        if(currLocationIndex+1 >= planList.getMyList().size()){
+        if(currLocationIndex + 1 >= planList.getMyList().size()){
             return false;
         }
         this.currLocationIndex++;
@@ -176,7 +176,7 @@ public class NavigatePlannedList {
    the first location in the list
     */
     public Boolean previousLocation() {
-        if(currLocationIndex < 1){
+        if(currLocationIndex < 0){
             return false;
         }
         this.currLocationIndex--;
