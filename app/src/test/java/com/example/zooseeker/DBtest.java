@@ -67,7 +67,9 @@ public class DBtest {
         assertEquals(id, item.Uid);
         assertEquals(exhibit1.id, item.id);
         assertEquals(exhibit1.name, item.name);
-        assertEquals(exhibit1.tags, item.tags);
+        for (int i = 0; i < tags.length; i++) {
+            assertEquals(exhibit1.tags.get(i), item.tags.get(i));
+        }
     }
 
     @Test

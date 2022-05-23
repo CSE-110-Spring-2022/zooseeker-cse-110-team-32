@@ -155,6 +155,16 @@ public class PlanList {
         this.myList = sortList;
         myList.add(gate);
     }
+
+    public List<Exhibit> getExhibits() {
+        List<Exhibit> result = new ArrayList<>();
+        for (Location loc : this.myList) {
+            if (loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)) {
+                result.add((Exhibit)loc);
+            }
+        }
+        return result;
+    }
     /*
         These two methods are for saving and loading PlanList, at the moment because
         sharedPreferences cannot store object, it only store strings. There is a way to doing

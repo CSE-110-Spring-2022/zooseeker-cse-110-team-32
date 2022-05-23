@@ -29,10 +29,21 @@ public class Exhibit extends Location{
     Exhibit(String id, String name, List<String> tags) {
         super(id, name, tags);
         this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
+        this.tags = tags;
     }
 
     public List<String> getTags() {
         return this.tags;
     }
 
+    @Override
+    public String toString() {
+        return "Exhibit{" +
+                "tags=" + tags +
+                ", id='" + id + '\'' +
+                ", kind=" + kind +
+                ", name='" + name + '\'' +
+                ", tags=" + tags +
+                '}';
+    }
 }
