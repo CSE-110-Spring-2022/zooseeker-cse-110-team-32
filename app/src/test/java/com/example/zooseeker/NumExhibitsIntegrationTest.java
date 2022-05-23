@@ -30,7 +30,7 @@ public class NumExhibitsIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("Arctic Foxes", true);
+            searchBar.setQuery("Flamingos", true);
             ListView searchView = activity.findViewById(R.id.search_list);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             TextView numExhibitsView = activity.findViewById(R.id.exhibits_num);
@@ -41,7 +41,7 @@ public class NumExhibitsIntegrationTest {
             assertEquals(1, (int) Integer.valueOf(numMatcher.group(0)));
 
 
-            searchBar.setQuery("gator", true);
+            searchBar.setQuery("ape", true);
             searchView = activity.findViewById(R.id.search_list);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             numExhibitsStr = (String) numExhibitsView.getText();
@@ -57,7 +57,7 @@ public class NumExhibitsIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("Arctic Foxes", true);
+            searchBar.setQuery("Flamingos", true);
             TextView numExhibitsView = activity.findViewById(R.id.exhibits_num);
             String numExhibitsStr = (String) numExhibitsView.getText();
             Pattern numPattern = Pattern.compile("\\d+");

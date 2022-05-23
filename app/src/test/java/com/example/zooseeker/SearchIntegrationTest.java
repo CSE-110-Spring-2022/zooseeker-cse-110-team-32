@@ -26,15 +26,15 @@ public class SearchIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("Lions", true);
+            searchBar.setQuery("Gorillas", true);
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchLion = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchLion);
-            assertEquals("Lions", searchLion.name);
-            searchBar.setQuery("fox", true);
-            ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchFox);
-            assertEquals("Arctic Foxes", searchFox.name);
+            ZooData.VertexInfo searchGorilla = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchGorilla);
+            assertEquals("Gorillas", searchGorilla.name);
+            searchBar.setQuery("flamingo", true);
+            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchFlamingo);
+            assertEquals("Flamingos", searchFlamingo.name);
         });
     }
 
@@ -44,7 +44,7 @@ public class SearchIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("Liona", true);
+            searchBar.setQuery("Gorillo", true);
             ListView searchView = activity.findViewById(R.id.search_list);
             assertEquals(0, searchView.getCount());
         });

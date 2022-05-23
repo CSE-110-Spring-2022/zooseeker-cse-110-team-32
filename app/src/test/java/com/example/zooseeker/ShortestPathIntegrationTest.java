@@ -36,12 +36,12 @@ public class ShortestPathIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("fox", true);
+            searchBar.setQuery("flamingo", true);
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchFox);
+            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchFlamingo);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
-            searchBar.setQuery("Elephant", true);
+            searchBar.setQuery("Hippo", true);
             searchView = activity.findViewById(R.id.search_list);
             ZooData.VertexInfo searchMammal = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
             assertNotNull(searchMammal);
@@ -54,18 +54,18 @@ public class ShortestPathIntegrationTest {
                 TextView directions = activity1.findViewById(R.id.path_result);
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
                 assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Arctic Foxes"));
+                assertEquals(true, ((String) directions.getText()).contains("To: Flamingos"));
                 assertEquals(true, ((String) directions.getText()).contains("1. Walk 10.0 meters"));
-                assertEquals("Elephant Odyssey, 800.0", nextLabel.getText());
+                assertEquals("Hippos, 240.0", nextLabel.getText());
                 Button nextBtn = activity1.findViewById(R.id.next_btn);
                 assertTrue(nextBtn.isClickable());
                 assertEquals(VISIBLE, nextBtn.getVisibility());
                 nextBtn.performClick();
-                assertEquals(true, ((String) directions.getText()).contains("From: Arctic Foxes"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Elephant Odyssey"));
-                assertEquals(true, ((String) directions.getText()).contains("Arctic Avenue"));
-                assertEquals(true, ((String) directions.getText()).contains("4. Walk 200.0 meters"));
-                assertEquals("Entrance and Exit Gate, 510.0", nextLabel.getText());
+                assertEquals(true, ((String) directions.getText()).contains("From: Flamingos"));
+                assertEquals(true, ((String) directions.getText()).contains("To: Hippos"));
+                assertEquals(true, ((String) directions.getText()).contains("Hippo Trail"));
+                assertEquals(true, ((String) directions.getText()).contains("4. Walk 10.0 meters"));
+                assertEquals("Entrance and Exit Gate, 200.0", nextLabel.getText());
 
             });
 
@@ -79,12 +79,12 @@ public class ShortestPathIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("fox", true);
+            searchBar.setQuery("flamingo", true);
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchFox);
+            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchFlamingo);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
-            searchBar.setQuery("Elephant", true);
+            searchBar.setQuery("Hippo", true);
             searchView = activity.findViewById(R.id.search_list);
             ZooData.VertexInfo searchMammal = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
             assertNotNull(searchMammal);
@@ -99,7 +99,6 @@ public class ShortestPathIntegrationTest {
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
                 assertTrue(nextBtn.isClickable());
                 assertEquals(VISIBLE, nextBtn.getVisibility());
-                nextBtn.performClick();
                 nextBtn.performClick();
                 nextBtn.performClick();
                 assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
