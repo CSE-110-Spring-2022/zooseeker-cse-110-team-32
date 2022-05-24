@@ -133,7 +133,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         Location currLoc = navList.getCurrentLocation();
         Location nextLoc = navList.getNextLocation();
         GraphPath<String, IdentifiedWeightedEdge> currPath = plan.getZooMap().getShortestPath(currLoc.getId(), nextLoc.getId());
-        String newRoute = locTracker.reroute(currPath);
+        String newRoute = locTracker.rerouteTextDirections(currPath);
         if (newRoute != null) {
             String animalsList = "";
             if (nextLoc.getKind() == ZooData.VertexInfo.Kind.EXHIBIT_GROUP) {

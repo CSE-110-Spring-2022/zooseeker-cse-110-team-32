@@ -13,6 +13,7 @@ public class LocationTracker {
     public double lng;
     private PlanList plan;
     private Map<String, ZooData.VertexInfo> zooLocs;
+    public GraphPath<String, IdentifiedWeightedEdge> newRoute;
 
 
     public LocationTracker(Context context, PlanList plan){
@@ -28,11 +29,14 @@ public class LocationTracker {
         this.lng = lng;
     }
 
-    public String reroute(GraphPath<String, IdentifiedWeightedEdge> currRoute){
+    public void reroute(GraphPath<String, IdentifiedWeightedEdge> currRoute){
         String closestLoc = null;
         double closestDist = Double.MAX_VALUE;
         for (ZooData.VertexInfo loc: zooLocs.values()){
-            double dist = distance(lat, loc.lat, lng, loc.lng);
+            if (loc.parent_id != null){
+                continue;
+            }
+            double dist = distance(lat, lng, loc.lat, loc.lng);
             if (dist < closestDist){
                 closestDist = dist;
                 closestLoc = loc.id;
@@ -50,10 +54,22 @@ public class LocationTracker {
             double lng2 = to.lng;
             double dist = distToStreet(lng, lat, lng1, lat1, lng2, lat2);
             if (closestLoc.equals(fromid) || closestLoc.equals(toid) || closestDist > dist){
-                return null;
+                newRoute = currRoute;
             }
         }
-        return plan.getZooMap().getTextDirections(closestLoc, currRoute.getEndVertex());
+        newRoute = plan.getZooMap().getShortestPath(closestLoc, currRoute.getEndVertex());
+    }
+
+    public GraphPath<String, IdentifiedWeightedEdge> getReroute(GraphPath<String, IdentifiedWeightedEdge> currRoute){
+        reroute(currRoute);
+        return newRoute;
+    }
+
+    public String rerouteTextDirections(GraphPath<String, IdentifiedWeightedEdge> currRoute){
+        reroute(currRoute);
+        String from = newRoute.getStartVertex();
+        String to = newRoute.getEndVertex();
+        return plan.getZooMap().getTextDirections(from, to);
     }
 
     public double distToStreet(double x, double y, double x1, double y1,  double x2, double y2){
@@ -86,6 +102,6 @@ public class LocationTracker {
     }
 
     public double distance(double x1, double y1, double x2, double y2){
-        return Math.pow(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2), 0.5);
+        return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
     }
 }
