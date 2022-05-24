@@ -41,7 +41,6 @@ public abstract class ExhibitDatabase extends RoomDatabase {
                     }
                 }).build();
     }
-
     @VisibleForTesting
     public static void injectExhibitDatabase(ExhibitDatabase testDatabase) {
         if (singleton != null) {

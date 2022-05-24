@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -154,6 +156,25 @@ public class PlanList {
         }
         this.myList = sortList;
         myList.add(gate);
+    }
+
+    public void clearList(ExhibitDao dao){
+        this.myList.clear();
+        List<Exhibit> temp = dao.getAll();
+        for(Exhibit e: dao.getAll()){
+
+            dao.delete(e);
+        }
+        resetCurrLocationIndex();
+        saveList(dao);
+
+        System.out.println("vukfluyfd "+dao.getAll().size()+", ");
+
+
+    }
+
+    public void resetCurrLocationIndex(){
+        this.currLocationIndex = 0;
     }
 
     public List<Exhibit> getExhibits() {

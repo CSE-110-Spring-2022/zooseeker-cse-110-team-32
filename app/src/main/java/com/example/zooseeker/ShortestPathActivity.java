@@ -41,6 +41,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         if(!back.isClickable()){
             back.setVisibility(View.GONE);
         }
+
         PlanList plan = SearchActivity.getPlan();
         NavigatePlannedList navList = new NavigatePlannedList(plan);
         Button next = findViewById(R.id.next_btn);
@@ -78,6 +79,8 @@ public class ShortestPathActivity extends AppCompatActivity {
             finish.setClickable(true);
             finish.setVisibility(View.VISIBLE);
             finish.setOnClickListener(view -> {
+                SearchActivity.getPlan().clearList(SearchActivity.getDao());
+                //navList.getPlanList().clearList(SearchActivity.getDao());
                 startActivity(intent);
             });
         }

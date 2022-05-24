@@ -31,6 +31,9 @@ public interface ExhibitDao {
     @Query("SELECT * FROM `exhibits`")
     List<Exhibit> getAll();
 
+    @Query("SELECT * FROM `exhibits`")
+    LiveData<List<Exhibit>> getAllLive();
+
     @Update
     int update(Exhibit exhibit);
 

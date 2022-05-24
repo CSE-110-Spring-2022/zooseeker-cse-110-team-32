@@ -77,6 +77,7 @@ public class SaveItineraryTest {
         List<Exhibit> exhibits = newPlan.getExhibits();
         List<Exhibit> expected = plan.getExhibits();
 
+        newPlan.clearList(dao);
         System.out.println(exhibits.size());
         for (int i = 0; i < expected.size(); i++) {
             assertEquals(expected.get(i).toString(), exhibits.get(i).toString());
