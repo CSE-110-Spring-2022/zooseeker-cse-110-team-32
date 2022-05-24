@@ -110,12 +110,9 @@ public class ZooMap {
     @return set of directions user needs to get from start to finish
      */
     public String getTextDirections(String node_from, String node_to){
-        /* commented out to update currPath always. fixed for updating based
-        off of user location
-        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
+        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) || !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
-         */
         setShortestPath(node_from, node_to);
         int i = 1;
         StringBuilder textDirections = new StringBuilder("");
