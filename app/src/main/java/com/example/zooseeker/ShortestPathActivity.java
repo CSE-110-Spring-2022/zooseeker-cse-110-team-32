@@ -83,6 +83,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             });
         }
         else{
+            nextNextView.setVisibility(View.VISIBLE);
             nextNextView.setText(navList.getNextNextLocation().getName() +
                     ", " + navList.getPathToNextNextLocation().getWeight());
         }
@@ -103,7 +104,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         TextView nextNextView = findViewById(R.id.next_lbl);
         Location prevLoc = navList.getPrevLocation();
         Location currLoc = navList.getCurrentLocation();
-        Location nextLoc = navList.getNextLocation();
         String directions = navList.getDirectionsToPreviousLocation();
         directions = "*Going Backwards\n\n" + "From: " + currLoc.getName() + "\nTo: "
                 + prevLoc.getName() + "\n\n" + directions;
@@ -128,12 +128,12 @@ public class ShortestPathActivity extends AppCompatActivity {
         next.setOnClickListener(view -> {
             displayTextDirections(navList);
         });
-
-        if (!navList.endReached()){
-            nextNextView.setVisibility(View.VISIBLE);
-            nextNextView.setText(navList.getNextNextLocation().getName() +
-                    ", " + navList.getPathToNextNextLocation().getWeight());
-        }
+        nextNextView.setVisibility(View.INVISIBLE);
+//        if (!navList.endReached()){
+//            nextNextView.setVisibility(View.VISIBLE);
+//            nextNextView.setText(navList.getNextNextLocation().getName() +
+//                    ", " + navList.getPathToNextNextLocation().getWeight());
+//        }
 
     }
 
