@@ -22,6 +22,9 @@ public interface ExhibitDao {
     @Insert
     List<Long> insertAll(List<Exhibit> planList);
 
+    @Query("SELECT * FROM `exhibits` WHERE `id`=:id")
+    Exhibit get(String id);
+
     @Query("SELECT * FROM `exhibits` WHERE `Uid`=:Uid")
     Exhibit get(long Uid);
 

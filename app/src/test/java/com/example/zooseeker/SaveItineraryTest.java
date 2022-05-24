@@ -32,11 +32,11 @@ public class SaveItineraryTest {
 
     @Before
     public void loadPlan() {
-
         db = Room.inMemoryDatabaseBuilder(context, ExhibitDatabase.class)
                 .allowMainThreadQueries()
                 .build();
         dao = db.exhibitDao();
+
     }
 
     @After
@@ -44,9 +44,7 @@ public class SaveItineraryTest {
         db.close();
     }
 
-
-    @Test
-    public void testingSavedList(){
+    public void savings() {
         zooMap = new ZooMap(context);
         plan = new PlanList(context);
         navList = new NavigatePlannedList(plan);
@@ -59,9 +57,24 @@ public class SaveItineraryTest {
         }
         plan.sort();
         planList = plan.getMyList();
-        dao.insertAll(plan.getExhibits());
-        List<Exhibit> exhibits = dao.getAll();
+    }
 
+
+    @Test
+    public void loadingList(){
+        savings();
+        //test for duplicates
+        plan.saveList(dao);
+        plan.saveList(dao);
+        plan.saveList(dao);
+        for (Exhibit g : plan.getExhibits()) {
+            System.out.println("hi" + g.Uid);
+        }
+        plan.saveList(dao);
+        PlanList newPlan = new PlanList(context);
+        newPlan.loadList(dao);
+
+        List<Exhibit> exhibits = newPlan.getExhibits();
         List<Exhibit> expected = plan.getExhibits();
 
         System.out.println(exhibits.size());

@@ -25,7 +25,6 @@ public class Exhibit extends Location{
     @TypeConverters(TagConverter.class)
     public List<String> tags;
 
-
     Exhibit(String id, String name, List<String> tags) {
         super(id, name, tags);
         this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
