@@ -10,7 +10,6 @@ public abstract class Location {
     String id;
     ZooData.VertexInfo.Kind kind;
     String name;
-    List<String> tags;
     double lat;
     double lng;
 

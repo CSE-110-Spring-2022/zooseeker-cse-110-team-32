@@ -50,8 +50,9 @@ public class SaveItineraryTest {
         navList = new NavigatePlannedList(plan);
         vertices = ZooData.loadVertexInfoJSON(context);
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()) {
-            if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)) {
-                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+            ZooData.VertexInfo v = loc.getValue();
+            if ((v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT) && v.parent_id == null) || v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT_GROUP)){
+                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                 plan.addLocation(exhibit);
             }
         }

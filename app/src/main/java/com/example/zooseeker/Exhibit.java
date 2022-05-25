@@ -24,27 +24,18 @@ public class Exhibit extends Location{
     @PrimaryKey(autoGenerate = true)
     public long Uid = 0;
 
-    @TypeConverters(TagConverter.class)
-    public List<String> tags;
 
-    Exhibit(String id, String name, double lat, double lng, List<String> tags) {
-        super(id, name, lat, lng, tags);
+    Exhibit(String id, String name, double lat, double lng) {
+        super(id, name, lat, lng);
         this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
-        this.tags = tags;
-    }
-
-    public List<String> getTags() {
-        return this.tags;
     }
 
     @Override
     public String toString() {
         return "Exhibit{" +
-                "tags=" + tags +
                 ", id='" + id + '\'' +
                 ", kind=" + kind +
                 ", name='" + name + '\'' +
-                ", tags=" + tags +
                 '}';
     }
 }
