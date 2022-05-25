@@ -53,7 +53,7 @@ public class EmptyListIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("fla", true);
+            searchBar.setQuery("capu", true);
             ListView searchView = activity.findViewById(R.id.search_list);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             searchBar.setQuery("mam", true);
@@ -61,6 +61,8 @@ public class EmptyListIntegrationTest {
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             Button planBtn = activity.findViewById(R.id.plan_btn);
             planBtn.performClick();
+            System.out.println(activity.getDao().getAll().get(0));
+            assertEquals(2, activity.getDao().getAll().size());
 
             ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
             pathScenario.moveToState(Lifecycle.State.CREATED);
