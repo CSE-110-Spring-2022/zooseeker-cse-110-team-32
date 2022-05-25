@@ -1,8 +1,11 @@
 package com.example.zooseeker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -40,10 +43,17 @@ public class SearchActivity extends AppCompatActivity {
     ArrayList<ZooData.VertexInfo> searchResults;
     Search searcher;
     SearchView search_bar;
+    private ExhibitViewModel viewModel;
     public static PlanList planList;
+    public static ExhibitDao exhibitDao;
     public static PlanList getPlan(){
         return planList;
     }
+
+    public static void resetPlan(){ planList = null;}
+
+    public static ExhibitDao getDao() { return exhibitDao;}
+
 
     /*Creates search page and initializes the needed classes and variables to work each component
     of the search page
@@ -53,6 +63,19 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        PlanList plan = new PlanList(this);
+
+        exhibitDao = ExhibitDatabase.getSingleton(this, planList).exhibitDao();
+
+        planList = plan;
+        if(this.exhibitDao != null && exhibitDao.getAll().size() > 0){
+            planList.loadList(exhibitDao);
+            Intent intent = new Intent(this, ShortestPathActivity.class);
+            startActivity(intent);
+        }
+        else{
+            planList = new PlanList(this);
+        }
 
         DisplayListAdapter adapter = new DisplayListAdapter();
         adapter.setHasStableIds(true);
@@ -60,8 +83,6 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.display_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-        PlanList plan = new PlanList(this);
 
         // Locate the ListView in listview_main.xml
         resultsView = (ListView) findViewById(R.id.search_list);
@@ -74,7 +95,6 @@ public class SearchActivity extends AppCompatActivity {
 
         // Binds the Adapter to the ListView
         resultsView.setAdapter(searchAdapter);
-
 
         // Locate the EditText in listview_main.xml
         search_bar = (SearchView) findViewById(R.id.search_bar);
@@ -116,6 +136,7 @@ public class SearchActivity extends AppCompatActivity {
             }
             adapter.setDisplayItems(list);
             num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()));
+
         });
 
         planList = plan;
@@ -123,7 +144,8 @@ public class SearchActivity extends AppCompatActivity {
         Button planBtn = findViewById(R.id.plan_btn);
         planBtn.setOnClickListener(view ->{
             Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-            plan.sort();
+            planList.sort();
+            planList.saveList(exhibitDao);
             startActivity(pathIntent);
         });
 
