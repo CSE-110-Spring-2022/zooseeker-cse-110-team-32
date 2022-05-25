@@ -48,50 +48,12 @@ public class EmptyListIntegrationTest {
     }
 
     @Test
-    public void clearEmptyListTest(){
-        scenario.moveToState(Lifecycle.State.CREATED);
-
-        scenario.onActivity(activity -> {
-            ListView searchView = activity.findViewById(R.id.search_list);
-            searchView = activity.findViewById(R.id.search_list);
-            Button planBtn = activity.findViewById(R.id.plan_btn);
-            planBtn.performClick();
-            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
-            pathScenario.moveToState(Lifecycle.State.CREATED);
-            pathScenario.onActivity(activity1 -> {
-                TextView directions = activity1.findViewById(R.id.path_result);
-                TextView nextLabel = activity1.findViewById(R.id.next_lbl);
-                assertEquals("", ((String) directions.getText()));
-                Button nextBtn = activity1.findViewById(R.id.next_btn);
-                assertTrue(nextBtn.isClickable());
-                assertEquals(VISIBLE, nextBtn.getVisibility());
-                nextBtn.performClick();
-                Button finishBtn = activity1.findViewById(R.id.finish_btn);
-                assertFalse(nextBtn.isClickable());
-                assertEquals(GONE, nextBtn.getVisibility());
-
-                assertTrue(finishBtn.isClickable());
-                assertEquals(VISIBLE, finishBtn.getVisibility());
-
-                assertEquals(0, activity.getDao().getAll().size());
-                finishBtn.performClick();
-                assertEquals(0, activity.getDao().getAll().size());
-
-
-            });
-
-
-        });
-
-    }
-
-    @Test
     public void clearNonEmptyListTest(){
         scenario.moveToState(Lifecycle.State.CREATED);
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("fla", true);
+            searchBar.setQuery("capu", true);
             ListView searchView = activity.findViewById(R.id.search_list);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             searchBar.setQuery("mam", true);
@@ -99,6 +61,8 @@ public class EmptyListIntegrationTest {
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             Button planBtn = activity.findViewById(R.id.plan_btn);
             planBtn.performClick();
+            System.out.println(activity.getDao().getAll().get(0));
+            assertEquals(2, activity.getDao().getAll().size());
 
             ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
             pathScenario.moveToState(Lifecycle.State.CREATED);
