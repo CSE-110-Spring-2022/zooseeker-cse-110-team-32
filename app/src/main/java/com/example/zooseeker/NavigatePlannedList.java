@@ -30,6 +30,10 @@ public class NavigatePlannedList {
         return false;
     }
 
+    /*tells us whether the user is at the first exhibit
+    returns true if the user is at the first exhibit and false otherwise
+    @return whether or not user is at first exhibit
+    */
     public Boolean atFirst(){
         if (currLocationIndex == 1){
             return true;
