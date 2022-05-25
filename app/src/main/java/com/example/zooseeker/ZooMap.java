@@ -66,7 +66,7 @@ public class ZooMap {
     @return list of locations between two points
      */
     public List<String> getLandmarks(String node_from, String node_to){
-        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
+        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) || !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
         List<String> locs = new ArrayList<>();
@@ -82,7 +82,7 @@ public class ZooMap {
     @return list of streets between start and end location
      */
     public List<String> getStreets(String node_from, String node_to){
-        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
+        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) || !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
         List<String> streets = new ArrayList<>();
@@ -98,7 +98,7 @@ public class ZooMap {
     @return distance between start and finish
      */
     public double getDistance(String node_from, String node_to){
-        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) && !currPath.getEndVertex().equals(node_to)) {
+        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) || !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
         return currPath.getWeight();

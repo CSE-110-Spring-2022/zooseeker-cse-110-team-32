@@ -1,0 +1,79 @@
+package com.example.zooseeker;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import android.content.Intent;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
+
+import androidx.lifecycle.Lifecycle;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(AndroidJUnit4.class)
+public class LocationTrackingIntegrationTest {
+    ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class);
+    LocationTracker locTracker;
+    @Test
+    public void displayDirectionsClickNextTest(){
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+            SearchView searchBar = activity.findViewById(R.id.search_bar);
+            searchBar.setQuery("flamingo", true);
+            ListView searchView = activity.findViewById(R.id.search_list);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            searchBar.setQuery("Hippo", true);
+            searchView = activity.findViewById(R.id.search_list);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            Button planBtn = activity.findViewById(R.id.plan_btn);
+            planBtn.performClick();
+            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
+            pathScenario.moveToState(Lifecycle.State.CREATED);
+            Intent intent = new Intent();
+            intent.putExtra(ShortestPathActivity.EXTRA_USE_LOCATION_SERVICE, false);
+
+            pathScenario.onActivity(activity1 -> {
+                Coord none = new Coord(0.1, -0.3);
+                activity1.mockLocation(none);
+                Coord capuchin = new Coord(32.751128871469874, -117.16364410510093);
+                activity1.mockLocation(capuchin);
+                TextView directions = activity1.findViewById(R.id.path_result);
+                TextView nextLabel = activity1.findViewById(R.id.next_lbl);
+                locTracker = activity1.locTracker;
+                System.out.println(locTracker.lat);
+                System.out.println(locTracker.lng);
+                assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
+                assertEquals(true, ((String) directions.getText()).contains("To: Flamingos"));
+
+                //assertEquals(true, ((String) directions.getText()).contains("Capuchin"));
+                assertEquals("Hippos, 240.0", nextLabel.getText());
+                Button nextBtn = activity1.findViewById(R.id.next_btn);
+                nextBtn.performClick();
+
+                System.out.println(locTracker.lat);
+                System.out.println(locTracker.lng);
+//                assertEquals(true, ((String) directions.getText()).contains("From: Flamingos"));
+//                assertEquals(true, ((String) directions.getText()).contains("To: Hippos"));
+//                assertEquals(true, ((String) directions.getText()).contains("Hippo Trail"));
+//                assertEquals(true, ((String) directions.getText()).contains("4. Walk 10.0 meters"));
+//                assertEquals("Entrance and Exit Gate, 200.0", nextLabel.getText());
+
+            });
+
+
+        });
+    }
+
+
+}
