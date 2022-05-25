@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -155,47 +157,75 @@ public class PlanList {
         this.myList = sortList;
         myList.add(gate);
     }
-    /*
-        These two methods are for saving and loading PlanList, at the moment because
-        sharedPreferences cannot store object, it only store strings. There is a way to doing
-        serialization but that would be pretty complicated to do. The other way involving
-        putting the name strings into a set into the preferences and to load them, we use
-        string name as query to fetch the data from the database
-        I am currently using the second way by converting the arraylist into a set, and then
-        put the ID into the set and retrieve the set in the loadList method
-     */
-    public void saveList() {
-        SharedPreferences preferences =
-                this.context.getSharedPreferences("List_File", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        Set<String> saveList = new HashSet<>();
-        for (Location e : myList) {
-            saveList.add(e.getId());
+
+    public void clearList(ExhibitDao dao){
+        this.myList.clear();
+        List<Exhibit> temp = dao.getAll();
+        for(Exhibit e: dao.getAll()){
+
+            dao.delete(e);
         }
-        editor.putStringSet("list", saveList);
-        editor.apply();
+        resetCurrLocationIndex();
+        saveList(dao);
+
+
+    }
+
+    public void resetCurrLocationIndex(){
+        this.currLocationIndex = 0;
+    }
+
+    public List<Exhibit> getExhibits() {
+        List<Exhibit> result = new ArrayList<>();
+        for (Location loc : this.myList) {
+            if (loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)) {
+                result.add((Exhibit)loc);
+            }
+        }
+        return result;
+    }
+    /*
+        saveList takes a database dao as an argument and it will call get exhibits, and
+        store all the current exhibits into the database
+     */
+    public void saveList(ExhibitDao dao) {
+        List<Exhibit> allExhibits = this.getExhibits();
+        for (Exhibit ex : allExhibits) {
+            if (dao.get(ex.id) == null) {
+                dao.insert(ex);
+            }
+        }
     }
 
     /*
-    Experimental stage: this function will be used to load the list from preferences, the list
-    stored in preferences are list of Location IDs, then this method will retrieve the location
-    object from the database and add them to the PlanList(aka the arraylist). Since the ordering
-    might be different, we will call sort method in this class to sort the arraylist.
-    As you can see outDao will be our future database and sort will be implemented in the future.
+        loadList takes a database dao as an argument and it will add the exhibit into a new
+        arrayList and then this new arraylist will replace the current list. Then calling sort
+        function to restore it's past values.
      */
-//    public void loadList() {
-//        SharedPreferences preferences = this.context.getSharedPreferences("List_File",
-//                Context.MODE_PRIVATE);
-//        Set<String> retrieveList = preferences.getStringSet("list", null);
-//        ArrayList<Location> newList = new ArrayList<>();
-//        for (String LocId : retrieveList ) {
-//            Location item = outDao.get(LocId);
-//            newList.add(item);
-//        }
-//        this.myList = newList;
-//        this.sort();
-//
-//    }
+
+    public void loadList(ExhibitDao dao) {
+        List<Exhibit> allExhibits = dao.getAll();
+        List<Location> newList = new ArrayList<>();
+        for (Exhibit ex : allExhibits) {
+            newList.add((Location)ex);
+        }
+        this.myList = newList;
+        this.sort();
+    }
 
 
+    /*
+    debug method for planList: print out the current Location in the list with its name and kind
+    useful during unit testing, scroll down in the output screen until you see the word printing
+    list:, and followed by all the items inside the list with its id and kind, when finished
+    it will show Finish printing.
+     */
+    public void printList() {
+        System.out.println("printing list:");
+        for (Location loc : myList) {
+            System.out.print("id: " + loc.getKind() + "kind: ");
+            System.out.println(loc.getKind());
+        }
+        System.out.println("Finish printing.");
+    }
 }
