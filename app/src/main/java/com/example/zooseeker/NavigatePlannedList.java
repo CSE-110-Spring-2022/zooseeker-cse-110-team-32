@@ -19,6 +19,28 @@ public class NavigatePlannedList {
 
     }
 
+    /*tells whether the user is at the entrance gate
+   returns true if the user is at the entrance gate and hasn't seen any exhibits and returns false otherwise
+   @return whether or not user is at beginning of their list
+     */
+    public Boolean atStart(){
+        if (currLocationIndex == 0){
+            return true;
+        }
+        return false;
+    }
+
+    /*tells us whether the user is at the first exhibit
+    returns true if the user is at the first exhibit and false otherwise
+    @return whether or not user is at first exhibit
+    */
+    public Boolean atFirst(){
+        if (currLocationIndex == 1){
+            return true;
+        }
+        return false;
+    }
+
     /*returns user's planned list of exhibits
     @return user's planned list of exhibits
      */
@@ -68,6 +90,13 @@ public class NavigatePlannedList {
     public Location getNextLocation() {
         if (currLocationIndex + 1 < this.planList.planSize()){
             return this.planList.getMyList().get(currLocationIndex+1);
+        }
+        return null;
+    }
+
+    public Location getPrevLocation() {
+        if (currLocationIndex - 1 >= 0){
+            return this.planList.getMyList().get(currLocationIndex-1);
         }
         return null;
     }
@@ -122,6 +151,17 @@ public class NavigatePlannedList {
         return this.planList.getZooMap().getTextDirections(currId, nextId);
     }
 
+    /*Returns the directions the user needs to get from their current location to the previous one
+   @return locations to previous location
+    */
+    public String getDirectionsToPreviousLocation() {
+        Location curr = this.planList.getMyList().get(currLocationIndex);
+        String currId = curr.getId();
+        Location prev = this.planList.getMyList().get(currLocationIndex-1);
+        String prevId = prev.getId();
+        return this.planList.getZooMap().getTextDirections(currId, prevId);
+    }
+
     /*returns distance from current location to next location
     @return distance to next location
      */
@@ -143,7 +183,7 @@ public class NavigatePlannedList {
     @return whether or not user was moved to next location
      */
     public Boolean advanceLocation() {
-        if(currLocationIndex+1 >= planList.getMyList().size()){
+        if(currLocationIndex + 1 >= planList.getMyList().size()){
             return false;
         }
         this.currLocationIndex++;
@@ -155,7 +195,7 @@ public class NavigatePlannedList {
    the first location in the list
     */
     public Boolean previousLocation() {
-        if(currLocationIndex < 1){
+        if(currLocationIndex < 0){
             return false;
         }
         this.currLocationIndex--;
