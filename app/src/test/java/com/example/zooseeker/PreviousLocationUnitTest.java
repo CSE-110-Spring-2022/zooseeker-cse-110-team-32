@@ -32,7 +32,7 @@ public class PreviousLocationUnitTest {
         vertices = ZooData.loadVertexInfoJSON(context);
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
             if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)){
-                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                 plan.addLocation(exhibit);
             }
         }
