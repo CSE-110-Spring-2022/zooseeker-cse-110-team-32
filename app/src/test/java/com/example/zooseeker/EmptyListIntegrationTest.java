@@ -53,14 +53,11 @@ public class EmptyListIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("fox", true);
+            searchBar.setQuery("fla", true);
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
-            searchBar.setQuery("Elephant", true);
+            searchBar.setQuery("mam", true);
             searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchMammal = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchMammal);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             Button planBtn = activity.findViewById(R.id.plan_btn);
             planBtn.performClick();

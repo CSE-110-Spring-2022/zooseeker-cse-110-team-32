@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Database;
 import androidx.room.Room;
 
 import android.content.Intent;
@@ -50,7 +51,6 @@ public class SearchActivity extends AppCompatActivity {
         PlanList plan = new PlanList(this);
 
         exhibitDao = ExhibitDatabase.getSingleton(this, planList).exhibitDao();
-
         planList = plan;
         if(this.exhibitDao != null && exhibitDao.getAll().size() > 0){
             planList.loadList(exhibitDao);

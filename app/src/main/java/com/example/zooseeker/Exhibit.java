@@ -1,5 +1,7 @@
 package com.example.zooseeker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -15,6 +17,8 @@ public class Exhibit extends Location{
    exhibit
    @param id = ID name of exhibit
    @param name = the actual name of the exhibit
+   @param lat = latitude of exhibit
+   @param lng = longitude of exhibit
    @param tags = list of tags/categories associated with the exhibit
     */
     @PrimaryKey(autoGenerate = true)
