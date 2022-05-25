@@ -170,6 +170,7 @@ public class ShortestPathActivity extends AppCompatActivity {
 
     public void buttonVisibility(){
         Button next = findViewById(R.id.next_btn);
+        TextView nextNextView = findViewById(R.id.next_lbl);
         Button finish = findViewById(R.id.finish_btn);
         if(navList.endReached()){
             next.setClickable(false);
@@ -197,7 +198,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             back.setVisibility(View.VISIBLE);
             back.setClickable(true);
             back.setOnClickListener(view -> {
-                displayPrevTextDirections(navList);
+                displayPrevTextDirections();
             });
         }
     }
@@ -206,7 +207,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     Displays directions from the next exhibit to the last exhibit to backtrack directions when user clicks back button
     @param navList = user's list of planned exhibits
     */
-    public void displayPrevTextDirections(NavigatePlannedList navList){
+    public void displayPrevTextDirections(){
         TextView textView = findViewById(R.id.path_result);
         TextView nextNextView = findViewById(R.id.next_lbl);
         Location prevLoc = navList.getPrevLocation();
@@ -233,7 +234,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         next.setVisibility(View.VISIBLE);
         next.setClickable(true);
         next.setOnClickListener(view -> {
-            displayTextDirections(navList);
+            displayTextDirections();
         });
         nextNextView.setVisibility(View.INVISIBLE);
 //        if (!navList.endReached()){
