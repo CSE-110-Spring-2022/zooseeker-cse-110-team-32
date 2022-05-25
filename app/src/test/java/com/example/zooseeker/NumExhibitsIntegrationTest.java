@@ -4,15 +4,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import android.content.Context;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,6 +27,19 @@ import java.util.regex.Pattern;
 @RunWith(AndroidJUnit4.class)
 public class NumExhibitsIntegrationTest {
     ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class);
+    ExhibitDatabase testDb;
+    ExhibitDao todoListItemDao;
+
+    @Before
+    public void resetDatabase(){
+        Context context = ApplicationProvider.getApplicationContext();
+        testDb = Room.inMemoryDatabaseBuilder(context, ExhibitDatabase.class)
+                .allowMainThreadQueries().build();
+
+        ExhibitDatabase.injectExhibitDatabase(testDb);
+
+        todoListItemDao = testDb.exhibitDao();
+    }
 
     @Test
     public void nonzeroExhibits(){

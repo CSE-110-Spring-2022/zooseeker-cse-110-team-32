@@ -19,6 +19,21 @@ public class NavigatePlannedList {
 
     }
 
+    /*returns user's planned list of exhibits
+    @return user's planned list of exhibits
+     */
+    public PlanList getPlanList(){
+        return this.planList;
+    }
+
+    /*
+        Resets user's current location index to 0 when list is cleared
+     */
+    public void resetCurrLocationIndex(){
+        this.currLocationIndex = 0;
+    }
+
+
     /*tells whether the end of the exhibit has been reached
    returns true if the user is at the end of the exhibit and returns false otherwise
    @return whether or not user is at end of their list
