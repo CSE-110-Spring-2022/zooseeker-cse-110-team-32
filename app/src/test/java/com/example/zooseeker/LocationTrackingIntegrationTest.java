@@ -24,8 +24,10 @@ import org.junit.runner.RunWith;
 public class LocationTrackingIntegrationTest {
     ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class);
     LocationTracker locTracker;
+
+    // To be finalized further
     @Test
-    public void displayDirectionsClickNextTest(){
+    public void updateMockLocationTest(){
         scenario.moveToState(Lifecycle.State.CREATED);
 
         scenario.onActivity(activity -> {
@@ -63,12 +65,6 @@ public class LocationTrackingIntegrationTest {
 
                 System.out.println(locTracker.lat);
                 System.out.println(locTracker.lng);
-//                assertEquals(true, ((String) directions.getText()).contains("From: Flamingos"));
-//                assertEquals(true, ((String) directions.getText()).contains("To: Hippos"));
-//                assertEquals(true, ((String) directions.getText()).contains("Hippo Trail"));
-//                assertEquals(true, ((String) directions.getText()).contains("4. Walk 10.0 meters"));
-//                assertEquals("Entrance and Exit Gate, 200.0", nextLabel.getText());
-
             });
 
 
