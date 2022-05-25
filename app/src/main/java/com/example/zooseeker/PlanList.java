@@ -168,8 +168,6 @@ public class PlanList {
         resetCurrLocationIndex();
         saveList(dao);
 
-        System.out.println("vukfluyfd "+dao.getAll().size()+", ");
-
 
     }
 

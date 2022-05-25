@@ -81,6 +81,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             finish.setOnClickListener(view -> {
                 SearchActivity.getPlan().clearList(SearchActivity.getDao());
                 //navList.getPlanList().clearList(SearchActivity.getDao());
+                SearchActivity.resetPlan();
                 startActivity(intent);
             });
         }

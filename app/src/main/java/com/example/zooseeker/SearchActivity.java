@@ -50,6 +50,8 @@ public class SearchActivity extends AppCompatActivity {
         return planList;
     }
 
+    public static void resetPlan(){ planList = null;}
+
     public static ExhibitDao getDao() { return exhibitDao;}
 
 
@@ -64,19 +66,15 @@ public class SearchActivity extends AppCompatActivity {
         PlanList plan = new PlanList(this);
 
         exhibitDao = ExhibitDatabase.getSingleton(this, planList).exhibitDao();
-        List<Exhibit> exhibitList = exhibitDao.getAll();
-
-        //viewModel = new ExhibitViewModel(this.getApplication(), planList);
-        //viewModel.getExhibitItems().observe(this, (Observer<? super List<Exhibit>>) planList.getExhibits());
 
         planList = plan;
-        if(this.exhibitDao != null && this.exhibitDao.getAll().size() > 0){
+        if(this.exhibitDao != null && exhibitDao.getAll().size() > 0){
             planList.loadList(exhibitDao);
             Intent intent = new Intent(this, ShortestPathActivity.class);
             startActivity(intent);
         }
         else{
-            plan = new PlanList(this);
+            planList = new PlanList(this);
         }
 
         DisplayListAdapter adapter = new DisplayListAdapter();
@@ -97,12 +95,6 @@ public class SearchActivity extends AppCompatActivity {
 
         // Binds the Adapter to the ListView
         resultsView.setAdapter(searchAdapter);
-
-        ExhibitDatabase database = Room.inMemoryDatabaseBuilder(this, ExhibitDatabase.class)
-                .allowMainThreadQueries()
-                .build();
-
-        exhibitDao = database.exhibitDao();
 
         // Locate the EditText in listview_main.xml
         search_bar = (SearchView) findViewById(R.id.search_bar);
@@ -131,20 +123,20 @@ public class SearchActivity extends AppCompatActivity {
 
 
         TextView num_exhibits = findViewById(R.id.exhibits_num);
-        PlanList finalPlan = plan;
         resultsView.setOnItemClickListener((adapterView, v, position, id) -> {
             ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
             Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.tags);
-            finalPlan.addLocation(exhibit);
+            plan.addLocation(exhibit);
             //after we get the list of exhibits (dynamic), going to grab location names into
             //a separate list to view on display
             List<DisplayListItem> list = new ArrayList<>();
-            for (int i = 0; i < finalPlan.getMyList().size(); i++) {
-                DisplayListItem item = new DisplayListItem(finalPlan.getMyList().get(i).getName());
+            for (int i = 0; i < plan.getMyList().size(); i++) {
+                DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
                 list.add(item);
             }
             adapter.setDisplayItems(list);
-            num_exhibits.setText("Number of exhibits: "+ Integer.toString(finalPlan.planSize()));
+            num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()));
+
         });
 
         planList = plan;
