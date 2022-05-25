@@ -99,6 +99,10 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Displays directions from the next exhibit to the last exhibit to backtrack directions when user clicks back button
+    @param navList = user's list of planned exhibits
+    */
     public void displayPrevTextDirections(NavigatePlannedList navList){
         TextView textView = findViewById(R.id.path_result);
         TextView nextNextView = findViewById(R.id.next_lbl);
