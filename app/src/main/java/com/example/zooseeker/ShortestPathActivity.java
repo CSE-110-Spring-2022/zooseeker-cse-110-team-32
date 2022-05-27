@@ -63,15 +63,14 @@ public class ShortestPathActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shortest_path);
 
-        Button back = findViewById(R.id.back_btn);
-        if(!back.isClickable()){
-            back.setVisibility(View.GONE);
-        }
+
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
         Button next = findViewById(R.id.next_btn);
+        Button back = findViewById(R.id.back_btn);
         if(!navList.endReached()){
             displayTextDirections();
+            buttonVisibility();
         }
 
         if(next.isClickable()) {
@@ -81,6 +80,12 @@ public class ShortestPathActivity extends AppCompatActivity {
                 buttonVisibility();
             });
         }
+
+        back.setOnClickListener(view -> {
+            navList.previousLocation();
+            displayPrevTextDirections();
+            buttonVisibility();
+        });
 
         // Set up the model.
         model = new ViewModelProvider(this).get(LocationModel.class);
@@ -142,14 +147,37 @@ public class ShortestPathActivity extends AppCompatActivity {
         Location nextLoc = navList.getNextLocation();
         String directions = navList.getDirectionsToNextLocation();
         directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
-
         textView.setText(directions);
         if(navList.endReached()){
             nextNextView.setVisibility(View.GONE);
         }
         else{
+            nextNextView.setVisibility(View.VISIBLE);
             nextNextView.setText(String.format("%s, %s", navList.getNextNextLocation().getName(), navList.getPathToNextNextLocation().getWeight()));
         }
+    }
+
+    /*
+   Displays directions from the next exhibit to the last exhibit to backtrack directions when user clicks back button
+   @param navList = user's list of planned exhibits
+   */
+    public void displayPrevTextDirections(){
+        TextView textView = findViewById(R.id.path_result);
+        TextView nextNextView = findViewById(R.id.next_lbl);
+        Location prevLoc = navList.getPrevLocation();
+        Location currLoc = navList.getCurrentLocation();
+        String directions = navList.getDirectionsToPreviousLocation();
+        directions = "*Going Backwards\n\n" + "From: " + currLoc.getName() + "\nTo: "
+                + prevLoc.getName() + "\n\n" + directions;
+        textView.setText(directions);
+
+        nextNextView.setVisibility(View.INVISIBLE);
+//        if (!navList.endReached()){
+//            nextNextView.setVisibility(View.VISIBLE);
+//            nextNextView.setText(navList.getNextNextLocation().getName() +
+//                    ", " + navList.getPathToNextNextLocation().getWeight());
+//        }
+
     }
 
     public void reroute(){
@@ -170,9 +198,9 @@ public class ShortestPathActivity extends AppCompatActivity {
 
     public void buttonVisibility(){
         Button next = findViewById(R.id.next_btn);
-        TextView nextNextView = findViewById(R.id.next_lbl);
         Button finish = findViewById(R.id.finish_btn);
-        if(navList.endReached()){
+        Button back = findViewById(R.id.back_btn);
+        if(navList.endReached() && navList.goingForwards()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
 
@@ -187,63 +215,22 @@ public class ShortestPathActivity extends AppCompatActivity {
             });
         }
         else{
-            nextNextView.setVisibility(View.VISIBLE);
-            nextNextView.setText(navList.getNextNextLocation().getName() +
-                    ", " + navList.getPathToNextNextLocation().getWeight());
+            next.setClickable(true);
+            next.setVisibility(View.VISIBLE);
+            finish.setClickable(false);
+            finish.setVisibility(View.INVISIBLE);
         }
-        navList.advanceLocation();
-
-        Button back = findViewById(R.id.back_btn);
-        if (!navList.atStart()){
-            back.setVisibility(View.VISIBLE);
-            back.setClickable(true);
-            back.setOnClickListener(view -> {
-                displayPrevTextDirections();
-            });
-        }
-    }
-
-    /*
-    Displays directions from the next exhibit to the last exhibit to backtrack directions when user clicks back button
-    @param navList = user's list of planned exhibits
-    */
-    public void displayPrevTextDirections(){
-        TextView textView = findViewById(R.id.path_result);
-        TextView nextNextView = findViewById(R.id.next_lbl);
-        Location prevLoc = navList.getPrevLocation();
-        Location currLoc = navList.getCurrentLocation();
-        String directions = navList.getDirectionsToPreviousLocation();
-        directions = "*Going Backwards\n\n" + "From: " + currLoc.getName() + "\nTo: "
-                + prevLoc.getName() + "\n\n" + directions;
-        textView.setText(directions);
-
-        Button back = findViewById(R.id.back_btn);
-        if (navList.atFirst()){
+        if(navList.atFirst() && !navList.goingForwards()){
             back.setClickable(false);
             back.setVisibility(View.GONE);
         }
-
-        navList.previousLocation();
-
-        Button next = findViewById(R.id.next_btn);
-        Button finish = findViewById(R.id.finish_btn);
-
-        finish.setClickable(false);
-        finish.setVisibility(View.GONE);
-
-        next.setVisibility(View.VISIBLE);
-        next.setClickable(true);
-        next.setOnClickListener(view -> {
-            displayTextDirections();
-        });
-        nextNextView.setVisibility(View.INVISIBLE);
-//        if (!navList.endReached()){
-//            nextNextView.setVisibility(View.VISIBLE);
-//            nextNextView.setText(navList.getNextNextLocation().getName() +
-//                    ", " + navList.getPathToNextNextLocation().getWeight());
-//        }
+        else{
+            back.setClickable(true);
+            back.setVisibility(View.VISIBLE);
+        }
 
     }
+
 
     @VisibleForTesting
     public void mockLocation(Coord coords) {

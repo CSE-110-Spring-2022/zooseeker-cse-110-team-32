@@ -8,7 +8,8 @@ starting from the entrance gate
 public class NavigatePlannedList {
 
     private PlanList planList;
-    private int currLocationIndex;
+    public int currLocationIndex;
+    public Boolean forwards;
 
     /*Constructor that sets the PlanList to use based on what's passed in
     @param plan = plan to navigate through
@@ -16,6 +17,7 @@ public class NavigatePlannedList {
     NavigatePlannedList(PlanList plan){
         this.planList = plan;
         this.currLocationIndex = 0;
+        this.forwards = true;
 
     }
 
@@ -41,6 +43,18 @@ public class NavigatePlannedList {
         return false;
     }
 
+    /*tells whether the end of the exhibit has been reached
+   returns true if the user is at the end of the exhibit and returns false otherwise
+   @return whether or not user is at end of their list
+    */
+    public Boolean endReached(){
+        if (currLocationIndex >= this.planList.planSize()-2){
+            return true;
+        }
+        return false;
+    }
+
+
     /*returns user's planned list of exhibits
     @return user's planned list of exhibits
      */
@@ -56,16 +70,6 @@ public class NavigatePlannedList {
     }
 
 
-    /*tells whether the end of the exhibit has been reached
-   returns true if the user is at the end of the exhibit and returns false otherwise
-   @return whether or not user is at end of their list
-    */
-    public Boolean endReached(){
-        if (currLocationIndex == this.planList.planSize()-2){
-            return true;
-        }
-        return false;
-    }
 
     /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
     exhibit is in their list
@@ -183,6 +187,11 @@ public class NavigatePlannedList {
     @return whether or not user was moved to next location
      */
     public Boolean advanceLocation() {
+        if (!forwards){
+            this.currLocationIndex--;
+            forwards = true;
+            return true;
+        }
         if(currLocationIndex + 1 >= planList.getMyList().size()){
             return false;
         }
@@ -195,10 +204,21 @@ public class NavigatePlannedList {
    the first location in the list
     */
     public Boolean previousLocation() {
-        if(currLocationIndex < 0){
+        if(forwards){
+            currLocationIndex++;
+            forwards = false;
+            return true;
+        }
+        if(currLocationIndex <= 1){
             return false;
         }
         this.currLocationIndex--;
         return true;
+    }
+
+    /*Returns true if the user is progressing forwards, false if backwards
+    */
+    public Boolean goingForwards(){
+        return forwards;
     }
 }

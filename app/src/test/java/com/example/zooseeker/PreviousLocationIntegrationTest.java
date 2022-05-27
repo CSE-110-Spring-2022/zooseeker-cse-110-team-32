@@ -46,10 +46,10 @@ public class PreviousLocationIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("fox", true);
+            searchBar.setQuery("capu", true);
             ListView searchView = activity.findViewById(R.id.search_list);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
-            searchBar.setQuery("lion", true);
+            searchBar.setQuery("gorilla", true);
             searchView = activity.findViewById(R.id.search_list);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             Button planBtn = activity.findViewById(R.id.plan_btn);
@@ -60,20 +60,18 @@ public class PreviousLocationIntegrationTest {
                 TextView directions = activity1.findViewById(R.id.path_result);
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
                 assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Arctic Foxes"));
-                assertEquals(true, ((String) directions.getText()).contains("Arctic Avenue"));
-                assertEquals("Lions, 600.0", nextLabel.getText());
+                assertEquals(true, ((String) directions.getText()).contains("To: Capuchin Monkeys"));
+                assertEquals(true, ((String) directions.getText()).contains("Monkey Trail"));
+                assertEquals("Gorillas, 180.0", nextLabel.getText());
                 Button backBtn = activity1.findViewById(R.id.back_btn);
                 assertTrue(backBtn.isClickable());
                 assertEquals(VISIBLE, backBtn.getVisibility());
                 backBtn.performClick();
-                assertEquals(true, ((String) directions.getText()).contains("From: Arctic Foxes"));
+                assertEquals(true, ((String) directions.getText()).contains("From: Capuchin Monkeys"));
                 assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
                 assertEquals(true, ((String) directions.getText()).contains("Going Backwards"));
-                assertEquals(true, ((String) directions.getText()).contains("Arctic Avenue"));
+                assertEquals(true, ((String) directions.getText()).contains("Monkey Trail"));
             });
-
-
         });
     }
 

@@ -69,7 +69,7 @@ public class SaveItineraryTest {
         plan.saveList(dao);
         plan.saveList(dao);
         for (Exhibit g : plan.getExhibits()) {
-            System.out.println("hi" + g.Uid);
+            System.out.println("Uid: " + g.Uid);
         }
         plan.saveList(dao);
         PlanList newPlan = new PlanList(context);
