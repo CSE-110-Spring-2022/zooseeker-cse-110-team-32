@@ -22,7 +22,8 @@ public class NumExhibitsUnitTest {
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         int numExhibits = 0;
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
-            if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)){
+            ZooData.VertexInfo v = loc.getValue();
+            if ((v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT) && v.parent_id == null) || v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT_GROUP)){
                 Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                 plan.addLocation(exhibit);
                 numExhibits++;

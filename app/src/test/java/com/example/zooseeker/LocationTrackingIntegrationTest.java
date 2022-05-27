@@ -19,11 +19,14 @@ import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+
 
 @RunWith(AndroidJUnit4.class)
 public class LocationTrackingIntegrationTest {
@@ -33,8 +36,8 @@ public class LocationTrackingIntegrationTest {
     ExhibitDatabase testDb;
     ExhibitDao todoListItemDao;
 
-//    @Rule
-//    InstantTaskExecutorTule execRule = new InstantTaskExecutorTule();
+    @Rule
+    public InstantTaskExecutorRule execRule = new InstantTaskExecutorRule();
 
     @Before
     public void resetDatabase(){
@@ -68,10 +71,11 @@ public class LocationTrackingIntegrationTest {
             intent.putExtra(ShortestPathActivity.EXTRA_USE_LOCATION_SERVICE, false);
 
             pathScenario.onActivity(activity1 -> {
-                Coord none = new Coord(0.1, -0.3);
-                activity1.mockLocation(none);
                 Coord capuchin = new Coord(32.751128871469874, -117.16364410510093);
                 activity1.mockLocation(capuchin);
+
+            });
+            pathScenario.onActivity(activity1 -> {
                 TextView directions = activity1.findViewById(R.id.path_result);
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
                 locTracker = activity1.locTracker;
@@ -84,12 +88,7 @@ public class LocationTrackingIntegrationTest {
                 assertEquals("Hippos, 240.0", nextLabel.getText());
                 Button nextBtn = activity1.findViewById(R.id.next_btn);
                 nextBtn.performClick();
-
-                System.out.println(locTracker.lat);
-                System.out.println(locTracker.lng);
             });
-
-
         });
     }
 
