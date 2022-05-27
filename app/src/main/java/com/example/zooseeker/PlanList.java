@@ -66,6 +66,15 @@ public class PlanList {
         return myList.indexOf(curr);
     }
 
+    public Location findExhibit(String id){
+        for (int i=0; i < myList.size(); i++){
+            if (myList.get(i).getId().equals(id)){
+                return myList.get(i);
+            }
+        }
+        return null;
+    }
+
     /*returns the number of exhibits the user plans to see
    @return number of exhibits user selected
     */
@@ -129,11 +138,11 @@ public class PlanList {
                 gateAdded = true;
             }
         }
-        Location gate = new Gate("","", new ArrayList<>());
+        Location gate = new Gate("","", 0, 0);
         if(!gateAdded){
             for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
                 if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
-                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                     sortList.add(gate);
                     break;
                 }

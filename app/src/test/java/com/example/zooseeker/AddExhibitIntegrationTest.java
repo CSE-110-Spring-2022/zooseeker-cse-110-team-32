@@ -39,32 +39,34 @@ public class AddExhibitIntegrationTest {
     }
 
     @Test
-    public void testAdd(){
+    public void testAdd() {
         scenario.moveToState(Lifecycle.State.CREATED);
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("Arctic Foxes", true);
+            searchBar.setQuery("Flamingos", true);
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchFox);
-            assertEquals("Arctic Foxes", searchFox.name);
+            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchFlamingo);
+            assertEquals("Flamingos", searchFlamingo.name);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             RecyclerView displayView = activity.recyclerView;
             DisplayListAdapter displayAdapter = (DisplayListAdapter) displayView.getAdapter();
             assertEquals(1, displayAdapter.getItemCount());
             List<DisplayListItem> locations = displayAdapter.getDisplayItems();
-            assertEquals("Arctic Foxes", locations.get(0).getName());
+            assertEquals("Flamingos", locations.get(0).getName());
 
-            searchBar.setQuery("gator", true);
+
+            searchBar.setQuery("ape", true);
             searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchGator = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchGator);
-            assertEquals("Alligators", searchGator.name);
+            ZooData.VertexInfo searchApe = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchApe);
+            assertEquals("Gorillas", searchApe.name);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             assertEquals(2, displayAdapter.getItemCount());
             locations = displayAdapter.getDisplayItems();
-            assertEquals("Alligators", locations.get(1).getName());
+            assertEquals("Gorillas", locations.get(1).getName());
+
         });
     }
 
@@ -74,11 +76,11 @@ public class AddExhibitIntegrationTest {
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
-            searchBar.setQuery("fox", true);
+            searchBar.setQuery("Flamingos", true);
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchFox = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchFox);
-            assertEquals("Arctic Foxes", searchFox.name);
+            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchFlamingo);
+            assertEquals("Flamingos", searchFlamingo.name);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             RecyclerView displayView = activity.recyclerView;

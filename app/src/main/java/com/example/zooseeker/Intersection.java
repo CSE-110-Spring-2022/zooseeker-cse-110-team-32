@@ -12,8 +12,8 @@ public class Intersection extends Location{
     @param name = name of the intersection
     @param tags = list of associated tags/categories with given intersection
      */
-    Intersection(String id, String name, List<String> tags) {
-        super(id, name, tags);
+    Intersection(String id, String name, double lat, double lng, List<String> tags) {
+        super(id, name, lat, lng);
         this.kind = ZooData.VertexInfo.Kind.INTERSECTION;
     }
 

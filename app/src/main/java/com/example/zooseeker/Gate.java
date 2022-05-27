@@ -1,7 +1,5 @@
 package com.example.zooseeker;
 
-import java.util.List;
-
 /*This class establishes the location type, Gate, using the Location abstract class.
   This is how the entrance/exit gate's information will be stored
  */
@@ -13,8 +11,8 @@ public class Gate extends Location{
     @param name = actual name of the gate
     @param tags = list of tags/categories associated with the gate
      */
-    Gate(String id, String name, List<String> tags) {
-        super(id, name, tags);
+    Gate(String id, String name, double lat, double lng) {
+        super(id, name, lat, lng);
         super.kind = ZooData.VertexInfo.Kind.GATE;
     }
 

@@ -10,8 +10,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RunWith(AndroidJUnit4.class)
@@ -24,8 +22,9 @@ public class NumExhibitsUnitTest {
         Map<String, ZooData.VertexInfo> vertices = ZooData.loadVertexInfoJSON(context);
         int numExhibits = 0;
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
-            if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)){
-                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+            ZooData.VertexInfo v = loc.getValue();
+            if ((v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT) && v.parent_id == null) || v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT_GROUP)){
+                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                 plan.addLocation(exhibit);
                 numExhibits++;
             }
@@ -45,7 +44,7 @@ public class NumExhibitsUnitTest {
     public void oneExhibit(){
         Context context = ApplicationProvider.getApplicationContext();
         PlanList plan = new PlanList(context);
-        Location exhibit = new Exhibit("lions", "Lions", new ArrayList<>());
+        Location exhibit = new Exhibit("lions", "Lions", 0, 0);
         int numExhibits = 1;
         plan.addLocation(exhibit);
         assertEquals(numExhibits, plan.planSize());

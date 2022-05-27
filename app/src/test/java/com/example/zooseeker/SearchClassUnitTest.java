@@ -26,7 +26,7 @@ public class SearchClassUnitTest {
     public void mapSize(){
         Context context = ApplicationProvider.getApplicationContext();
         Map<String, ZooData.VertexInfo> completeMap = ZooData.loadVertexInfoJSON(context);
-        assertEquals(7, completeMap.size());
+        assertEquals(27, completeMap.size());
     }
 
     @Test
@@ -43,16 +43,16 @@ public class SearchClassUnitTest {
     public void sizeResults(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
-        ArrayList<ZooData.VertexInfo> results = searcher.getResults("Lions");
+        ArrayList<ZooData.VertexInfo> results = searcher.getResults("Crocodiles");
         assertEquals(1, results.size());
     }
 
     @Test
-    public void lionsResults(){
+    public void crocodilesResults(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
-        ArrayList<ZooData.VertexInfo> results = searcher.getResults("Lions");
-        assertEquals("Lions", results.get(0).name);
+        ArrayList<ZooData.VertexInfo> results = searcher.getResults("Crocodiles");
+        assertEquals("Crocodiles", results.get(0).name);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class SearchClassUnitTest {
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
         ArrayList<ZooData.VertexInfo> results = searcher.getResults("e");
-        assertEquals(4, results.size());
+        assertEquals(12, results.size());
     }
 
     @Test
@@ -82,8 +82,9 @@ public class SearchClassUnitTest {
     public void testSearchTags(){
         Context context = ApplicationProvider.getApplicationContext();
         Search searcher = new Search(context);
-        assertEquals(searcher.getResults("ape"), searcher.getResults(("gorillas")));
+        ArrayList<ZooData.VertexInfo> apeResults = searcher.getResults("ape");
+        assertEquals(2, searcher.getResults(("ape")).size());
         ArrayList<ZooData.VertexInfo> results = searcher.getResults("mammal");
-        assertEquals(4, results.size());
+        assertEquals(5, results.size());
     }
 }
