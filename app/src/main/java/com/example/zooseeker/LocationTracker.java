@@ -55,6 +55,7 @@ public class LocationTracker {
             double dist = distToStreet(lng, lat, lng1, lat1, lng2, lat2);
             if (closestLoc.equals(fromid) || closestLoc.equals(toid) || closestDist > dist){
                 newRoute = currRoute;
+                return;
             }
         }
         newRoute = plan.getZooMap().getShortestPath(closestLoc, currRoute.getEndVertex());
