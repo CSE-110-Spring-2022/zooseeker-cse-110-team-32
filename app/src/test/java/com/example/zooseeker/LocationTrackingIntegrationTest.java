@@ -21,6 +21,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,6 +32,9 @@ public class LocationTrackingIntegrationTest {
 
     ExhibitDatabase testDb;
     ExhibitDao todoListItemDao;
+
+//    @Rule
+//    InstantTaskExecutorTule execRule = new InstantTaskExecutorTule();
 
     @Before
     public void resetDatabase(){
