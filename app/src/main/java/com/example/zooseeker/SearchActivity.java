@@ -1,34 +1,22 @@
 package com.example.zooseeker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Database;
+import androidx.room.Room;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 /*This class loads the search page including search bar, search results, list of planned exhibits,
 and number of exhibits the user wants to see
@@ -40,10 +28,17 @@ public class SearchActivity extends AppCompatActivity {
     ArrayList<ZooData.VertexInfo> searchResults;
     Search searcher;
     SearchView search_bar;
+    private ExhibitViewModel viewModel;
     public static PlanList planList;
+    public static ExhibitDao exhibitDao;
     public static PlanList getPlan(){
         return planList;
     }
+
+    public static void resetPlan(){ planList = null;}
+
+    public static ExhibitDao getDao() { return exhibitDao;}
+
 
     /*Creates search page and initializes the needed classes and variables to work each component
     of the search page
@@ -53,6 +48,18 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        PlanList plan = new PlanList(this);
+
+        exhibitDao = ExhibitDatabase.getSingleton(this, planList).exhibitDao();
+        planList = plan;
+        if(this.exhibitDao != null && exhibitDao.getAll().size() > 0){
+            planList.loadList(exhibitDao);
+            Intent intent = new Intent(this, ShortestPathActivity.class);
+            startActivity(intent);
+        }
+        else{
+            planList = new PlanList(this);
+        }
 
         DisplayListAdapter adapter = new DisplayListAdapter();
         adapter.setHasStableIds(true);
@@ -61,7 +68,7 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        PlanList plan = new PlanList(this);
+        PlanManager planManager = new PlanManager(this, plan);
 
         // Locate the ListView in listview_main.xml
         resultsView = (ListView) findViewById(R.id.search_list);
@@ -74,7 +81,6 @@ public class SearchActivity extends AppCompatActivity {
 
         // Binds the Adapter to the ListView
         resultsView.setAdapter(searchAdapter);
-
 
         // Locate the EditText in listview_main.xml
         search_bar = (SearchView) findViewById(R.id.search_bar);
@@ -103,27 +109,30 @@ public class SearchActivity extends AppCompatActivity {
 
 
         TextView num_exhibits = findViewById(R.id.exhibits_num);
+        List<String> exhibitList = new ArrayList();
         resultsView.setOnItemClickListener((adapterView, v, position, id) -> {
             ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
-            Location exhibit = new Exhibit(searchItem.id, searchItem.name, searchItem.tags);
-            plan.addLocation(exhibit);
+            planManager.addLocation(searchItem);
+            if (!exhibitList.contains(searchItem.name)) {
+                exhibitList.add(searchItem.name);
+            }
             //after we get the list of exhibits (dynamic), going to grab location names into
             //a separate list to view on display
             List<DisplayListItem> list = new ArrayList<>();
-            for (int i = 0; i < plan.getMyList().size(); i++) {
-                DisplayListItem item = new DisplayListItem(plan.getMyList().get(i).getName());
+            for (int i = 0; i < exhibitList.size(); i++) {
+                DisplayListItem item = new DisplayListItem(exhibitList.get(i));
                 list.add(item);
             }
             adapter.setDisplayItems(list);
             num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()));
-        });
 
-        planList = plan;
+        });
 
         Button planBtn = findViewById(R.id.plan_btn);
         planBtn.setOnClickListener(view ->{
             Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-            plan.sort();
+            planList = planManager.getFinalPlan();
+            planList.saveList(exhibitDao);
             startActivity(pathIntent);
         });
 

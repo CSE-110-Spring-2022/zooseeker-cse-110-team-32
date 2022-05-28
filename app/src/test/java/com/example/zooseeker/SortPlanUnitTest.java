@@ -9,12 +9,10 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.jgrapht.GraphPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +32,9 @@ public class SortPlanUnitTest {
         navList = new NavigatePlannedList(plan);
         vertices = ZooData.loadVertexInfoJSON(context);
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
-            if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)){
-                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+            ZooData.VertexInfo v = loc.getValue();
+            if ((v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT) && v.parent_id == null) || v.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT_GROUP)){
+                Location exhibit = new Exhibit(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                 plan.addLocation(exhibit);
             }
         }
@@ -45,10 +44,10 @@ public class SortPlanUnitTest {
 
     @Test
     public void gateStartEnd(){
-        Location gate = new Gate("", "", new ArrayList<>());
+        Location gate = new Gate("", "", 0, 0);
         for (Map.Entry<String, ZooData.VertexInfo> loc : vertices.entrySet()){
             if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
-                gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().tags);
+                gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
                 break;
             }
         }

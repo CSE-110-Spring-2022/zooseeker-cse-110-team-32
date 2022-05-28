@@ -44,7 +44,7 @@ public class DisplayListAdapter extends RecyclerView.Adapter<DisplayListAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.activity_searchview, parent, false);
+                .inflate(R.layout.activity_search_displayview, parent, false);
         return new ViewHolder(view);
     }
 

@@ -7,32 +7,42 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+
 
 @RunWith(AndroidJUnit4.class)
-public class ShortestPathIntegrationTest {
+public class LocationTrackingIntegrationTest {
     ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class);
+    LocationTracker locTracker;
+
     ExhibitDatabase testDb;
     ExhibitDao todoListItemDao;
+
+    @Rule
+    public InstantTaskExecutorRule execRule = new InstantTaskExecutorRule();
 
     @Before
     public void resetDatabase(){
@@ -46,87 +56,100 @@ public class ShortestPathIntegrationTest {
     }
 
     @Test
-    public void displayDirectionsClickNextTest(){
-        scenario.moveToState(Lifecycle.State.CREATED);
+    public void noRerouteTest(){
+        scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
             searchBar.setQuery("flamingo", true);
+
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchFlamingo);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             searchBar.setQuery("Hippo", true);
+
             searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchMammal = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchMammal);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+
             Button planBtn = activity.findViewById(R.id.plan_btn);
             planBtn.performClick();
-            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
-            pathScenario.moveToState(Lifecycle.State.CREATED);
+
+            Intent intent = new Intent(activity, ShortestPathActivity.class);
+            intent.putExtra(ShortestPathActivity.EXTRA_USE_LOCATION_SERVICE, false);
+            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(intent);
+            pathScenario.moveToState(Lifecycle.State.STARTED);
+
+            pathScenario.onActivity(activity1 -> {
+                double gateLng = -117.14936;
+                double gateLat = 32.73561;
+                double ixnFrontTreetopsLng = -117.1521136981983;
+                double ixnFrontTreetopsLat = 32.735546539459556;
+                double halfwayLng = (gateLng + ixnFrontTreetopsLng) / 2.0;
+                double halfwayLat = (gateLat + ixnFrontTreetopsLat) / 2.0;
+                Coord halfway = new Coord(halfwayLat, halfwayLng);
+                activity1.mockLocation(halfway);
+
+            });
             pathScenario.onActivity(activity1 -> {
                 TextView directions = activity1.findViewById(R.id.path_result);
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
+                locTracker = activity1.locTracker;
+                NavigatePlannedList navList = activity1.navList;
+                String oldDirections = navList.getPlanList().getZooMap().getTextDirections("entrance_exit_gate", "flamingo");
+                System.out.println(locTracker.lat);
+                System.out.println(locTracker.lng);
+                System.out.println(directions.getText());
                 assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
                 assertEquals(true, ((String) directions.getText()).contains("To: Flamingos"));
-                assertEquals(true, ((String) directions.getText()).contains("1. Walk 10.0 meters"));
+                assertEquals(true, ((String) directions.getText()).contains(oldDirections));
                 assertEquals("Hippos, 240.0", nextLabel.getText());
                 Button nextBtn = activity1.findViewById(R.id.next_btn);
-                assertTrue(nextBtn.isClickable());
-                assertEquals(VISIBLE, nextBtn.getVisibility());
                 nextBtn.performClick();
-                assertEquals(true, ((String) directions.getText()).contains("From: Flamingos"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Hippos"));
-                assertEquals(true, ((String) directions.getText()).contains("Hippo Trail"));
-                assertEquals(true, ((String) directions.getText()).contains("4. Walk 10.0 meters"));
-                assertEquals("Entrance and Exit Gate, 200.0", nextLabel.getText());
-
             });
-
-
         });
     }
 
     @Test
-    public void EndOfExhibitListTest(){
-        scenario.moveToState(Lifecycle.State.CREATED);
+    public void mockLocationRerouteTest(){
+        scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
             SearchView searchBar = activity.findViewById(R.id.search_bar);
             searchBar.setQuery("flamingo", true);
+
             ListView searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchFlamingo);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             searchBar.setQuery("Hippo", true);
+
             searchView = activity.findViewById(R.id.search_list);
-            ZooData.VertexInfo searchMammal = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
-            assertNotNull(searchMammal);
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+
             Button planBtn = activity.findViewById(R.id.plan_btn);
             planBtn.performClick();
-            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
-            pathScenario.moveToState(Lifecycle.State.CREATED);
+
+            Intent intent = new Intent(activity, ShortestPathActivity.class);
+            intent.putExtra(ShortestPathActivity.EXTRA_USE_LOCATION_SERVICE, false);
+            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(intent);
+            pathScenario.moveToState(Lifecycle.State.STARTED);
+
+            pathScenario.onActivity(activity1 -> {
+                Coord capuchin = new Coord(32.751128871469874, -117.16364410510093);
+                activity1.mockLocation(capuchin);
+
+            });
             pathScenario.onActivity(activity1 -> {
                 TextView directions = activity1.findViewById(R.id.path_result);
-                Button nextBtn = activity1.findViewById(R.id.next_btn);
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
-                assertTrue(nextBtn.isClickable());
-                assertEquals(VISIBLE, nextBtn.getVisibility());
+                locTracker = activity1.locTracker;
+                System.out.println(locTracker.lat);
+                System.out.println(locTracker.lng);
+                assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
+                assertEquals(true, ((String) directions.getText()).contains("To: Flamingos"));
+                assertEquals(true, ((String) directions.getText()).contains("Capuchin"));
+                assertEquals("Hippos, 240.0", nextLabel.getText());
+                Button nextBtn = activity1.findViewById(R.id.next_btn);
                 nextBtn.performClick();
-                nextBtn.performClick();
-<<<<<<< HEAD
-                assertFalse(nextBtn.isClickable());
-=======
->>>>>>> master
-                assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
-                assertEquals(GONE, nextLabel.getVisibility());
-                assertFalse(nextBtn.isClickable());
-                assertEquals(GONE, nextBtn.getVisibility());
             });
-
-
         });
     }
+
 }
