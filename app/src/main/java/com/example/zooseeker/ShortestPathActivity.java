@@ -111,22 +111,6 @@ public class ShortestPathActivity extends AppCompatActivity {
             String provider = LocationManager.GPS_PROVIDER;
             model.addLocationProviderSource(locationManager, provider);
         }
-        // Listen for location updates
-//        {
-//            this.locTracker = new LocationTracker(this, plan);
-//            String provider = LocationManager.GPS_PROVIDER;
-//            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-//            LocationListener locationListener = new LocationListener(){
-//              @Override
-//              public void onLocationChanged(@NonNull android.location.Location location){
-//                  Log.d("Zooseeker", String.format("Location changed: %s", location));
-//                  locTracker.setLat(location.getLatitude());
-//                  locTracker.setLng(location.getLongitude());
-//                  reroute();
-//              }
-//            };
-//            locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
-//        }
         this.locTracker = new LocationTracker(this, plan);
         model.getLastKnownCoords().observe(this, (coord) -> {
             Log.i("Zooseeker", String.format("Observing location model update to %s", coord));
@@ -172,12 +156,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         textView.setText(directions);
 
         nextNextView.setVisibility(View.INVISIBLE);
-//        if (!navList.endReached()){
-//            nextNextView.setVisibility(View.VISIBLE);
-//            nextNextView.setText(navList.getNextNextLocation().getName() +
-//                    ", " + navList.getPathToNextNextLocation().getWeight());
-//        }
-
     }
 
     public void reroute(){
