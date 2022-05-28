@@ -82,18 +82,46 @@ public class LocationTrackingUnitTest {
     }
 
     @Test
-    public void noReroute(){
+    public void noRerouteCloseLocation(){
         plan.sort();
         navList.advanceLocation();
         GraphPath<String, IdentifiedWeightedEdge> path = navList.getPlanPath(0);
+        assertEquals("koi", path.getStartVertex());
+        assertEquals("flamingo", path.getEndVertex());
         List<String> stops = path.getVertexList();
         // koi: 32.72211788245888, -117.15794384136309
         for(String stop: stops){
             System.out.println(stop);
         }
-        // koi coords
-        locTracker.setLat(32.72211788245888);
-        locTracker.setLng(-117.15794384136309);
+        // intxn_front_lagoon_1 coords
+        locTracker.setLat(32.72726737662313);
+        locTracker.setLng(-117.15496383006723);
+        GraphPath<String, IdentifiedWeightedEdge> newPath = locTracker.getReroute(path);
+        assertEquals("koi", newPath.getStartVertex());
+        assertEquals("flamingo", newPath.getEndVertex());
+    }
+
+    @Test
+    public void noRerouteCloseStreet(){
+        plan.sort();
+        navList.advanceLocation();
+        GraphPath<String, IdentifiedWeightedEdge> path = navList.getPlanPath(0);
+        assertEquals("koi", path.getStartVertex());
+        assertEquals("flamingo", path.getEndVertex());
+        List<String> stops = path.getVertexList();
+        // koi: 32.72211788245888, -117.15794384136309
+        for(String stop: stops){
+            System.out.println(stop);
+        }
+        // halfway from koi to intxn_front_lagoon_1 coords
+        double koiLng = -117.15794384136309;
+        double koiLat = 32.72211788245888;
+        double ixnFrontLagoon1Lng = -117.15496383006723;
+        double ixnFrontLagoon1Lat = 32.72726737662313;
+        double halfwayLng = (koiLng + ixnFrontLagoon1Lng) / 2.0;
+        double halfwayLat = (koiLat + ixnFrontLagoon1Lat) / 2.0;
+        locTracker.setLat(halfwayLat);
+        locTracker.setLng(halfwayLng);
         GraphPath<String, IdentifiedWeightedEdge> newPath = locTracker.getReroute(path);
         assertEquals("koi", newPath.getStartVertex());
         assertEquals("flamingo", newPath.getEndVertex());
