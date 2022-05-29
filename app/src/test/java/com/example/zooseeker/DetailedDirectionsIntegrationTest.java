@@ -1,9 +1,7 @@
 package com.example.zooseeker;
 
-import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -13,26 +11,29 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.Lifecycle;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.jgrapht.Graph;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
 @RunWith(AndroidJUnit4.class)
-public class ShortestPathIntegrationTest {
+public class DetailedDirectionsIntegrationTest {
     ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class);
     ExhibitDatabase testDb;
     ExhibitDao todoListItemDao;
+    ZooMap zooMap;
+    Graph<String, IdentifiedWeightedEdge> graph;
+    Map<String, ZooData.VertexInfo> locVertices;
+    Map<String, ZooData.EdgeInfo> roadEdges;
 
     @Before
     public void resetDatabase(){
@@ -45,8 +46,17 @@ public class ShortestPathIntegrationTest {
         todoListItemDao = testDb.exhibitDao();
     }
 
+    @Before
+    public void zooInfo(){
+        Context context = ApplicationProvider.getApplicationContext();
+        zooMap = new ZooMap(context);
+        graph = ZooData.loadZooGraphJSON(context);
+        locVertices = ZooData.loadVertexInfoJSON(context);
+        roadEdges = ZooData.loadEdgeInfoJSON(context);
+    }
+
     @Test
-    public void displayDirectionsClickNextTest(){
+    public void detailedDirections(){
         scenario.moveToState(Lifecycle.State.CREATED);
 
         scenario.onActivity(activity -> {
@@ -68,27 +78,20 @@ public class ShortestPathIntegrationTest {
             pathScenario.onActivity(activity1 -> {
                 TextView directions = activity1.findViewById(R.id.path_result);
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
-                assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Flamingos"));
-                assertEquals(true, ((String) directions.getText()).contains("1. Walk 10.0 meters"));
-                assertEquals("Hippos, 240.0", nextLabel.getText());
+                SwitchCompat directionsToggle = activity1.findViewById(R.id.directions_switch);
                 Button nextBtn = activity1.findViewById(R.id.next_btn);
-                assertTrue(nextBtn.isClickable());
-                assertEquals(VISIBLE, nextBtn.getVisibility());
+                directionsToggle.performClick();
+                assertTrue(((String) directions.getText()).contains(zooMap.getDetailedTextDirections("entrance_exit_gate", "flamingo")));
                 nextBtn.performClick();
-                assertEquals(true, ((String) directions.getText()).contains("From: Flamingos"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Hippos"));
-                assertEquals(true, ((String) directions.getText()).contains("Hippo Trail"));
-                assertEquals("Entrance and Exit Gate, 200.0", nextLabel.getText());
-
+                assertTrue(((String) directions.getText()).contains(zooMap.getDetailedTextDirections("flamingo", "hippo")));
+                nextBtn.performClick();
+                assertTrue(((String) directions.getText()).contains(zooMap.getDetailedTextDirections("hippo", "entrance_exit_gate")));
             });
-
-
         });
     }
 
     @Test
-    public void EndOfExhibitListTest(){
+    public void briefDirections(){
         scenario.moveToState(Lifecycle.State.CREATED);
 
         scenario.onActivity(activity -> {
@@ -109,20 +112,15 @@ public class ShortestPathIntegrationTest {
             pathScenario.moveToState(Lifecycle.State.CREATED);
             pathScenario.onActivity(activity1 -> {
                 TextView directions = activity1.findViewById(R.id.path_result);
-                Button nextBtn = activity1.findViewById(R.id.next_btn);
                 TextView nextLabel = activity1.findViewById(R.id.next_lbl);
-                assertTrue(nextBtn.isClickable());
-                assertEquals(VISIBLE, nextBtn.getVisibility());
+                Button nextBtn = activity1.findViewById(R.id.next_btn);
+                assertTrue(((String) directions.getText()).contains(zooMap.getBriefTextDirections("entrance_exit_gate", "flamingo")));
                 nextBtn.performClick();
+                assertTrue(((String) directions.getText()).contains(zooMap.getBriefTextDirections("flamingo", "hippo")));
                 nextBtn.performClick();
-                assertFalse(nextBtn.isClickable());
-                assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
-                assertEquals(GONE, nextLabel.getVisibility());
-                assertFalse(nextBtn.isClickable());
-                assertEquals(GONE, nextBtn.getVisibility());
+                assertTrue(((String) directions.getText()).contains(zooMap.getBriefTextDirections("hippo", "entrance_exit_gate")));
             });
-
-
         });
     }
+
 }
