@@ -67,6 +67,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
         Button next = findViewById(R.id.next_btn);
+        Button skip = findViewById(R.id.skip_btn);
         Button back = findViewById(R.id.back_btn);
         if(!navList.endReached()){
             displayTextDirections();
@@ -81,9 +82,17 @@ public class ShortestPathActivity extends AppCompatActivity {
             });
         }
 
+        if(skip.isClickable()) {
+            skip.setOnClickListener(view -> {
+                navList.skip();
+                displayTextDirections();
+                buttonVisibility();
+            });
+        }
+
         back.setOnClickListener(view -> {
             navList.previousLocation();
-            displayPrevTextDirections();
+            displayTextDirections();
             buttonVisibility();
         });
 
@@ -138,15 +147,19 @@ public class ShortestPathActivity extends AppCompatActivity {
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
-    @param plan = user's planned exhibits
+    @param prefix = Prefix to attach to directions
      */
     public void displayTextDirections(){
         TextView textView = findViewById(R.id.path_result);
         TextView nextNextView = findViewById(R.id.next_lbl);
         Location currLoc = navList.getCurrentLocation();
-        Location nextLoc = navList.getNextLocation();
-        String directions = navList.getDirectionsToNextLocation();
-        directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
+        Location nextLoc = navList.getDestination();
+        String directions = navList.getDirectionsToDestination();
+        String prefix = "";
+        if (!navList.goingForwards()){
+            prefix = "*Going Backwards\n\n";
+        }
+        directions = prefix + "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
         if(navList.endReached()){
             nextNextView.setVisibility(View.GONE);
@@ -198,12 +211,12 @@ public class ShortestPathActivity extends AppCompatActivity {
 
     public void buttonVisibility(){
         Button next = findViewById(R.id.next_btn);
+        Button skip = findViewById(R.id.skip_btn);
         Button finish = findViewById(R.id.finish_btn);
         Button back = findViewById(R.id.back_btn);
         if(navList.endReached() && navList.goingForwards()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
-
             Intent intent = new Intent(this, SearchActivity.class);
             finish.setClickable(true);
             finish.setVisibility(View.VISIBLE);
@@ -218,7 +231,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             next.setClickable(true);
             next.setVisibility(View.VISIBLE);
             finish.setClickable(false);
-            finish.setVisibility(View.INVISIBLE);
+            finish.setVisibility(View.GONE);
         }
         if(navList.atFirst() && !navList.goingForwards()){
             back.setClickable(false);
@@ -228,7 +241,14 @@ public class ShortestPathActivity extends AppCompatActivity {
             back.setClickable(true);
             back.setVisibility(View.VISIBLE);
         }
-
+        if((navList.endReached() && navList.goingForwards()) || (navList.atFirst() && !navList.goingForwards())){
+            skip.setClickable(false);
+            skip.setVisibility(View.GONE);
+        }
+        else{
+            skip.setClickable(true);
+            skip.setVisibility(View.VISIBLE);
+        }
     }
 
 

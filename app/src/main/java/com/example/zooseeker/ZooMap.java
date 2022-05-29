@@ -113,7 +113,9 @@ public class ZooMap {
         if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) || !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
-        setShortestPath(node_from, node_to);
+        if(node_from.equals(node_to)){
+            return "You're already there!";
+        }
         int i = 1;
         StringBuilder textDirections = new StringBuilder("");
         List<String> locations = currPath.getVertexList();

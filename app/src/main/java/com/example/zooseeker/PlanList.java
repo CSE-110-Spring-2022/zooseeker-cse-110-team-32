@@ -52,10 +52,17 @@ public class PlanList {
         this.context = newContext;
     }
 
-    /*returns user's list of planned exhibits
+    /*returns user's list of planned exhibits, only used for testing purposes
     @return user's list of exhibits
      */
     public List<Location> getMyList() { return this.myList; }
+
+    /*returns location at given index
+    @return location at given index
+     */
+    public Location get(int i){
+        return myList.get(i);
+    }
 
     /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
     exhibit is in their list
@@ -104,18 +111,29 @@ public class PlanList {
         return this.myList.add(e);
     }
 
-    /*Returns the location user is currently at
-    @returns user's location
-     */
-
-    public Boolean addGate(Location g) {
-        for (int i = 0; i < myList.size(); i++) {
-            if (myList.get(i).getId().equals(g.getId())) {
-                return false;
-            }
-        }
-        return this.myList.add(g);
+    public void deleteLocation(int i){
+        this.myList.remove(i);
     }
+
+    public void replan(int ind){
+        Location gate = myList.remove(myList.size()-1);
+        for (int j=ind; j < myList.size()-1;j++){
+            Location curr = myList.get(j);
+            int smallestInd = j+1;
+            double smallestDist = Double.MAX_VALUE;
+            for (int i = j+1; i < myList.size(); i++){
+                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
+                if (dist < smallestDist){
+                    smallestDist = dist;
+                    smallestInd = i;
+                }
+            }
+            Location next = myList.remove(smallestInd);
+            myList.add(j+1,next);
+        }
+        myList.add(gate);
+    }
+
 
 
     /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
