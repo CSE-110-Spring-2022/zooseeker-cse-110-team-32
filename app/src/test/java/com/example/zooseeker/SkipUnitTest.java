@@ -1,6 +1,7 @@
 package com.example.zooseeker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
@@ -49,20 +50,20 @@ public class SkipUnitTest {
         navList.skip();
         assertEquals(origSize-1, plan.planSize());
         assertEquals(gate, navList.getCurrentLocation());
+        assertFalse(planList.contains(skip));
+
         // Remove end gate
         planList.remove(planList.size()-1);
         // For each stop, check that distance to next stop is less than distance to all remaining stops
         for (int i=0; i < planList.size()-1; i++){
             Location curr = planList.get(i);
             double dist = navList.getDistanceToNextLocation();
-            assertTrue(navList.getCurrentLocation() != skip);
             for(int j=i+2; j<planList.size(); j++){
                 Location alt = planList.get(j);
                 assertTrue(dist <= zooMap.getDistance(curr.getId(), alt.getId()));
             }
             navList.advanceLocation();
         }
-        assertTrue(navList.getCurrentLocation() != skip);
     }
 
     @Test
@@ -75,7 +76,7 @@ public class SkipUnitTest {
         navList.skip();
         assertEquals(origSize-1, plan.planSize());
         assertEquals(curr, navList.getCurrentLocation());
-        assertTrue(!planList.contains(skip));
+        assertFalse(planList.contains(skip));
     }
 
 
