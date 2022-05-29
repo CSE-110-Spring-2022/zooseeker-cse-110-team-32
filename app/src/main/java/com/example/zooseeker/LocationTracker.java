@@ -1,6 +1,7 @@
 package com.example.zooseeker;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.jgrapht.GraphPath;
 
@@ -64,6 +65,29 @@ public class LocationTracker {
     public GraphPath<String, IdentifiedWeightedEdge> getReroute(GraphPath<String, IdentifiedWeightedEdge> currRoute){
         reroute(currRoute);
         return newRoute;
+    }
+
+    public boolean aheadOfCurrentLoc(String currLocId, int currLocIndex) {
+        String closestLoc = null;
+        double closestDist = Double.MAX_VALUE;
+        for (ZooData.VertexInfo loc: zooLocs.values()){
+            if (loc.parent_id != null){
+                continue;
+            }
+            double dist = distance(lat, lng, loc.lat, loc.lng);
+            if (dist < closestDist){
+                closestDist = dist;
+                closestLoc = loc.id;
+            }
+        }
+        Log.i("LT", String.format("closestLoc: %s", closestLoc));
+        List<Location> vertexList = plan.getMyList();
+        for (int i = currLocIndex + 1; i < vertexList.size() - 1; i++) {
+            if (closestLoc.equals(vertexList.get(i).getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String rerouteTextDirections(GraphPath<String, IdentifiedWeightedEdge> currRoute){

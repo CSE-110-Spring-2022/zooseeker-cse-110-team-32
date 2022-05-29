@@ -18,9 +18,11 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jgrapht.*;
@@ -87,6 +89,15 @@ public class ShortestPathActivity extends AppCompatActivity {
             buttonVisibility();
         });
 
+        Button mockCoordButton = findViewById(R.id.mock);
+        EditText lngText = findViewById(R.id.lng);
+        EditText latText = findViewById(R.id.lat);
+        mockCoordButton.setOnClickListener(view -> {
+            double mockLng = Double.parseDouble(lngText.getText().toString());
+            double mockLat = Double.parseDouble(latText.getText().toString());
+            Coord mockCoord = new Coord(mockLng, mockLat);
+            mockLocation(mockCoord);
+        });
         // Set up the model.
         model = new ViewModelProvider(this).get(LocationModel.class);
         useLocationService = getIntent().getBooleanExtra(EXTRA_USE_LOCATION_SERVICE, false);
@@ -117,6 +128,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             locTracker.setLat(coord.lat);
             locTracker.setLng(coord.lng);
             System.out.println(locTracker.lat);
+            replan(coord);
             reroute();
         });
     }
@@ -156,6 +168,15 @@ public class ShortestPathActivity extends AppCompatActivity {
         textView.setText(directions);
 
         nextNextView.setVisibility(View.INVISIBLE);
+    }
+
+    public void replan(Coord coord) {
+        LocationTracker laterLoc = new LocationTracker(this, plan);
+        laterLoc.setLng(coord.lng);
+        laterLoc.setLat(coord.lat);
+        if (laterLoc.aheadOfCurrentLoc(navList.getCurrentLocation().getId(), navList.currLocationIndex) == true) {
+            Utilities.notifyIfOffTrack(this, "Replan?");
+        }
     }
 
     public void reroute(){

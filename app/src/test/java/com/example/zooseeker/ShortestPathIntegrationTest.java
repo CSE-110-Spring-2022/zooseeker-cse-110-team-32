@@ -89,6 +89,39 @@ public class ShortestPathIntegrationTest {
     }
 
     @Test
+    public void LocationChangeTest(){
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+            SearchView searchBar = activity.findViewById(R.id.search_bar);
+            searchBar.setQuery("flamingo", true);
+            ListView searchView = activity.findViewById(R.id.search_list);
+            ZooData.VertexInfo searchFlamingo = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchFlamingo);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            searchBar.setQuery("Hippo", true);
+            searchView = activity.findViewById(R.id.search_list);
+            ZooData.VertexInfo searchMammal = (ZooData.VertexInfo) searchView.getItemAtPosition(0);
+            assertNotNull(searchMammal);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            Button planBtn = activity.findViewById(R.id.plan_btn);
+            planBtn.performClick();
+            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
+            pathScenario.moveToState(Lifecycle.State.CREATED);
+            pathScenario.onActivity(activity1 -> {
+                TextView directions = activity1.findViewById(R.id.path_result);
+                Button nextBtn = activity1.findViewById(R.id.next_btn);
+                TextView nextLabel = activity1.findViewById(R.id.next_lbl);
+                assertTrue(nextBtn.isClickable());
+                assertEquals(VISIBLE, nextBtn.getVisibility());
+
+                Coord capuchin = new Coord(32.751128871469874, -117.16364410510093);
+                activity1.mockLocation(capuchin);
+            });
+        });
+    }
+
+    @Test
     public void EndOfExhibitListTest(){
         scenario.moveToState(Lifecycle.State.CREATED);
 
@@ -121,8 +154,6 @@ public class ShortestPathIntegrationTest {
                 assertFalse(nextBtn.isClickable());
                 assertEquals(GONE, nextBtn.getVisibility());
             });
-
-
         });
     }
 }

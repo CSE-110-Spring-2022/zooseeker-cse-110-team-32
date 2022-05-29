@@ -1,7 +1,5 @@
 package com.example.zooseeker;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -39,7 +37,7 @@ public class LocationTrackingIntegrationTest {
     LocationTracker locTracker;
 
     ExhibitDatabase testDb;
-    ExhibitDao todoListItemDao;
+    ExhibitDao exhibitDao;
 
     @Rule
     public InstantTaskExecutorRule execRule = new InstantTaskExecutorRule();
@@ -52,7 +50,7 @@ public class LocationTrackingIntegrationTest {
 
         ExhibitDatabase.injectExhibitDatabase(testDb);
 
-        todoListItemDao = testDb.exhibitDao();
+        exhibitDao = testDb.exhibitDao();
     }
 
     @Test
