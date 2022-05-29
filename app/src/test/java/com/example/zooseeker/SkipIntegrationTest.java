@@ -60,6 +60,7 @@ public class SkipIntegrationTest {
                 TextView directions = activity1.findViewById(R.id.path_result);
                 Button skipBtn = activity1.findViewById(R.id.skip_btn);
                 Button nextBtn = activity1.findViewById(R.id.next_btn);
+                Button finishBtn = activity1.findViewById(R.id.finish_btn);
                 assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
                 assertEquals(true, ((String) directions.getText()).contains("To: Siamangs"));
                 skipBtn.performClick();
@@ -78,6 +79,44 @@ public class SkipIntegrationTest {
                 assertEquals(true, ((String) directions.getText()).contains("From: Hippos"));
                 assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
                 assertFalse(skipBtn.isClickable());
+                finishBtn.performClick();
+            });
+        });
+    }
+
+    @Test
+    public void skipReplan(){
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+            SearchView searchBar = activity.findViewById(R.id.search_bar);
+            searchBar.setQuery("flamin", true);
+            ListView searchView = activity.findViewById(R.id.search_list);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            searchBar.setQuery("capu", true);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            searchBar.setQuery("hippo", true);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            searchBar.setQuery("gorilla", true);
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            Button planBtn = activity.findViewById(R.id.plan_btn);
+            planBtn.performClick();
+            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
+            pathScenario.moveToState(Lifecycle.State.CREATED);
+            pathScenario.onActivity(activity1 -> {
+                System.out.println(activity1.plan.getMyList());
+                TextView directions = activity1.findViewById(R.id.path_result);
+                Button skipBtn = activity1.findViewById(R.id.skip_btn);
+                Button nextBtn = activity1.findViewById(R.id.next_btn);
+                Button finishBtn = activity1.findViewById(R.id.finish_btn);
+                assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
+                assertEquals(true, ((String) directions.getText()).contains("To: Flamingos"));
+                skipBtn.performClick();
+                assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
+                assertEquals(true, ((String) directions.getText()).contains("To: Hippos"));
+                nextBtn.performClick();
+                nextBtn.performClick();
+                finishBtn.performClick();
             });
         });
     }
