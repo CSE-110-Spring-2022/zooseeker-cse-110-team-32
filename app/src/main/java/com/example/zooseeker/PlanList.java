@@ -115,6 +115,26 @@ public class PlanList {
         this.myList.remove(i);
     }
 
+    public void replan(int ind){
+        Location gate = myList.remove(myList.size()-1);
+        for (int j=ind; j < myList.size()-1;j++){
+            Location curr = myList.get(j);
+            int smallestInd = j+1;
+            double smallestDist = Double.MAX_VALUE;
+            for (int i = j+1; i < myList.size(); i++){
+                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
+                if (dist < smallestDist){
+                    smallestDist = dist;
+                    smallestInd = i;
+                }
+            }
+            Location next = myList.remove(smallestInd);
+            myList.add(j+1,next);
+        }
+        myList.add(gate);
+    }
+
+
 
     /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
     with the shortest distance to go next, repeating until all Exhibits have been added. Also

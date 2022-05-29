@@ -116,10 +116,7 @@ public class ShortestPathIntegrationTest {
                 assertEquals(VISIBLE, nextBtn.getVisibility());
                 nextBtn.performClick();
                 nextBtn.performClick();
-<<<<<<< HEAD
                 assertFalse(nextBtn.isClickable());
-=======
->>>>>>> master
                 assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
                 assertEquals(GONE, nextLabel.getVisibility());
                 assertFalse(nextBtn.isClickable());
