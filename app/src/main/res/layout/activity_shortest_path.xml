@@ -6,15 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".ShortestPathActivity">
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="600dp"
-        android:layout_marginLeft="3dp"
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/directions_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brief/Detailed"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintHorizontal_bias="0.009"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <ScrollView
+        android:layout_width="397dp"
+        android:layout_height="554dp"
+        android:layout_marginLeft="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/next_lbl"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/directions_switch"
         app:layout_constraintVertical_bias="0.366">
 
         <TextView
@@ -96,5 +109,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.900"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

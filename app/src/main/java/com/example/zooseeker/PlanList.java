@@ -31,7 +31,7 @@ public class PlanList {
     private int currLocationIndex;
     //adding this ZooMap object for future iteration
     private Context context;
-    private ZooMap zooMap;
+    public ZooMap zooMap;
     private Map<String, ZooData.VertexInfo> zooLocs;
 
     /*Constructor that sets the information of the list of planned exhibits using the data passed in

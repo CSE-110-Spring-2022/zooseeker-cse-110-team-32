@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import org.jgrapht.*;
@@ -96,6 +98,22 @@ public class ShortestPathActivity extends AppCompatActivity {
             buttonVisibility();
         });
 
+        SwitchCompat directionsToggle = findViewById(R.id.directions_switch);
+
+        directionsToggle.setOnCheckedChangeListener(new SwitchCompat.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton switchView, boolean isChecked){
+                if (isChecked){
+                    plan.getZooMap().setDetailedDirectionSetting();
+                    displayTextDirections();
+                }
+                else{
+                    plan.getZooMap().setBriefDirectionSetting();
+                    displayTextDirections();
+                }
+            }
+        });
+
         // Set up the model.
         model = new ViewModelProvider(this).get(LocationModel.class);
         useLocationService = getIntent().getBooleanExtra(EXTRA_USE_LOCATION_SERVICE, false);
@@ -168,29 +186,6 @@ public class ShortestPathActivity extends AppCompatActivity {
             nextNextView.setVisibility(View.VISIBLE);
             nextNextView.setText(String.format("%s, %s", navList.getNextNextLocation().getName(), navList.getPathToNextNextLocation().getWeight()));
         }
-    }
-
-    /*
-   Displays directions from the next exhibit to the last exhibit to backtrack directions when user clicks back button
-   @param navList = user's list of planned exhibits
-   */
-    public void displayPrevTextDirections(){
-        TextView textView = findViewById(R.id.path_result);
-        TextView nextNextView = findViewById(R.id.next_lbl);
-        Location prevLoc = navList.getPrevLocation();
-        Location currLoc = navList.getCurrentLocation();
-        String directions = navList.getDirectionsToPreviousLocation();
-        directions = "*Going Backwards\n\n" + "From: " + currLoc.getName() + "\nTo: "
-                + prevLoc.getName() + "\n\n" + directions;
-        textView.setText(directions);
-
-        nextNextView.setVisibility(View.INVISIBLE);
-//        if (!navList.endReached()){
-//            nextNextView.setVisibility(View.VISIBLE);
-//            nextNextView.setText(navList.getNextNextLocation().getName() +
-//                    ", " + navList.getPathToNextNextLocation().getWeight());
-//        }
-
     }
 
     public void reroute(){
