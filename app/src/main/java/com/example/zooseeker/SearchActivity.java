@@ -1,7 +1,5 @@
 package com.example.zooseeker;
 
-import static android.view.View.VISIBLE;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,7 +10,6 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -102,6 +99,7 @@ public class SearchActivity extends AppCompatActivity {
             }
 
             /*Detects when text in search bar is updated, currently does nothing with this
+
              */
             @Override
             public boolean onQueryTextChange(String s) {
@@ -112,10 +110,6 @@ public class SearchActivity extends AppCompatActivity {
 
         TextView num_exhibits = findViewById(R.id.exhibits_num);
         List<String> exhibitList = new ArrayList();
-        Button planBtn = findViewById(R.id.plan_btn);
-        planBtn.setClickable(false);
-        planBtn.setVisibility(View.GONE);
-
         resultsView.setOnItemClickListener((adapterView, v, position, id) -> {
             ZooData.VertexInfo searchItem = (ZooData.VertexInfo) adapterView.getItemAtPosition(position);
             planManager.addLocation(searchItem);
@@ -128,26 +122,22 @@ public class SearchActivity extends AppCompatActivity {
             for (int i = 0; i < exhibitList.size(); i++) {
                 DisplayListItem item = new DisplayListItem(exhibitList.get(i));
                 list.add(item);
-                if(list.size()>0) {
-                    planBtn.setVisibility(VISIBLE);
-                    planBtn.setClickable(true);
-
-                }
             }
             adapter.setDisplayItems(list);
             num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()));
-            planList = planManager.getPlan();
-
 
         });
 
-        planBtn.setOnClickListener(view -> {
-            Intent pathIntent = new Intent(this, PlanSummaryActivity.class);
+        Button planBtn = findViewById(R.id.plan_btn);
+        planBtn.setOnClickListener(view ->{
+            Intent pathIntent = new Intent(this, ShortestPathActivity.class);
             planList = planManager.getFinalPlan();
             planList.saveList(exhibitDao);
             startActivity(pathIntent);
         });
 
     }
+
+
 
 }
