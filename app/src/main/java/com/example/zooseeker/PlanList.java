@@ -205,8 +205,13 @@ public class PlanList {
     public List<Exhibit> getExhibits() {
         List<Exhibit> result = new ArrayList<>();
         for (Location loc : this.myList) {
-            if (loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT)) {
+            if ((loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT))) {
                 result.add((Exhibit)loc);
+            } else if ((loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT_GROUP))) {
+                Map<String, Exhibit> animals = ((ExhibitGroup) loc).getAnimals();
+                for (Exhibit ex : animals.values()) {
+                    result.add(ex);
+                }
             }
         }
         return result;
@@ -218,7 +223,7 @@ public class PlanList {
     public void saveList(ExhibitDao dao) {
         List<Exhibit> allExhibits = this.getExhibits();
         for (Exhibit ex : allExhibits) {
-            if (dao.get(ex.id) == null) {
+            if (dao.get(ex.id) == null ) {
                 dao.insert(ex);
             }
         }
@@ -233,7 +238,13 @@ public class PlanList {
     public void loadList(ExhibitDao dao) {
         List<Exhibit> allExhibits = dao.getAll();
         List<Location> newList = new ArrayList<>();
+        List<String> checkDup = new ArrayList<>();
         for (Exhibit ex : allExhibits) {
+            if (ex.parentId != null && !checkDup.contains(dao.get(ex.id).parentId)) {
+                ExhibitGroup temp = new ExhibitGroup(ex.parentId, ex.parentName, ex.lat, ex.lng);
+                checkDup.add(ex.parentId);
+                newList.add((Location) temp);
+            }
             newList.add((Location)ex);
         }
         this.myList = newList;

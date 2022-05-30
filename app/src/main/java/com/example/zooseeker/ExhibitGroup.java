@@ -10,25 +10,25 @@ public class ExhibitGroup extends Location{
   @param name = the actual name of the exhibit
   @param tags = list of tags/categories associated with the exhibit
    */
-    public Map<String, String> animals;
+    public Map<String, Exhibit> animals;
     ExhibitGroup(String id, String name, double lat, double lng) {
         super(id, name, lat, lng);
         this.kind = ZooData.VertexInfo.Kind.EXHIBIT_GROUP;
         animals = new HashMap<>();
     }
 
-    public void addAnimal(String id, String name){
-        animals.put(id, name);
+    public void addAnimal(String id, Exhibit loc){
+        animals.put(id, loc);
     }
 
-    public Map<String, String> getAnimals(){
+    public Map<String, Exhibit> getAnimals(){
         return animals;
     }
 
     public String getAnimalNameText(){
         StringBuilder text = new StringBuilder();
-        for (String name: animals.values()){
-            text.append(name).append(", ");
+        for (Exhibit loc: animals.values()){
+            text.append(loc.name).append(", ");
         }
         text.delete(text.length()-2, text.length());
         return text.toString();
