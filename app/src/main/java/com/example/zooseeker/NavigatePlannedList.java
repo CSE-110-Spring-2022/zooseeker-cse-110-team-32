@@ -84,7 +84,7 @@ public class NavigatePlannedList {
     @return current location
      */
     public Location getCurrentLocation() {
-        return this.planList.getMyList().get(currLocationIndex);
+        return this.planList.get(currLocationIndex);
     }
 
     /*returns the next location in planned list of exhibits
@@ -93,11 +93,15 @@ public class NavigatePlannedList {
      */
     public Location getNextLocation() {
         if (currLocationIndex + 1 < this.planList.planSize()){
-            return this.planList.getMyList().get(currLocationIndex+1);
+            return this.planList.get(currLocationIndex+1);
         }
         return null;
     }
 
+    /*returns the previous location in planned list of exhibits
+    If user has reached the start of their list of exhibits, return null
+    @returns the previous location in list or null if there aren't any
+     */
     public Location getPrevLocation() {
         if (currLocationIndex - 1 >= 0){
             return this.planList.getMyList().get(currLocationIndex-1);
@@ -105,12 +109,24 @@ public class NavigatePlannedList {
         return null;
     }
 
+    /*returns the next or previous location depending on going forwards or backwards
+    @returns the next/previous location in list or null if there aren't any
+    */
+    public Location getDestination(){
+        if(forwards){
+            return getNextLocation();
+        }
+        else{
+            return getPrevLocation();
+        }
+    }
+
     /*Returns location after the next location
     @return location after next
      */
     public Location getNextNextLocation() {
         if (currLocationIndex + 2 < this.planList.planSize()){
-            return this.planList.getMyList().get(currLocationIndex+2);
+            return this.planList.get(currLocationIndex+2);
         }
         return null;
     }
@@ -137,9 +153,9 @@ public class NavigatePlannedList {
         if (currInd < 0 || currInd > this.planList.planSize()){
             return null;
         }
-        Location curr = this.planList.getMyList().get(currInd);
+        Location curr = this.planList.get(currInd);
         String currId = curr.getId();
-        Location next = this.planList.getMyList().get(currInd + 1);
+        Location next = this.planList.get(currInd + 1);
         String nextId = next.getId();
         return this.planList.getZooMap().getShortestPath(currId, nextId);
     }
@@ -148,9 +164,9 @@ public class NavigatePlannedList {
    @return locations to next location
     */
     public String getDirectionsToNextLocation() {
-        Location curr = this.planList.getMyList().get(currLocationIndex);
+        Location curr = this.planList.get(currLocationIndex);
         String currId = curr.getId();
-        Location next = this.planList.getMyList().get(currLocationIndex + 1);
+        Location next = this.planList.get(currLocationIndex + 1);
         String nextId = next.getId();
         return this.planList.getZooMap().getTextDirections(currId, nextId);
     }
@@ -164,6 +180,19 @@ public class NavigatePlannedList {
         Location prev = this.planList.getMyList().get(currLocationIndex-1);
         String prevId = prev.getId();
         return this.planList.getZooMap().getTextDirections(currId, prevId);
+    }
+
+    /*Returns the directions the user needs to get from their current location to the next/previous one
+    depending on if they're going forwards or backwards
+   @return locations to next/previous location
+    */
+    public String getDirectionsToDestination(){
+        if(forwards){
+            return getDirectionsToNextLocation();
+        }
+        else{
+            return getDirectionsToPreviousLocation();
+        }
     }
 
     /*returns distance from current location to next location
@@ -216,6 +245,24 @@ public class NavigatePlannedList {
         return true;
     }
 
+    public Boolean skip(){
+        if (forwards) {
+            if (currLocationIndex + 1 >= planList.planSize()) {
+                return false;
+            }
+            planList.deleteLocation(currLocationIndex + 1);
+            planList.replan(currLocationIndex);
+        }
+        else{
+            if (currLocationIndex - 1 <= 0) {
+                return false;
+            }
+            planList.deleteLocation(this.currLocationIndex - 1);
+            currLocationIndex = currLocationIndex-1;
+        }
+        return true;
+    }
+    
     /*Returns true if the user is progressing forwards, false if backwards
     */
     public Boolean goingForwards(){

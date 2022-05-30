@@ -30,6 +30,7 @@ public class ZooMap {
     GraphPath<String, IdentifiedWeightedEdge> currPath;
     Map<String, ZooData.VertexInfo> locVertices;
     Map<String, ZooData.EdgeInfo> roadEdges;
+    Boolean brief = true;
 
     /*Constructor that populates zoo info from given context
     @param context = gives information of asset files that need to be loaded
@@ -104,16 +105,44 @@ public class ZooMap {
         return currPath.getWeight();
     }
 
-    /*Returns list of directions user needs to get from start location to next exhibit
+    /*Sets directions to be brief
+     */
+    public void setBriefDirectionSetting(){
+        brief = true;
+    }
+
+    /*Sets directions to be detailed
+     */
+    public void setDetailedDirectionSetting(){
+        brief = false;
+    }
+
+    /*Returns string of directions user needs to get from start location to next exhibit
     @param node_from = start location
     @param node_to = end location
     @return set of directions user needs to get from start to finish
      */
     public String getTextDirections(String node_from, String node_to){
+        if (brief){
+            return getBriefTextDirections(node_from, node_to);
+        }
+        else{
+            return getDetailedTextDirections(node_from, node_to);
+        }
+    }
+
+    /*Returns detailed string of directions user needs to get from start location to next exhibit
+    @param node_from = start location
+    @param node_to = end location
+    @return set of directions user needs to get from start to finish
+     */
+    public String getDetailedTextDirections(String node_from, String node_to){
         if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) || !currPath.getEndVertex().equals(node_to)) {
             setShortestPath(node_from, node_to);
         }
-        setShortestPath(node_from, node_to);
+        if(node_from.equals(node_to)){
+            return "You're already there!";
+        }
         int i = 1;
         StringBuilder textDirections = new StringBuilder("");
         List<String> locations = currPath.getVertexList();
@@ -125,6 +154,58 @@ public class ZooMap {
             textDirections.append(textline);
             i++;
         }
+        return textDirections.toString();
+    }
+
+    /*Returns string of brief directions user needs to get from start location to next exhibit
+    @param node_from = start location
+    @param node_to = end location
+    @return set of directions user needs to get from start to finish
+     */
+    public String getBriefTextDirections(String node_from, String node_to){
+        if (Objects.isNull(currPath) || !currPath.getStartVertex().equals(node_from) || !currPath.getEndVertex().equals(node_to)) {
+            setShortestPath(node_from, node_to);
+        }
+        if(node_from.equals(node_to)){
+            return "You're already there!";
+        }
+        int i = 1;
+        int step = 1;
+        StringBuilder textDirections = new StringBuilder();
+        List<String> locations = currPath.getVertexList();
+        String currStreet = "";
+        String start = "";
+        double meters = 0;
+        List<IdentifiedWeightedEdge> edges = currPath.getEdgeList();
+        for(int e = 0; e < edges.size(); e++){
+            IdentifiedWeightedEdge edge = edges.get(e);
+            if(e == 0){
+                currStreet = roadEdges.get(edge.getId()).street;
+                start = locVertices.get(locations.get(i-1)).name;
+                meters = graph.getEdgeWeight(edge);
+                continue;
+            }
+            if (!currStreet.equals(roadEdges.get(edge.getId()).street)){
+                String textline = Integer.toString(step) + ". Walk " + meters
+                        + " meters along " + currStreet + " from "
+                        + start + " to "
+                        + locVertices.get(locations.get(i)).name + "\n";
+                textDirections.append(textline);
+                currStreet = roadEdges.get(edge.getId()).street;
+                start = locVertices.get(locations.get(i)).name;
+                meters = graph.getEdgeWeight(edge);
+                step = step + 1;
+            }
+            else{
+                meters += graph.getEdgeWeight(edge);
+            }
+            i = i+1;
+        }
+        String textline = Integer.toString(step) + ". Walk " + meters
+                + " meters along " + currStreet + " from "
+                + start + " to "
+                + locVertices.get(locations.get(i)).name + "\n";
+        textDirections.append(textline);
         return textDirections.toString();
     }
 

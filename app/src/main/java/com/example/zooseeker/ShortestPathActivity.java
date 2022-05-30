@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,11 +19,10 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import org.jgrapht.*;
@@ -69,6 +69,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
         Button next = findViewById(R.id.next_btn);
+        Button skip = findViewById(R.id.skip_btn);
         Button back = findViewById(R.id.back_btn);
         if(!navList.endReached()){
             displayTextDirections();
@@ -83,21 +84,36 @@ public class ShortestPathActivity extends AppCompatActivity {
             });
         }
 
+        if(skip.isClickable()) {
+            skip.setOnClickListener(view -> {
+                navList.skip();
+                displayTextDirections();
+                buttonVisibility();
+            });
+        }
+
         back.setOnClickListener(view -> {
             navList.previousLocation();
-            displayPrevTextDirections();
+            displayTextDirections();
             buttonVisibility();
         });
 
-        Button mockCoordButton = findViewById(R.id.mock);
-        EditText lngText = findViewById(R.id.lng);
-        EditText latText = findViewById(R.id.lat);
-        mockCoordButton.setOnClickListener(view -> {
-            double mockLng = Double.parseDouble(lngText.getText().toString());
-            double mockLat = Double.parseDouble(latText.getText().toString());
-            Coord mockCoord = new Coord(mockLng, mockLat);
-            mockLocation(mockCoord);
+        SwitchCompat directionsToggle = findViewById(R.id.directions_switch);
+
+        directionsToggle.setOnCheckedChangeListener(new SwitchCompat.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton switchView, boolean isChecked){
+                if (isChecked){
+                    plan.getZooMap().setDetailedDirectionSetting();
+                    displayTextDirections();
+                }
+                else{
+                    plan.getZooMap().setBriefDirectionSetting();
+                    displayTextDirections();
+                }
+            }
         });
+
         // Set up the model.
         model = new ViewModelProvider(this).get(LocationModel.class);
         useLocationService = getIntent().getBooleanExtra(EXTRA_USE_LOCATION_SERVICE, false);
@@ -122,27 +138,46 @@ public class ShortestPathActivity extends AppCompatActivity {
             String provider = LocationManager.GPS_PROVIDER;
             model.addLocationProviderSource(locationManager, provider);
         }
+        // Listen for location updates
+//        {
+//            this.locTracker = new LocationTracker(this, plan);
+//            String provider = LocationManager.GPS_PROVIDER;
+//            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+//            LocationListener locationListener = new LocationListener(){
+//              @Override
+//              public void onLocationChanged(@NonNull android.location.Location location){
+//                  Log.d("Zooseeker", String.format("Location changed: %s", location));
+//                  locTracker.setLat(location.getLatitude());
+//                  locTracker.setLng(location.getLongitude());
+//                  reroute();
+//              }
+//            };
+//            locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
+//        }
         this.locTracker = new LocationTracker(this, plan);
         model.getLastKnownCoords().observe(this, (coord) -> {
             Log.i("Zooseeker", String.format("Observing location model update to %s", coord));
             locTracker.setLat(coord.lat);
             locTracker.setLng(coord.lng);
             System.out.println(locTracker.lat);
-            replan(coord);
             reroute();
         });
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
-    @param plan = user's planned exhibits
+    @param prefix = Prefix to attach to directions
      */
     public void displayTextDirections(){
         TextView textView = findViewById(R.id.path_result);
         TextView nextNextView = findViewById(R.id.next_lbl);
         Location currLoc = navList.getCurrentLocation();
-        Location nextLoc = navList.getNextLocation();
-        String directions = navList.getDirectionsToNextLocation();
-        directions = "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
+        Location nextLoc = navList.getDestination();
+        String directions = navList.getDirectionsToDestination();
+        String prefix = "";
+        if (!navList.goingForwards()){
+            prefix = "*Going Backwards\n\n";
+        }
+        directions = prefix + "From: " + currLoc.getName() + "\nTo: " + nextLoc.getName() + "\n\n" + directions;
         textView.setText(directions);
         if(navList.endReached()){
             nextNextView.setVisibility(View.GONE);
@@ -150,32 +185,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         else{
             nextNextView.setVisibility(View.VISIBLE);
             nextNextView.setText(String.format("%s, %s", navList.getNextNextLocation().getName(), navList.getPathToNextNextLocation().getWeight()));
-        }
-    }
-
-    /*
-   Displays directions from the next exhibit to the last exhibit to backtrack directions when user clicks back button
-   @param navList = user's list of planned exhibits
-   */
-    public void displayPrevTextDirections(){
-        TextView textView = findViewById(R.id.path_result);
-        TextView nextNextView = findViewById(R.id.next_lbl);
-        Location prevLoc = navList.getPrevLocation();
-        Location currLoc = navList.getCurrentLocation();
-        String directions = navList.getDirectionsToPreviousLocation();
-        directions = "*Going Backwards\n\n" + "From: " + currLoc.getName() + "\nTo: "
-                + prevLoc.getName() + "\n\n" + directions;
-        textView.setText(directions);
-
-        nextNextView.setVisibility(View.INVISIBLE);
-    }
-
-    public void replan(Coord coord) {
-        LocationTracker laterLoc = new LocationTracker(this, plan);
-        laterLoc.setLng(coord.lng);
-        laterLoc.setLat(coord.lat);
-        if (laterLoc.aheadOfCurrentLoc(navList.getCurrentLocation().getId(), navList.currLocationIndex) == true) {
-            Utilities.notifyIfOffTrack(this, "Replan?");
         }
     }
 
@@ -197,12 +206,12 @@ public class ShortestPathActivity extends AppCompatActivity {
 
     public void buttonVisibility(){
         Button next = findViewById(R.id.next_btn);
+        Button skip = findViewById(R.id.skip_btn);
         Button finish = findViewById(R.id.finish_btn);
         Button back = findViewById(R.id.back_btn);
         if(navList.endReached() && navList.goingForwards()){
             next.setClickable(false);
             next.setVisibility(View.GONE);
-
             Intent intent = new Intent(this, SearchActivity.class);
             finish.setClickable(true);
             finish.setVisibility(View.VISIBLE);
@@ -217,7 +226,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             next.setClickable(true);
             next.setVisibility(View.VISIBLE);
             finish.setClickable(false);
-            finish.setVisibility(View.INVISIBLE);
+            finish.setVisibility(View.GONE);
         }
         if(navList.atFirst() && !navList.goingForwards()){
             back.setClickable(false);
@@ -227,7 +236,14 @@ public class ShortestPathActivity extends AppCompatActivity {
             back.setClickable(true);
             back.setVisibility(View.VISIBLE);
         }
-
+        if((navList.endReached() && navList.goingForwards()) || (navList.atFirst() && !navList.goingForwards())){
+            skip.setClickable(false);
+            skip.setVisibility(View.GONE);
+        }
+        else{
+            skip.setClickable(true);
+            skip.setVisibility(View.VISIBLE);
+        }
     }
 
 
