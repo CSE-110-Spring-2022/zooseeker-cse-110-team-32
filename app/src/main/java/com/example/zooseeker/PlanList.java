@@ -21,7 +21,7 @@ public class PlanList {
     //adding this ZooMap object for future iteration
     private Context context;
     public ZooMap zooMap;
-    private Map<String, ZooData.VertexInfo> zooLocs;
+    public Map<String, ZooData.VertexInfo> zooLocs;
 
     /*Constructor that sets the information of the list of planned exhibits using the data passed in
    @param context = gives information of asset files that need to be loaded
@@ -45,6 +45,13 @@ public class PlanList {
     @return user's list of exhibits
      */
     public List<Location> getMyList() { return this.myList; }
+
+    /* Sets user's planned list (only called when replacing old list with sorted list
+       @param list = sorted list containing myList's exhibits (plus entrance/exit gate)
+     */
+    public void setMyList(List<Location> list){
+        this.myList = list;
+    }
 
     /*returns location at given index
     @return location at given index
@@ -130,84 +137,6 @@ public class PlanList {
         myList.add(gate);
     }
 
-    /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
-    with the shortest distance to go next, repeating until all Exhibits have been added. Also
-    appends the gate at the end
-     */
-    public void sort(){
-        List<Location> sortList = new ArrayList<>();
-        Boolean gateAdded = checkForGate(sortList);
-
-        Location gate = new Gate("","", 0, 0);
-        if(!gateAdded) gate = addGate(sortList);
-
-        while(myList.size() > 0){
-            Location curr = sortList.get(sortList.size()-1);
-            //Calculates which exhibit is closest to current exhibit
-            int closest = calculateClosest(curr);
-            //Adds closest exhibit to the sorted list
-            sortList.add(myList.get(closest));
-            myList.remove(closest);
-        }
-        this.myList = sortList;
-        myList.add(gate);
-    }
-
-    /* Adds entrance/exit gate to beginning of sorted list and checks for instances of gate in user's plan
-       @param sortedList = list of exhibits in sorted order
-       @return true if gate was added, false otherwise
-     */
-    public boolean checkForGate(List<Location> sortedList){
-        Location startEnd;
-        boolean gateAdded = false;
-        for (int i = 0; i < planSize(); i++){
-            Location stop = myList.get(i);
-            if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
-                startEnd = stop;
-                if(!gateAdded) { sortedList.add(startEnd); }
-                myList.remove(i);
-                i--;
-                gateAdded = true;
-            }
-        }
-        return gateAdded;
-    }
-
-    /* Builds the sorted list by checking which exhibit is the closest to the most recently added
-       exhibit in the user's list
-       @param sortedList = list of exhibits in sorted order
-       @return the gated added to sortedList
-     */
-    public Location addGate(List<Location> sortedList){
-        Location gate = new Gate("","", 0, 0);
-        for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
-            if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
-                gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
-                sortedList.add(gate);
-                break;
-            }
-        }
-        return gate;
-    }
-
-    /* Calculates which exhibit is closest to current exhibit
-       @param currentLoc = the location we're trying to find the closest exhibit to. It's the last location
-                           added to the sortList
-       @return the index of the location closest to currentLoc
-     */
-    public int calculateClosest(Location currentLoc){
-        int smallestInd = 0;
-        double smallestDist = Double.MAX_VALUE;
-        for (int i = 0; i < myList.size(); i++){
-            double dist = zooMap.getShortestPath(currentLoc.getId(), myList.get(i).getId()).getWeight();
-            if (dist < smallestDist){
-                smallestDist = dist;
-                smallestInd = i;
-            }
-        }
-        return smallestInd;
-    }
-
     /* Clears the list from the database and resets the user's index to the beginning
        @param dao = database that stores user's list of exhibits
      */
@@ -265,7 +194,8 @@ public class PlanList {
             newList.add((Location)ex);
         }
         this.myList = newList;
-        this.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(this);
     }
 
 

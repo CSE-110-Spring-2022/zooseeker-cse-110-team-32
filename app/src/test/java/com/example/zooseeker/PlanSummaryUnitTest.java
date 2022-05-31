@@ -26,7 +26,8 @@ public class PlanSummaryUnitTest {
         Location gate = new Intersection("intxn_front_treetops", "Front Street / Treetops Way",32.735546539459556,-117.1521136981983,new ArrayList<>());
         planList.addLocation(gate);
         assertEquals(1, planList.planSize());
-        planList.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(planList);
         NavigatePlannedList navList = new NavigatePlannedList(planList);
         PlanSummaryActivity summary = new PlanSummaryActivity();
         assertTrue(summary.createExhibitsList(navList).get(0).getName().contains("10.0"));
@@ -40,7 +41,8 @@ public class PlanSummaryUnitTest {
         Location koi = new Exhibit("koi", "Koi Fish",32.72211788245888,-117.15794384136309);
         planList.addLocation(koi);
         assertEquals(1, planList.planSize());
-        planList.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(planList);
         NavigatePlannedList navList = new NavigatePlannedList(planList);
         PlanSummaryActivity summary = new PlanSummaryActivity();
         assertTrue(summary.createExhibitsList(navList).get(0).getName().contains("60.0"));

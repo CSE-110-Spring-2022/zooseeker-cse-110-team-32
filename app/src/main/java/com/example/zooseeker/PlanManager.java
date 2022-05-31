@@ -52,7 +52,8 @@ public class PlanManager {
        @return sorted plan of user's exhibits
      */
     public PlanList getFinalPlan(){
-        plan.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(plan);
         return plan;
     }
 

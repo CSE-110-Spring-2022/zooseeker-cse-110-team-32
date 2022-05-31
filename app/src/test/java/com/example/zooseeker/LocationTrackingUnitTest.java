@@ -63,7 +63,8 @@ public class LocationTrackingUnitTest {
 
     @Test
     public void reroute(){
-        plan.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(plan);
         GraphPath<String, IdentifiedWeightedEdge> path = navList.getPlanPath(0);
         List<String> stops = path.getVertexList();
         // gate: 32.73561, -117.14936
@@ -83,7 +84,8 @@ public class LocationTrackingUnitTest {
 
     @Test
     public void noRerouteCloseLocation(){
-        plan.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(plan);
         navList.advanceLocation();
         GraphPath<String, IdentifiedWeightedEdge> path = navList.getPlanPath(0);
         assertEquals("koi", path.getStartVertex());
@@ -103,7 +105,8 @@ public class LocationTrackingUnitTest {
 
     @Test
     public void noRerouteCloseStreet(){
-        plan.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(plan);
         navList.advanceLocation();
         GraphPath<String, IdentifiedWeightedEdge> path = navList.getPlanPath(0);
         assertEquals("koi", path.getStartVertex());
