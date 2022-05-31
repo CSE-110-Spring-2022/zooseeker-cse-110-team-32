@@ -125,23 +125,34 @@ public class LocationTracker {
         return plan.getZooMap().getTextDirections(from, to);
     }
 
-    //TODO: refactor the following methods so that they have more descriptive variable names and are easier to understand
-
-    /* Calculates the distance to a street
-
+    /* Calculates the distance from a point (x,y) to a street, which is a line segment defined by
+        points (startx,starty) and (endx, endy)
+        @param x = x coordinate of point
+        @param y = y coordinate of point
+        @param startx = x coordinate of street start
+        @param starty = y coordinate of street start
+        @param endx = x coordinate of street end
+        @param endy = y coordinate of street end
      */
-    public double distToStreet(double x, double y, double x1, double y1,  double x2, double y2){
-        double startdist = distance(x, y, x1, y1);
-        double enddist = distance(x, y, x2, y2);
-        double linedist = pointDistToLine(x, y, x1, y1, x2, y2);
-        double startang = angle(x1, y1, x, y, x2, y2);
-        double endang = angle(x2, y2, x, y, x1, y1);
+    public double distToStreet(double x, double y, double startx, double starty, double endx, double endy){
+        double startdist = distance(x, y, startx, starty);
+        double enddist = distance(x, y, endx, endy);
+        double linedist = pointDistToLine(x, y, startx, starty, endx, endy);
+        double startang = angle(startx, starty, x, y, endx, endy);
+        double endang = angle(endx, endy, x, y, startx, starty);
         if (startang >= Math.PI/2 || endang >= Math.PI/2){
             return Math.min(startdist, enddist);
         }
         return linedist;
     }
 
+    /*  Calculates the angle defined by 3 points where (vx, vy) is the angle vertex and
+        (p1x, p1y) and (p2x, p2y) are the two other points of the angle
+        @param x = x coordinate of point
+        @param y = y coordinate of point
+        @param p1x, p2x = x coordinates of endpoints
+        @param p1y, p2y = y coordinates of endpoints
+     */
     public double angle(double vx, double vy, double p1x, double p1y, double p2x, double p2y){
         double vp1 = distance(vx, vy, p1x, p1y);
         double vp2 = distance(vx, vy, p2x, p2y);
@@ -152,6 +163,12 @@ public class LocationTracker {
         return Math.acos((vp1sq+vp2sq-p1p2sq)/(2*vp1*vp2));
     }
 
+    /* Calculates the distance from point (x,y) to a line defined by points (x1, y1) and (x2,y2)
+        @param x = x coordinate of point
+        @param y = y coordinate of point
+        @param x1, x2 = x coordinates of points that define line
+        @param y1, y2 = y coordinates of points that define line
+     */
     public double pointDistToLine(double x, double y, double x1, double y1,  double x2, double y2){
         double linelen = distance(x1, y1, x2, y2);
         double numerator = Math.abs((x2-x1)*(y1-y)-(x1-x)*(y2-y1));
@@ -159,6 +176,10 @@ public class LocationTracker {
         return dist;
     }
 
+    /* Calculates distance between two points (x1,y1) and (x2,y2)
+        @param x1, x2 = x coordinates of points
+        @param y1, y2 = y coordinates of points
+     */
     public double distance(double x1, double y1, double x2, double y2){
         return Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2));
     }

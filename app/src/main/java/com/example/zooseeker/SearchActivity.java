@@ -141,6 +141,7 @@ public class SearchActivity extends AppCompatActivity {
 
         });
 
+        // Listener for button that moves to the plan summary screen
         planBtn.setOnClickListener(view -> {
             Intent pathIntent = new Intent(this, PlanSummaryActivity.class);
             planList = planManager.getFinalPlan();
