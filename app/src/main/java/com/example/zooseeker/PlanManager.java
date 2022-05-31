@@ -11,6 +11,7 @@ import java.util.Map;
 public class PlanManager {
     private PlanList plan;
     private Map<String, ZooData.VertexInfo> locs;
+    private Sorter sorter;
 
     /* Constructor that initializes information about the zoo and the user's planned list of exhibits
        @param context = information about zoo
@@ -19,6 +20,7 @@ public class PlanManager {
     public PlanManager(Context context, PlanList plan){
         this.plan = plan;
         this.locs = ZooData.loadVertexInfoJSON(context);
+        this.sorter = new Sorter();
     }
 
     /* Adds location to an exhibit group
@@ -52,7 +54,6 @@ public class PlanManager {
        @return sorted plan of user's exhibits
      */
     public PlanList getFinalPlan(){
-        Sorter sorter = new Sorter();
         sorter.sort(plan);
         return plan;
     }
