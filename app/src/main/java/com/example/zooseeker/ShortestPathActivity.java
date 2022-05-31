@@ -50,6 +50,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     NavigatePlannedList navList;
     LocationTracker locTracker;
     private LocationModel model;
+    public boolean askedReplan;
     private boolean useLocationService;
     public static final String EXTRA_USE_LOCATION_SERVICE = "use_location_updated";
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
@@ -70,12 +71,12 @@ public class ShortestPathActivity extends AppCompatActivity {
 
         //Used for testing different user locations
         Button mockCoordButton = findViewById(R.id.mock);
-        EditText lngText = findViewById(R.id.lng);
         EditText latText = findViewById(R.id.lat);
+        EditText lngText = findViewById(R.id.lng);
         mockCoordButton.setOnClickListener(view -> {
-            double mockLng = Double.parseDouble(lngText.getText().toString());
             double mockLat = Double.parseDouble(latText.getText().toString());
-            Coord mockCoord = new Coord(mockLng, mockLat);
+            double mockLng = Double.parseDouble(lngText.getText().toString());
+            Coord mockCoord = new Coord(mockLat, mockLng);
             mockLocation(mockCoord);
         });
 
@@ -94,6 +95,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 navList.advanceLocation();
                 displayTextDirections();
                 buttonVisibility();
+                askedReplan = false;
             });
         }
 
@@ -102,6 +104,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 navList.skip();
                 displayTextDirections();
                 buttonVisibility();
+                askedReplan = false;
             });
         }
 
@@ -109,6 +112,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             navList.previousLocation();
             displayTextDirections();
             buttonVisibility();
+            askedReplan = false;
         });
 
         SwitchCompat directionsToggle = findViewById(R.id.directions_switch);
@@ -152,11 +156,11 @@ public class ShortestPathActivity extends AppCompatActivity {
             model.addLocationProviderSource(locationManager, provider);
         }
         this.locTracker = new LocationTracker(this, plan);
+        askedReplan = false;
         model.getLastKnownCoords().observe(this, (coord) -> {
             Log.i("Zooseeker", String.format("Observing location model update to %s", coord));
             locTracker.setLat(coord.lat);
             locTracker.setLng(coord.lng);
-            System.out.println(locTracker.lat);
             replan(coord);
             reroute();
         });
@@ -190,8 +194,9 @@ public class ShortestPathActivity extends AppCompatActivity {
         LocationTracker laterLoc = new LocationTracker(this, plan);
         laterLoc.setLng(coord.lng);
         laterLoc.setLat(coord.lat);
-        if (laterLoc.aheadOfCurrentLoc(navList.currLocationIndex) != -1) {
+        if (laterLoc.aheadOfCurrentLoc(navList.currLocationIndex) != -1 && !askedReplan) {
             notifyIfOffTrack(this, "Replan?", laterLoc.aheadOfCurrentLoc(navList.currLocationIndex));
+            askedReplan = true;
         }
     }
 
