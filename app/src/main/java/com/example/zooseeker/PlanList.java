@@ -94,14 +94,33 @@ public class PlanList {
    @return whether location was successfully added or not
     */
     public Boolean addLocation(Location e) {
-        for (int i=0; i < myList.size(); i++){
-            if (myList.get(i).getId().equals(e.getId())){
-                return false;
-            }
-        }
+        if(checkIfInList(e)) return false;
         return this.myList.add(e);
     }
-  
+
+    /* Checks if the given location is already in the user's list of exhibits
+       @param location = location to be checked to see if it's already in the list
+       @return true if already in list, false otherwise
+     */
+    public boolean checkIfInList(Location location){
+        for (int i=0; i < myList.size(); i++){
+            if (myList.get(i).getId().equals(location.getId())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* Adds given location at given index in user's list of planned exhibits
+       @param index = where the location would be inserted
+       @param location = location to be added to list
+       @return true if added to list, false if otherwise
+     */
+    public boolean addLocation(int index, Location location){
+        if(checkIfInList(location)) return false;
+        this.myList.add(index, location);
+        return true;
+    }
     public void replaceLocationIndex(int index, Location e) {
         myList.set(index, e);
     }
@@ -110,8 +129,8 @@ public class PlanList {
         @param = index of location to be removed in user's list
      */
 
-    public void deleteLocation(int i){
-        this.myList.remove(i);
+    public Location deleteLocation(int i){
+       return this.myList.remove(i);
     }
 
     /* Clears the list from the database and resets the user's index to the beginning

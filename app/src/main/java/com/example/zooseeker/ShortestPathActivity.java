@@ -133,20 +133,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         // If GPS is enabled, then update the model from the Location service.
         if (useLocationService) {
             // Permissions setup
-            {
-                String[] requiredPermissions = new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                };
-
-                Boolean hasNoLocationPerms = Arrays.stream(requiredPermissions)
-                        .map(perm -> ContextCompat.checkSelfPermission(this, perm))
-                        .allMatch(status -> status == PackageManager.PERMISSION_DENIED);
-                if (hasNoLocationPerms){
-                    requestPermissionLauncher.launch(requiredPermissions);
-                    return;
-                }
-            }
+            if (permissionsSetup()) return;
             LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             String provider = LocationManager.GPS_PROVIDER;
             model.addLocationProviderSource(locationManager, provider);
@@ -160,6 +147,24 @@ public class ShortestPathActivity extends AppCompatActivity {
             replan(coord);
             reroute();
         });
+    }
+
+    /* Method that sets up permissions to use the user's location
+     */
+    private boolean permissionsSetup() {
+        String[] requiredPermissions = new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+
+        boolean hasNoLocationPerms = Arrays.stream(requiredPermissions)
+                .map(perm -> ContextCompat.checkSelfPermission(this, perm))
+                .allMatch(status -> status == PackageManager.PERMISSION_DENIED);
+        if (hasNoLocationPerms){
+            requestPermissionLauncher.launch(requiredPermissions);
+            return true;
+        }
+        return false;
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list

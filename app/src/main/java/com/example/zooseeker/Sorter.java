@@ -89,29 +89,29 @@ public class Sorter {
        2 and on need to be replanned)
      */
     public void replan(PlanList plan, int ind){
-        Location gate = plan.getMyList().remove(plan.planSize()-1);
+        Location gate = plan.deleteLocation(plan.planSize()-1);
         //Creates a new list containing only the exhibits that need to be replanned
 
         for (int j=ind; j < plan.planSize()-1;j++){
-            Location curr = plan.getMyList().get(j);
+            Location curr = plan.get(j);
             int smallestInd = j+1;
             double smallestDist = Double.MAX_VALUE;
 
             //Calculates distance between locations to determine which exhibit is the closest
-            for (int i = j+1; i < plan.getMyList().size(); i++){
-                double dist = plan.getZooMap().getShortestPath(curr.getId(), plan.getMyList().get(i).getId()).getWeight();
+            for (int i = j+1; i < plan.planSize(); i++){
+                double dist = plan.zooMap.getShortestPath(curr.getId(), plan.get(i).getId()).getWeight();
                 if (dist < smallestDist){
                     smallestDist = dist;
                     smallestInd = i;
                 }
             }
             //removes the exhibits that were replanned from the old list and inserts the new exhibit order
-            Location next = plan.getMyList().remove(smallestInd);
-            List<Location> temp = plan.getMyList();
-            temp.add(j+1,next);
-            plan.setMyList(temp);
+            Location next = plan.deleteLocation(smallestInd);
+            plan.addLocation(j+1, next);
+
         }
         plan.addLocation(gate);
+
 
     }
 }
