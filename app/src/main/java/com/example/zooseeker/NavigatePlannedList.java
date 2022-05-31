@@ -281,7 +281,9 @@ public class NavigatePlannedList {
             Location newLoc = planList.get(newLocInd);
             planList.replaceLocationIndex(currLocationIndex, newLoc);
             planList.replaceLocationIndex(newLocInd, oldLoc);
-            planList.replan(currLocationIndex);
+            Sorter sorter = new Sorter();
+            sorter.replan(planList,currLocationIndex);
+
 
         }
         return true;
