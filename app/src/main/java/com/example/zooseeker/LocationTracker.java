@@ -7,6 +7,8 @@ import org.jgrapht.GraphPath;
 import java.util.List;
 import java.util.Map;
 
+/* This class is in charge of tracking the user's location
+ */
 public class LocationTracker {
 
     public double lat;
@@ -15,33 +17,51 @@ public class LocationTracker {
     private Map<String, ZooData.VertexInfo> zooLocs;
     public GraphPath<String, IdentifiedWeightedEdge> newRoute;
 
-
+    /* Constructor that initializes the user's list of planned exhibits and information about the zoo
+       @param context = information about the zoo
+       @param plan = user's plan of exhibits
+     */
     public LocationTracker(Context context, PlanList plan){
         this.plan = plan;
         this.zooLocs = ZooData.loadVertexInfoJSON(context);
     }
 
+    /* Sets the latitude of user
+       @param lat = user's latitude
+     */
     public void setLat(double lat){
         this.lat = lat;
     }
 
+    /* Sets user's longitude
+       @param lng = user's longitude
+     */
     public void setLng(double lng){
         this.lng = lng;
     }
 
+    /* Creates a new optimized path for the user when they go off route
+        @param currRoute = current route the user was following
+     */
     public void reroute(GraphPath<String, IdentifiedWeightedEdge> currRoute){
         String closestLoc = null;
         double closestDist = Double.MAX_VALUE;
+
+        //Calculates which exhibit is now the closest to the user's location
         for (ZooData.VertexInfo loc: zooLocs.values()){
             if (loc.parent_id != null){
                 continue;
             }
             double dist = distance(lat, lng, loc.lat, loc.lng);
+            //Sets the coordinates of what is the closest exhibit up to this point in the loop
             if (dist < closestDist){
                 closestDist = dist;
                 closestLoc = loc.id;
             }
         }
+
+        //Creates new route starting with the newly calculated closed exhibit and uses the list of exhibits from
+        //user's list
         List<String> vertexList = currRoute.getVertexList();
         for (int i = 0; i < vertexList.size()-1;i++){
             String fromid = vertexList.get(i);
@@ -61,11 +81,19 @@ public class LocationTracker {
         newRoute = plan.getZooMap().getShortestPath(closestLoc, currRoute.getEndVertex());
     }
 
+    /* Returns the new route for user once they go offroute
+       @param currRoute = current route that user was following
+       @return new optimized route according to user's location
+     */
     public GraphPath<String, IdentifiedWeightedEdge> getReroute(GraphPath<String, IdentifiedWeightedEdge> currRoute){
         reroute(currRoute);
         return newRoute;
     }
 
+    /* Creates the new directions for the new route
+       @param currRoute = current route that user was following
+       @return directions in between exhibits in the new order
+     */
     public String rerouteTextDirections(GraphPath<String, IdentifiedWeightedEdge> currRoute){
         reroute(currRoute);
         String from = newRoute.getStartVertex();
@@ -73,6 +101,11 @@ public class LocationTracker {
         return plan.getZooMap().getTextDirections(from, to);
     }
 
+    //TODO: refactor the following methods so that they have more descriptive variable names and are easier to understand
+
+    /* Calculates the distance to a street
+
+     */
     public double distToStreet(double x, double y, double x1, double y1,  double x2, double y2){
         double startdist = distance(x, y, x1, y1);
         double enddist = distance(x, y, x2, y2);

@@ -73,6 +73,10 @@ public class PlanList {
         return myList.indexOf(curr);
     }
 
+    /* Uses the given ID to find the corresponding exhibit
+       @param id = ID of exhibit
+       @return location that matches given ID
+     */
     public Location findExhibit(String id){
         for (int i=0; i < myList.size(); i++){
             if (myList.get(i).getId().equals(id)){
@@ -111,16 +115,26 @@ public class PlanList {
         return this.myList.add(e);
     }
 
+    /* Deletes location from list
+        @param = index of location to be removed in user's list
+     */
     public void deleteLocation(int i){
         this.myList.remove(i);
     }
 
+    /* Replans the most optimized route using the user's list of exhibits after the user skips an exhibit
+       @param ind = starting index of which exhibits need to be replanned (so if ind = 2 then exhibits
+       2 and on need to be replanned)
+     */
     public void replan(int ind){
         Location gate = myList.remove(myList.size()-1);
+        //Creates a new list containing only the exhibits that need to be replanned
         for (int j=ind; j < myList.size()-1;j++){
             Location curr = myList.get(j);
             int smallestInd = j+1;
             double smallestDist = Double.MAX_VALUE;
+
+            //Calculates distance between locations to determine which exhibit is the closest
             for (int i = j+1; i < myList.size(); i++){
                 double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
                 if (dist < smallestDist){
@@ -128,6 +142,7 @@ public class PlanList {
                     smallestInd = i;
                 }
             }
+            //removes the exhibits that were replanned from the old list and inserts the new exhibit order
             Location next = myList.remove(smallestInd);
             myList.add(j+1,next);
         }
@@ -144,6 +159,7 @@ public class PlanList {
         List<Location> sortList = new ArrayList<>();
         Location startEnd;
         Boolean gateAdded = false;
+        //Adds entrance/exit gate to beginning of sorted list and checks for instances of gate in user's plan
         for (int i = 0; i < planSize(); i++){
             Location stop = myList.get(i);
             if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
@@ -167,8 +183,11 @@ public class PlanList {
             }
         }
 
+        //Builds the sorted list one exhibit at a time by checking which exhibit is the closest to the most
+        //recently added exhibit of the sorted list
         while(myList.size() > 0){
             Location curr = sortList.get(sortList.size()-1);
+            //Calculates whichc exhibit is closest to current exhibit
             int smallestInd = 0;
             double smallestDist = Double.MAX_VALUE;
             for (int i = 0; i < myList.size(); i++){
@@ -178,6 +197,7 @@ public class PlanList {
                     smallestInd = i;
                 }
             }
+            //Adds closest exhibit to the sorted list
             sortList.add(myList.get(smallestInd));
             myList.remove(smallestInd);
         }
@@ -185,23 +205,28 @@ public class PlanList {
         myList.add(gate);
     }
 
+    /* Clears the list from the database and resets the user's index to the beginning
+       @param dao = database that stores user's list of exhibits
+     */
     public void clearList(ExhibitDao dao){
         this.myList.clear();
         List<Exhibit> temp = dao.getAll();
         for(Exhibit e: dao.getAll()){
-
             dao.delete(e);
         }
         resetCurrLocationIndex();
         saveList(dao);
-
-
     }
 
+    /* Resets the user's location index (ie how far down the list of exhibits the user is) to 0
+     */
     public void resetCurrLocationIndex(){
         this.currLocationIndex = 0;
     }
 
+    /* Returns list of exhibits (only exhibits, not locations)
+       @return list of user's chosen exhibits
+     */
     public List<Exhibit> getExhibits() {
         List<Exhibit> result = new ArrayList<>();
         for (Location loc : this.myList) {

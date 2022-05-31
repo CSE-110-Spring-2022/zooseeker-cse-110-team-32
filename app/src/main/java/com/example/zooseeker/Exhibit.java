@@ -13,23 +13,24 @@ import java.util.List;
  */
 @Entity(tableName = "exhibits")
 public class Exhibit extends Location{
+    @PrimaryKey(autoGenerate = true)
+    public long Uid = 0;
+
     /*Constructor for Exhibit that tells the name, list of tags, id, and other info about a specific
    exhibit
    @param id = ID name of exhibit
    @param name = the actual name of the exhibit
    @param lat = latitude of exhibit
    @param lng = longitude of exhibit
-   @param tags = list of tags/categories associated with the exhibit
     */
-    @PrimaryKey(autoGenerate = true)
-    public long Uid = 0;
-
-
     Exhibit(String id, String name, double lat, double lng) {
         super(id, name, lat, lng);
         this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
     }
 
+    /* Returns string format of Exhibit, including its ID, name, and type of Location
+    @return string format of exhibit's information
+     */
     @Override
     public String toString() {
         return "Exhibit{" +

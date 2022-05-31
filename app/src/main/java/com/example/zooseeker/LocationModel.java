@@ -19,13 +19,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+/* This class handles the viewModel that is in charge of storing the user's last known location
+ */
 public class LocationModel extends AndroidViewModel {
     private final String TAG = "FOOBAR";
     private final MediatorLiveData<Coord> lastKnownCoords;
-
     private LiveData<Coord> locationProviderSource = null;
     private MutableLiveData<Coord> mockSource = null;
 
+    /* Constructor that initializes the last known coordinates of the user and a mock source
+       @param application = application that's collecting location information
+     */
     public LocationModel(@NonNull Application application) {
         super(application);
         lastKnownCoords = new MediatorLiveData<>();
@@ -35,6 +39,9 @@ public class LocationModel extends AndroidViewModel {
         lastKnownCoords.addSource(mockSource, lastKnownCoords::setValue);
     }
 
+    /* Returns the last known coordinates of the user for when they close the app and open it again
+       @return last known location of the user, as tracked by the app
+     */
     public LiveData<Coord> getLastKnownCoords() {
         return lastKnownCoords;
     }
@@ -69,17 +76,28 @@ public class LocationModel extends AndroidViewModel {
         lastKnownCoords.addSource(locationProviderSource, lastKnownCoords::setValue);
     }
 
+    /* Removes the source that accesses the user's location
+     */
     void removeLocationProviderSource() {
         if (locationProviderSource == null) return;
         lastKnownCoords.removeSource(locationProviderSource);
     }
 
+    /* Creates a mock location for testing purposes
+       @param coords = mock coordinates you're testing with
+     */
     @VisibleForTesting
     public void mockLocation(Coord coords) {
         System.out.println(coords);
         mockSource.postValue(coords);
     }
 
+    /* Creates a mock route for testing purposes
+       @param route = route that's being changed
+       @param delay = how long the thread will sleep
+       @param unit = unit of time that will be converted to milliseconds
+       @return mocked route
+     */
     @VisibleForTesting
     public Future<?> mockRoute(List<Coord> route, long delay, TimeUnit unit) {
         return Executors.newSingleThreadExecutor().submit(() -> {
