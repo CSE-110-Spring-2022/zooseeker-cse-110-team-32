@@ -42,13 +42,16 @@ public class Search {
         valuesCollection.toArray(values);
 
         for (ZooData.VertexInfo vertex: valuesCollection){
+            //Makes it so user input and search results aren't case sensitive
             String temp = vertex.name.toLowerCase();
             String searchText = exhibitName.toLowerCase();
 
             if (vertex.kind == ZooData.VertexInfo.Kind.EXHIBIT) {
+                //Checks exhibit names
                 if (temp.contains(searchText)) {
                     results.add(vertex);
                 } else{
+                    //Checks exhibit's tags for query
                     for (String tag: vertex.tags) {
                         if (tag.contains(searchText)) {
                             results.add(vertex);
