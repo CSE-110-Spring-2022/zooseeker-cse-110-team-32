@@ -2,6 +2,9 @@ package com.example.zooseeker;
 
 import org.jgrapht.GraphPath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*This class navigates through the user's list of planned exhibits and gives directions to each exhibit
 starting from the entrance gate
  */
@@ -43,8 +46,8 @@ public class NavigatePlannedList {
         return false;
     }
 
-    /*tells whether the end of the exhibit has been reached
-   returns true if the user is at the end of the exhibit and returns false otherwise
+    /*tells whether the end of the plan has been reached (i.e. getting directions to the end gate)
+   returns true if the user is at the end of the planQ and returns false otherwise
    @return whether or not user is at end of their list
     */
     public Boolean endReached(){
@@ -231,6 +234,7 @@ public class NavigatePlannedList {
     /*Moves user to the previous location from their current one
    Returns true if user was successfully moved to the previous location and false if the user is at
    the first location in the list
+    @return whether user was moved to the previous location
     */
     public Boolean previousLocation() {
         if(forwards){
@@ -264,6 +268,21 @@ public class NavigatePlannedList {
             }
             planList.deleteLocation(this.currLocationIndex - 1);
             currLocationIndex = currLocationIndex-1;
+        }
+        return true;
+    }
+
+    public Boolean replanOffTrack(int newLocInd) {
+        if (forwards) {
+            if (currLocationIndex + 1 >= planList.planSize()) {
+                return false;
+            }
+            Location oldLoc = planList.get(currLocationIndex);
+            Location newLoc = planList.get(newLocInd);
+            planList.replaceLocationIndex(currLocationIndex, newLoc);
+            planList.replaceLocationIndex(newLocInd, oldLoc);
+            planList.replan(currLocationIndex);
+
         }
         return true;
     }

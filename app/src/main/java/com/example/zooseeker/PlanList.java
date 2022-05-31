@@ -101,10 +101,15 @@ public class PlanList {
         }
         return this.myList.add(e);
     }
+  
+    public void replaceLocationIndex(int index, Location e) {
+        myList.set(index, e);
+    }
 
     /* Deletes location from list
         @param = index of location to be removed in user's list
      */
+
     public void deleteLocation(int i){
         this.myList.remove(i);
     }
