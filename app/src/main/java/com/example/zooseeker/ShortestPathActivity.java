@@ -138,22 +138,6 @@ public class ShortestPathActivity extends AppCompatActivity {
             String provider = LocationManager.GPS_PROVIDER;
             model.addLocationProviderSource(locationManager, provider);
         }
-        // Listen for location updates
-//        {
-//            this.locTracker = new LocationTracker(this, plan);
-//            String provider = LocationManager.GPS_PROVIDER;
-//            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-//            LocationListener locationListener = new LocationListener(){
-//              @Override
-//              public void onLocationChanged(@NonNull android.location.Location location){
-//                  Log.d("Zooseeker", String.format("Location changed: %s", location));
-//                  locTracker.setLat(location.getLatitude());
-//                  locTracker.setLng(location.getLongitude());
-//                  reroute();
-//              }
-//            };
-//            locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
-//        }
         this.locTracker = new LocationTracker(this, plan);
         model.getLastKnownCoords().observe(this, (coord) -> {
             Log.i("Zooseeker", String.format("Observing location model update to %s", coord));
@@ -165,7 +149,6 @@ public class ShortestPathActivity extends AppCompatActivity {
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
-    @param prefix = Prefix to attach to directions
      */
     public void displayTextDirections(){
         TextView textView = findViewById(R.id.path_result);
@@ -188,7 +171,8 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
-    /* Creates new route when user goes off route
+    /* Creates new route when user goes off route, does not update route if the current location is
+        not actually off route
      */
     public void reroute(){
         TextView textView = findViewById(R.id.path_result);
