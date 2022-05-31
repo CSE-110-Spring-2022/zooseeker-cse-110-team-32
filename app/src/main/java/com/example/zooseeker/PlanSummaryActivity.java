@@ -51,10 +51,10 @@ public class PlanSummaryActivity extends AppCompatActivity {
     public List<DisplayListItem> createExhibitsList(NavigatePlannedList navList){
         List<DisplayListItem> list = new ArrayList<>();
         double totalDistance = 0.0;
-        for (int i = 1; i < SearchActivity.getPlan().planSize()-1; i++) {
+        for (int i = 1; i < navList.getPlanList().planSize()-1; i++) {
             StringBuilder exhibitSummary = new StringBuilder("");
             totalDistance+=navList.getDistanceToNextLocation();
-            exhibitSummary.append(i+"). "+SearchActivity.getPlan().get(i).getName()+": "+totalDistance+" meters");
+            exhibitSummary.append(i+"). "+navList.getPlanList().get(i).getName()+": "+totalDistance+" meters");
             DisplayListItem item = new DisplayListItem(exhibitSummary.toString());
             navList.advanceLocation();
             list.add(item);
