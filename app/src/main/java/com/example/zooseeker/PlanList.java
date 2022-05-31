@@ -109,14 +109,16 @@ public class PlanList {
         this.myList.remove(i);
     }
 
-    /* Replans the most optimized route using the user's list of exhibits after the user skips an exhibit
+    /* Replans the most optimized route using the user's list of exhibits from a certain point
        @param ind = starting index of which exhibits need to be replanned (so if ind = 2 then exhibits
        2 and on need to be replanned)
      */
     public void replan(int ind){
+        // Removes and stores end gate
         Location gate = myList.remove(myList.size()-1);
-        //Creates a new list containing only the exhibits that need to be replanned
 
+        // Starting from ind, check all next exhibits to see which is closest to the current one
+        // Sorting in place
         for (int j=ind; j < myList.size()-1;j++){
             Location curr = myList.get(j);
             int smallestInd = j+1;
@@ -130,10 +132,11 @@ public class PlanList {
                     smallestInd = i;
                 }
             }
-            //removes the exhibits that were replanned from the old list and inserts the new exhibit order
+            // Remove next closest exhibit from its previous spot and insert it to the appropriate index
             Location next = myList.remove(smallestInd);
             myList.add(j+1,next);
         }
+        // Adding final end gate back in
         myList.add(gate);
     }
 
