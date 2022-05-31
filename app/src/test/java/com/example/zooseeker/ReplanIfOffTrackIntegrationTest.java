@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -27,6 +28,7 @@ public class ReplanIfOffTrackIntegrationTest {
     ActivityScenario<SearchActivity> scenario = ActivityScenario.launch(SearchActivity.class);
     ExhibitDatabase testDb;
     ExhibitDao exhibitItemDao;
+    LocationTracker locTracker;
 
     @Before
     public void resetDatabase(){
@@ -56,8 +58,10 @@ public class ReplanIfOffTrackIntegrationTest {
             searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
             Button planBtn = activity.findViewById(R.id.plan_btn);
             planBtn.performClick();
-            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(ShortestPathActivity.class);
-            pathScenario.moveToState(Lifecycle.State.CREATED);
+            Intent intent = new Intent(activity, ShortestPathActivity.class);
+            intent.putExtra(ShortestPathActivity.EXTRA_USE_LOCATION_SERVICE, false);
+            ActivityScenario<ShortestPathActivity> pathScenario = ActivityScenario.launch(intent);
+            pathScenario.moveToState(Lifecycle.State.STARTED);
             pathScenario.onActivity(activity1 -> {
                 System.out.println(activity1.plan.getMyList());
                 TextView directions = activity1.findViewById(R.id.path_result);
@@ -83,12 +87,19 @@ public class ReplanIfOffTrackIntegrationTest {
                 lat.setText("32.74812588554637");
                 lng.setText("-117.17565073656901");
                 mock.performClick();
+            });
+            pathScenario.onActivity(activity1 -> {
+                TextView directions = activity1.findViewById(R.id.path_result);
+                Button backBtn = activity1.findViewById(R.id.back_btn);
+                Button skipBtn = activity1.findViewById(R.id.skip_btn);
+                Button nextBtn = activity1.findViewById(R.id.next_btn);
+                locTracker = activity1.locTracker;
+                System.out.println(locTracker.lat);
+                System.out.println(locTracker.lng);
 
-                /*
-                activity1.getLastAlertDialog().performClick();
 
-                Button replan = alert.getButton(-1);
-                replan.performClick();
+                activity1.getLastAlertDialog().getButton(DialogInterface.BUTTON_POSITIVE).performClick();
+
 
                 assertEquals(true, ((String) directions.getText()).contains("From: Hippos"));
                 assertEquals(true, ((String) directions.getText()).contains("To: Gorillas"));
@@ -116,7 +127,7 @@ public class ReplanIfOffTrackIntegrationTest {
                 backBtn.performClick();
                 assertEquals(true, ((String) directions.getText()).contains("From: Flamingos"));
                 assertEquals(true, ((String) directions.getText()).contains("To: Entrance and Exit Gate"));
-*/
+
             });
         });
     }
