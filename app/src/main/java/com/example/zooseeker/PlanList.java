@@ -193,7 +193,6 @@ public class PlanList {
         this.myList.clear();
         List<Exhibit> temp = dao.getAll();
         for(Exhibit e: dao.getAll()){
-
             dao.delete(e);
         }
         resetCurrLocationIndex();
@@ -244,15 +243,17 @@ public class PlanList {
         List<Location> newList = new ArrayList<>();
         List<String> checkDup = new ArrayList<>();
         for (Exhibit ex : allExhibits) {
-            if (ex.parentId != null && !checkDup.contains(dao.get(ex.id).parentId)) {
+            if (ex.parentId != null && !checkDup.contains((dao.get(ex.id)).parentId)) {
                 ExhibitGroup temp = new ExhibitGroup(ex.parentId, ex.parentName, ex.lat, ex.lng);
                 checkDup.add(ex.parentId);
+                //System.out.println("parent id " + ex.parentId);
                 newList.add((Location) temp);
+            } else {
+                newList.add((Location) ex);
             }
-            newList.add((Location)ex);
         }
         this.myList = newList;
-        this.sort();
+        //this.sort();
     }
 
 
@@ -265,7 +266,7 @@ public class PlanList {
     public void printList() {
         System.out.println("printing list:");
         for (Location loc : myList) {
-            System.out.print("id: " + loc.getKind() + "kind: ");
+            System.out.print("id: " + loc.getId() + " kind: ");
             System.out.println(loc.getKind());
         }
         System.out.println("Finish printing.");

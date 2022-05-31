@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -67,6 +68,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shortest_path);
+        int locIndex = loadIndex();
 
         //Used for testing different user locations
         Button mockCoordButton = findViewById(R.id.mock);
@@ -81,6 +83,10 @@ public class ShortestPathActivity extends AppCompatActivity {
 
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
+        //make sure it doesn't go over
+        if (locIndex + 2 < plan.planSize()) {
+            navList.currLocationIndex = locIndex;
+        }
         Button next = findViewById(R.id.next_btn);
         Button skip = findViewById(R.id.skip_btn);
         Button back = findViewById(R.id.back_btn);
@@ -251,6 +257,28 @@ public class ShortestPathActivity extends AppCompatActivity {
             skip.setClickable(true);
             skip.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        int saved = navList.currLocationIndex;
+        editor.putInt("key", saved);
+        boolean yes = editor.commit();
+        Log.e("Saving", "saved value is " + saved + " " + yes);
+
+    }
+
+    public int loadIndex() {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        int locIndex = preferences.getInt("key", 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+        Log.e("loading", "load value is " + locIndex);
+        return locIndex;
     }
 
     public void notifyIfOffTrack(Activity activity, String message, int newLocInd) {

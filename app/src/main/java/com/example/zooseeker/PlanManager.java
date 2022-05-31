@@ -25,16 +25,17 @@ public class PlanManager {
                 exhibitGroup.addAnimal(v.id, ex);
                 return plan.addLocation(exhibitGroup);
             }
-            else{
+            else {
                 Exhibit ex = new Exhibit(v.id, v.name, groupV.lat, groupV.lng, group_id, groupV.name);
                 exhibitGroup.addAnimal(v.id, ex);
                 return true;
             }
         }
-        else{
+        else if (v.kind == ZooData.VertexInfo.Kind.EXHIBIT){
             Location exhibit = new Exhibit(v.id, v.name, v.lat, v.lng);
             return plan.addLocation(exhibit);
         }
+        return false;
     }
 
     public PlanList getFinalPlan(){
