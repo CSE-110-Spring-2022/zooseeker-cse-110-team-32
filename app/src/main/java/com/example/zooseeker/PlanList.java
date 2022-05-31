@@ -1,20 +1,10 @@
 package com.example.zooseeker;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /*This class creates a planned route that visits the exhibits the user selected. Based on where in
 the list of exhibits the user is, they can go to the next or previous exhibit or notifies the user
@@ -22,17 +12,16 @@ when their route is over
  */
 public class PlanList {
     private List<Location> myList;
-
+    private int currLocationIndex;
     /*this currLocationIndex will be referring to which location user is on in the list
       this currLocation index will be updated when we call sort or when user manually put
       select their current location Default to be 0 when the list is initialized.
 
     */
-    private int currLocationIndex;
     //adding this ZooMap object for future iteration
     private Context context;
     public ZooMap zooMap;
-    private Map<String, ZooData.VertexInfo> zooLocs;
+    public Map<String, ZooData.VertexInfo> zooLocs;
 
     /*Constructor that sets the information of the list of planned exhibits using the data passed in
    @param context = gives information of asset files that need to be loaded
@@ -57,6 +46,13 @@ public class PlanList {
      */
     public List<Location> getMyList() { return this.myList; }
 
+    /* Sets user's planned list (only called when replacing old list with sorted list
+       @param list = sorted list containing myList's exhibits (plus entrance/exit gate)
+     */
+    public void setMyList(List<Location> list){
+        this.myList = list;
+    }
+
     /*returns location at given index
     @return location at given index
      */
@@ -64,16 +60,7 @@ public class PlanList {
         return myList.get(i);
     }
 
-    /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
-    exhibit is in their list
-    @param curr = the exhibit the user is currently at
-    @return index indicating where the current exhibit is in their list
-     */
-    public int currExhibitIndex(Exhibit curr) {
-        return myList.indexOf(curr);
-    }
-
-    /* Uses the given ID to find the corresponding exhibit
+    /* Uses the given ID to find the corresponding exhibit within the user's list of exhibit
        @param id = ID of exhibit
        @return location that matches given ID
      */
@@ -127,13 +114,16 @@ public class PlanList {
         this.myList.remove(i);
     }
 
-    /* Replans the most optimized route using the user's list of exhibits after the user skips an exhibit
+    /* Replans the most optimized route using the user's list of exhibits from a certain point
        @param ind = starting index of which exhibits need to be replanned (so if ind = 2 then exhibits
        2 and on need to be replanned)
      */
     public void replan(int ind){
+        // Removes and stores end gate
         Location gate = myList.remove(myList.size()-1);
-        //Creates a new list containing only the exhibits that need to be replanned
+
+        // Starting from ind, check all next exhibits to see which is closest to the current one
+        // Sorting in place
         for (int j=ind; j < myList.size()-1;j++){
             Location curr = myList.get(j);
             int smallestInd = j+1;
@@ -147,66 +137,11 @@ public class PlanList {
                     smallestInd = i;
                 }
             }
-            //removes the exhibits that were replanned from the old list and inserts the new exhibit order
+            // Remove next closest exhibit from its previous spot and insert it to the appropriate index
             Location next = myList.remove(smallestInd);
             myList.add(j+1,next);
         }
-        myList.add(gate);
-    }
-
-
-
-    /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
-    with the shortest distance to go next, repeating until all Exhibits have been added. Also
-    appends the gate at the end
-     */
-    public void sort(){
-        List<Location> sortList = new ArrayList<>();
-        Location startEnd;
-        Boolean gateAdded = false;
-        //Adds entrance/exit gate to beginning of sorted list and checks for instances of gate in user's plan
-        for (int i = 0; i < planSize(); i++){
-            Location stop = myList.get(i);
-            if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
-                startEnd = stop;
-                if(!gateAdded) {
-                    sortList.add(startEnd);
-                }
-                myList.remove(i);
-                i--;
-                gateAdded = true;
-            }
-        }
-        Location gate = new Gate("","", 0, 0);
-        if(!gateAdded){
-            for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
-                if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
-                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
-                    sortList.add(gate);
-                    break;
-                }
-            }
-        }
-
-        //Builds the sorted list one exhibit at a time by checking which exhibit is the closest to the most
-        //recently added exhibit of the sorted list
-        while(myList.size() > 0){
-            Location curr = sortList.get(sortList.size()-1);
-            //Calculates whichc exhibit is closest to current exhibit
-            int smallestInd = 0;
-            double smallestDist = Double.MAX_VALUE;
-            for (int i = 0; i < myList.size(); i++){
-                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
-                if (dist < smallestDist){
-                    smallestDist = dist;
-                    smallestInd = i;
-                }
-            }
-            //Adds closest exhibit to the sorted list
-            sortList.add(myList.get(smallestInd));
-            myList.remove(smallestInd);
-        }
-        this.myList = sortList;
+        // Adding final end gate back in
         myList.add(gate);
     }
 
@@ -267,7 +202,8 @@ public class PlanList {
             newList.add((Location)ex);
         }
         this.myList = newList;
-        this.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(this);
     }
 
 

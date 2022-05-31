@@ -163,7 +163,6 @@ public class ShortestPathActivity extends AppCompatActivity {
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
-    @param prefix = Prefix to attach to directions
      */
     public void displayTextDirections(){
         TextView textView = findViewById(R.id.path_result);

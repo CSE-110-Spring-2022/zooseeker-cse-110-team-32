@@ -46,8 +46,8 @@ public class NavigatePlannedList {
         return false;
     }
 
-    /*tells whether the end of the exhibit has been reached
-   returns true if the user is at the end of the exhibit and returns false otherwise
+    /*tells whether the end of the plan has been reached (i.e. getting directions to the end gate)
+   returns true if the user is at the end of the planQ and returns false otherwise
    @return whether or not user is at end of their list
     */
     public Boolean endReached(){
@@ -234,6 +234,7 @@ public class NavigatePlannedList {
     /*Moves user to the previous location from their current one
    Returns true if user was successfully moved to the previous location and false if the user is at
    the first location in the list
+    @return whether user was moved to the previous location
     */
     public Boolean previousLocation() {
         if(forwards){
