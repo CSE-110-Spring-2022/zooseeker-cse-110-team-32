@@ -38,7 +38,7 @@ public class Exhibit extends Location{
     @Ignore
     Exhibit(String id, String name, double lat, double lng, String parentId, String parentName) {
         super(id, name, lat, lng);
-        this.kind = ZooData.VertexInfo.Kind.EXHIBIT_GROUP;
+        this.kind = ZooData.VertexInfo.Kind.EXHIBIT;
         this.parentId = parentId;
         this.parentName = parentName;
     }

@@ -68,19 +68,17 @@ public class NewDBTest {
         plan.saveList(dao);
         plan.saveList(dao);
         plan.saveList(dao);
-        //plan.printList();
-        //plan.saveList(dao);
         PlanList newPlan = new PlanList(context);
-        //System.out.println("start");
         newPlan.loadList(dao);
-        //System.out.println("fini");
         newPlan.printList();
         List<Exhibit> exhibits = newPlan.getExhibits();
         List<Exhibit> expected = plan.getExhibits();
 
         newPlan.clearList(dao);
+        System.out.println(expected.size());
         System.out.println(exhibits.size());
         for (int i = 0; i < expected.size(); i++) {
+            //System.out.println("current index " + i);
             assertEquals(expected.get(i).toString(), exhibits.get(i).toString());
         }
 

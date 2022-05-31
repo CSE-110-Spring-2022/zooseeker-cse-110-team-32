@@ -1,20 +1,12 @@
 package com.example.zooseeker;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /*This class creates a planned route that visits the exhibits the user selected. Based on where in
 the list of exhibits the user is, they can go to the next or previous exhibit or notifies the user
@@ -211,9 +203,11 @@ public class PlanList {
             if ((loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT))) {
                 result.add((Exhibit)loc);
             } else if ((loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT_GROUP))) {
+                //System.out.println("hi " + loc.getKind() + " " + loc.getName() +" " + loc.getClass());
                 Map<String, Exhibit> animals = ((ExhibitGroup) loc).getAnimals();
                 for (Exhibit ex : animals.values()) {
                     result.add(ex);
+                    //System.out.println("for " + ex.getKind() + " " + ex.getName() +" " + ex.getClass() + " " + ex.parentId);
                 }
             }
         }
@@ -241,15 +235,19 @@ public class PlanList {
     public void loadList(ExhibitDao dao) {
         List<Exhibit> allExhibits = dao.getAll();
         List<Location> newList = new ArrayList<>();
-        List<String> checkDup = new ArrayList<>();
+        Map<String, ExhibitGroup> allGroups = new HashMap<>();
         for (Exhibit ex : allExhibits) {
-            if (ex.parentId != null && !checkDup.contains((dao.get(ex.id)).parentId)) {
+            if (ex.parentId != null && allGroups.get(ex.parentId) == null) {
                 ExhibitGroup temp = new ExhibitGroup(ex.parentId, ex.parentName, ex.lat, ex.lng);
-                checkDup.add(ex.parentId);
                 //System.out.println("parent id " + ex.parentId);
-                newList.add((Location) temp);
+                temp.addAnimal(ex.id, ex);
+                newList.add(temp);
+                allGroups.put(temp.getId(), temp);
+            } else if (allGroups.get(ex.parentId) != null){
+                ExhibitGroup temp = allGroups.get(ex.parentId);
+                temp.addAnimal(ex.getId(), ex);
             } else {
-                newList.add((Location) ex);
+                newList.add(ex);
             }
         }
         this.myList = newList;
