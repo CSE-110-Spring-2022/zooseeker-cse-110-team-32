@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jgrapht.*;
@@ -65,6 +68,16 @@ public class ShortestPathActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shortest_path);
 
+        //Used for testing different user locations
+        Button mockCoordButton = findViewById(R.id.mock);
+        EditText lngText = findViewById(R.id.lng);
+        EditText latText = findViewById(R.id.lat);
+        mockCoordButton.setOnClickListener(view -> {
+            double mockLng = Double.parseDouble(lngText.getText().toString());
+            double mockLat = Double.parseDouble(latText.getText().toString());
+            Coord mockCoord = new Coord(mockLng, mockLat);
+            mockLocation(mockCoord);
+        });
 
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
@@ -144,6 +157,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             locTracker.setLat(coord.lat);
             locTracker.setLng(coord.lng);
             System.out.println(locTracker.lat);
+            replan(coord);
             reroute();
         });
     }
@@ -171,8 +185,16 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
-    /* Creates new route when user goes off route, does not update route if the current location is
-        not actually off route
+    public void replan(Coord coord) {
+        LocationTracker laterLoc = new LocationTracker(this, plan);
+        laterLoc.setLng(coord.lng);
+        laterLoc.setLat(coord.lat);
+        if (laterLoc.aheadOfCurrentLoc(navList.currLocationIndex) != -1) {
+            notifyIfOffTrack(this, "Replan?", laterLoc.aheadOfCurrentLoc(navList.currLocationIndex));
+        }
+    }
+
+    /* Creates new route when user goes off route
      */
     public void reroute(){
         TextView textView = findViewById(R.id.path_result);
@@ -235,6 +257,26 @@ public class ShortestPathActivity extends AppCompatActivity {
             skip.setClickable(true);
             skip.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void notifyIfOffTrack(Activity activity, String message, int newLocInd) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
+
+        alertBuilder
+                .setTitle("Off track!")
+                .setMessage(message)
+                .setPositiveButton("Yes", (dialog, id) -> {
+                    navList.replanOffTrack(newLocInd);
+                    displayTextDirections();
+
+                })
+                .setNegativeButton("No", (dialog, id) -> {
+                    dialog.cancel();
+                })
+                .setCancelable(true);
+
+        AlertDialog alertDialog = alertBuilder.create();
+        alertDialog.show();
     }
 
 
