@@ -275,11 +275,11 @@ public class NavigatePlannedList {
             if (currLocationIndex + 1 >= planList.planSize()) {
                 return false;
             }
-            Location oldLoc = planList.get(currLocationIndex);
+            Location oldLoc = planList.get(currLocationIndex+1);
             Location newLoc = planList.get(newLocInd);
-            planList.replaceLocationIndex(currLocationIndex, newLoc);
+            planList.replaceLocationIndex(currLocationIndex+1, newLoc);
             planList.replaceLocationIndex(newLocInd, oldLoc);
-            planList.replan(currLocationIndex);
+            planList.replan(currLocationIndex+1);
 
         }
         return true;
