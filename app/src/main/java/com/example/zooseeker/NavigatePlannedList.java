@@ -2,6 +2,9 @@ package com.example.zooseeker;
 
 import org.jgrapht.GraphPath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*This class navigates through the user's list of planned exhibits and gives directions to each exhibit
 starting from the entrance gate
  */
@@ -262,6 +265,21 @@ public class NavigatePlannedList {
             }
             planList.deleteLocation(this.currLocationIndex - 1);
             currLocationIndex = currLocationIndex-1;
+        }
+        return true;
+    }
+
+    public Boolean replanOffTrack(int newLocInd) {
+        if (forwards) {
+            if (currLocationIndex + 1 >= planList.planSize()) {
+                return false;
+            }
+            Location oldLoc = planList.get(currLocationIndex);
+            Location newLoc = planList.get(newLocInd);
+            planList.replaceLocationIndex(currLocationIndex, newLoc);
+            planList.replaceLocationIndex(newLocInd, oldLoc);
+            planList.replan(currLocationIndex);
+
         }
         return true;
     }
