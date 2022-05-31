@@ -87,7 +87,7 @@ public class PlanList {
         return this.zooMap;
     }
 
-    /*adds exhibit to user's list of planned exhibits.
+    /*Adds exhibit to user's list of planned exhibits.
    Checks to see if location has already been added. Returns true if location has not been added
    before now and location was successfully added, and false otherwise.
    @param e = name of location (can be Exhibit or other) user wants to see
@@ -95,6 +95,14 @@ public class PlanList {
     */
     public Boolean addLocation(Location e) {
         if(checkIfInList(e)) return false;
+        return add(e);
+    }
+
+    /* General method for adding locations to user's list of planned exhibits.
+   @param e = name of location (can be Exhibit or other)
+   @return whether location was successfully added or not
+    */
+    public Boolean add(Location e){
         return this.myList.add(e);
     }
 

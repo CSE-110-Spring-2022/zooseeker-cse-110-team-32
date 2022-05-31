@@ -110,8 +110,6 @@ public class Sorter {
             plan.addLocation(j+1, next);
 
         }
-        plan.addLocation(gate);
-
-
+        plan.add(gate);
     }
 }
