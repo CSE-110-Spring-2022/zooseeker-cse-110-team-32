@@ -260,7 +260,6 @@ public class ShortestPathActivity extends AppCompatActivity {
                 .setTitle("Off track!")
                 .setMessage(message)
                 .setPositiveButton("Yes", (dialog, id) -> {
-                    //replanIfOffTrack
                     navList.replanOffTrack(newLocInd);
                     displayTextDirections();
 
