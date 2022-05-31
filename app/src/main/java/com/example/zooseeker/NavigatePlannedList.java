@@ -254,7 +254,9 @@ public class NavigatePlannedList {
                 return false;
             }
             planList.deleteLocation(currLocationIndex + 1);
-            planList.replan(currLocationIndex);
+            Sorter sorter = new Sorter();
+            sorter.replan(planList,currLocationIndex);
+
         }
         else{
             if (currLocationIndex - 1 <= 0) {

@@ -109,34 +109,6 @@ public class PlanList {
         this.myList.remove(i);
     }
 
-    /* Replans the most optimized route using the user's list of exhibits after the user skips an exhibit
-       @param ind = starting index of which exhibits need to be replanned (so if ind = 2 then exhibits
-       2 and on need to be replanned)
-     */
-    public void replan(int ind){
-        Location gate = myList.remove(myList.size()-1);
-        //Creates a new list containing only the exhibits that need to be replanned
-
-        for (int j=ind; j < myList.size()-1;j++){
-            Location curr = myList.get(j);
-            int smallestInd = j+1;
-            double smallestDist = Double.MAX_VALUE;
-
-            //Calculates distance between locations to determine which exhibit is the closest
-            for (int i = j+1; i < myList.size(); i++){
-                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
-                if (dist < smallestDist){
-                    smallestDist = dist;
-                    smallestInd = i;
-                }
-            }
-            //removes the exhibits that were replanned from the old list and inserts the new exhibit order
-            Location next = myList.remove(smallestInd);
-            myList.add(j+1,next);
-        }
-        myList.add(gate);
-    }
-
     /* Clears the list from the database and resets the user's index to the beginning
        @param dao = database that stores user's list of exhibits
      */
