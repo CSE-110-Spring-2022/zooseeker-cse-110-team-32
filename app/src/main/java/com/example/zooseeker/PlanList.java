@@ -111,6 +111,10 @@ public class PlanList {
         return this.myList.add(e);
     }
 
+    public void replaceLocationIndex(int index, Location e) {
+        myList.set(index, e);
+    }
+
     public void deleteLocation(int i){
         this.myList.remove(i);
     }

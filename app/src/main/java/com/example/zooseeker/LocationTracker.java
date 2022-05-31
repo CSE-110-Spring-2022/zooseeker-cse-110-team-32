@@ -67,7 +67,7 @@ public class LocationTracker {
         return newRoute;
     }
 
-    public boolean aheadOfCurrentLoc(String currLocId, int currLocIndex) {
+    public int aheadOfCurrentLoc(int currLocIndex) {
         String closestLoc = null;
         double closestDist = Double.MAX_VALUE;
         for (ZooData.VertexInfo loc: zooLocs.values()){
@@ -84,10 +84,10 @@ public class LocationTracker {
         List<Location> vertexList = plan.getMyList();
         for (int i = currLocIndex + 1; i < vertexList.size() - 1; i++) {
             if (closestLoc.equals(vertexList.get(i).getId())) {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     public String rerouteTextDirections(GraphPath<String, IdentifiedWeightedEdge> currRoute){
