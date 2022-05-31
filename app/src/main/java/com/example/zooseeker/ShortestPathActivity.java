@@ -14,6 +14,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
@@ -50,6 +51,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     NavigatePlannedList navList;
     LocationTracker locTracker;
     private LocationModel model;
+    private Button alertDialogBtn;
     public boolean askedReplan;
     private boolean useLocationService;
     public static final String EXTRA_USE_LOCATION_SERVICE = "use_location_updated";
@@ -195,7 +197,8 @@ public class ShortestPathActivity extends AppCompatActivity {
         laterLoc.setLng(coord.lng);
         laterLoc.setLat(coord.lat);
         if (laterLoc.aheadOfCurrentLoc(navList.currLocationIndex) != -1 && !askedReplan) {
-            notifyIfOffTrack(this, "Replan?", laterLoc.aheadOfCurrentLoc(navList.currLocationIndex));
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            this.alertDialogBtn = notifyIfOffTrack(alertBuilder, "Replan?", laterLoc.aheadOfCurrentLoc(navList.currLocationIndex));
             askedReplan = true;
         }
     }
@@ -265,9 +268,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
-    public void notifyIfOffTrack(Activity activity, String message, int newLocInd) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
-
+    public Button notifyIfOffTrack(AlertDialog.Builder alertBuilder, String message, int newLocInd) {
         alertBuilder
                 .setTitle("Off track!")
                 .setMessage(message)
@@ -283,6 +284,7 @@ public class ShortestPathActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = alertBuilder.create();
         alertDialog.show();
+        return alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
     }
 
 
@@ -293,5 +295,8 @@ public class ShortestPathActivity extends AppCompatActivity {
     public void mockLocation(Coord coords) {
         model.mockLocation(coords);
     }
+
+    @VisibleForTesting
+    public Button getLastAlertDialog() {return this.alertDialogBtn;}
 
 }
