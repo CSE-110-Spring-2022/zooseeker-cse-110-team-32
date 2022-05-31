@@ -9,7 +9,8 @@ public class Gate extends Location{
     gate
     @param id = ID associated with the gate
     @param name = actual name of the gate
-    @param tags = list of tags/categories associated with the gate
+    @param lat = latitude of exhibit
+    @param lng = longitude of exhibit
      */
     Gate(String id, String name, double lat, double lng) {
         super(id, name, lat, lng);

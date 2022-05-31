@@ -11,6 +11,9 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 
+/* This class is in charge of loading the components of the plan summary page, including the sorted
+list of exhibits and their distances and the "directions" button
+ */
 public class PlanSummaryActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
 
@@ -27,8 +30,26 @@ public class PlanSummaryActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        List<DisplayListItem> list = new ArrayList<>();
         NavigatePlannedList navList = new NavigatePlannedList(SearchActivity.getPlan());
+        List<DisplayListItem> list = createExhibitsList(navList);
+        navList.resetCurrLocationIndex();
+        adapter.setDisplayItems(list);
+
+        Button directionsBtn = findViewById(R.id.directions_btn);
+        directionsBtn.setOnClickListener(view ->{
+            Intent pathIntent = new Intent(this, ShortestPathActivity.class);
+            startActivity(pathIntent);
+        });
+
+
+    }
+
+    /* Creates a list of exhibits in the sorted order, with the distance from the user to that exhibit
+       @param navList = the sorted list that the user would navigate
+       @return list of sorted exhibits with distances
+     */
+    public List<DisplayListItem> createExhibitsList(NavigatePlannedList navList){
+        List<DisplayListItem> list = new ArrayList<>();
         double totalDistance = 0.0;
         for (int i = 1; i < SearchActivity.getPlan().planSize()-1; i++) {
             StringBuilder exhibitSummary = new StringBuilder("");
@@ -38,13 +59,6 @@ public class PlanSummaryActivity extends AppCompatActivity {
             navList.advanceLocation();
             list.add(item);
         }
-        navList.resetCurrLocationIndex();
-        adapter.setDisplayItems(list);
-
-        Button directionsBtn = findViewById(R.id.directions_btn);
-        directionsBtn.setOnClickListener(view ->{
-            Intent pathIntent = new Intent(this, ShortestPathActivity.class);
-            startActivity(pathIntent);
-        });
+        return list;
     }
 }

@@ -17,7 +17,8 @@ public abstract class Location {
       is passed in
       @param id = ID of location
       @param name = name of the location
-      @param tags = list of associated tags/categories of the given location
+      @param lat = latitude of location
+      @param lng = longitude of location
      */
     public Location(String id, String name, double lat, double lng){
         this.id = id;

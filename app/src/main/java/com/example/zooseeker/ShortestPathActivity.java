@@ -195,12 +195,15 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
+    /* Creates new route when user goes off route
+     */
     public void reroute(){
         TextView textView = findViewById(R.id.path_result);
         Location currLoc = navList.getCurrentLocation();
         Location nextLoc = navList.getNextLocation();
         GraphPath<String, IdentifiedWeightedEdge> currPath = plan.getZooMap().getShortestPath(currLoc.getId(), nextLoc.getId());
         String newRoute = locTracker.rerouteTextDirections(currPath);
+        //creates new directions for traversing between exhibits
         if (newRoute != null) {
             String animalsList = "";
             if (nextLoc.getKind() == ZooData.VertexInfo.Kind.EXHIBIT_GROUP) {
@@ -211,6 +214,10 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
+    /* Controls visibility and whether or not a button is clickable based on where in the exhibit
+       list the user is
+       Checks conditions for next, back, skip, and finish buttons
+     */
     public void buttonVisibility(){
         Button next = findViewById(R.id.next_btn);
         Button skip = findViewById(R.id.skip_btn);
@@ -274,6 +281,9 @@ public class ShortestPathActivity extends AppCompatActivity {
     }
 
 
+    /* Creates fake location for testing purposes
+       @param coords = coordinates of mock location
+     */
     @VisibleForTesting
     public void mockLocation(Coord coords) {
         model.mockLocation(coords);

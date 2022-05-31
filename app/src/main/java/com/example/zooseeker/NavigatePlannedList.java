@@ -248,6 +248,9 @@ public class NavigatePlannedList {
         return true;
     }
 
+    /* Skips an exhibit in the user's list (effectively deletes the exhibit and reroutes the user)
+       @return true if the exhibit was successfully skipped and false otherwise
+     */
     public Boolean skip(){
         if (forwards) {
             if (currLocationIndex + 1 >= planList.planSize()) {

@@ -11,6 +11,8 @@ public class Intersection extends Location{
     @param id = ID of intersection
     @param name = name of the intersection
     @param tags = list of associated tags/categories with given intersection
+    @param lat = latitude of intersection
+    @param lng = longitude of intersection
      */
     Intersection(String id, String name, double lat, double lng, List<String> tags) {
         super(id, name, lat, lng);
