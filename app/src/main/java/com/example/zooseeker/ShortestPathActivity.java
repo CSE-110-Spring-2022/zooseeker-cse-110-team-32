@@ -41,6 +41,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     private AlertDialog alert;
     public boolean askedReplan;
     private boolean useLocationService;
+
     public static final String EXTRA_USE_LOCATION_SERVICE = "use_location_updated";
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), perms -> {
@@ -60,19 +61,12 @@ public class ShortestPathActivity extends AppCompatActivity {
         int locIndex = loadIndex();
 
         //Used for testing different user locations
-        Button mockCoordButton = findViewById(R.id.mock);
-        EditText lngText = findViewById(R.id.lng);
-        EditText latText = findViewById(R.id.lat);
-        mockCoordButton.setOnClickListener(view -> {
-            double mockLng = Double.parseDouble(lngText.getText().toString());
-            double mockLat = Double.parseDouble(latText.getText().toString());
-            Coord mockCoord = new Coord(mockLat, mockLng);
-            mockLocation(mockCoord);
-        });
+        mockLocationSetup();
 
         this.plan = SearchActivity.getPlan();
         this.exhibitDao = SearchActivity.getDao();
         this.navList = new NavigatePlannedList(plan);
+
         //make sure it doesn't go over
         if (locIndex < plan.planSize()-1) {
             navList.currLocationIndex = locIndex;
@@ -149,6 +143,18 @@ public class ShortestPathActivity extends AppCompatActivity {
             locTracker.setLng(coord.lng);
             checkOffRoute(coord);
             reroute();
+        });
+    }
+
+    private void mockLocationSetup() {
+        Button mockCoordButton = findViewById(R.id.mock);
+        EditText lngText = findViewById(R.id.lng);
+        EditText latText = findViewById(R.id.lat);
+        mockCoordButton.setOnClickListener(view -> {
+            double mockLng = Double.parseDouble(lngText.getText().toString());
+            double mockLat = Double.parseDouble(latText.getText().toString());
+            Coord mockCoord = new Coord(mockLat, mockLng);
+            mockLocation(mockCoord);
         });
     }
 
@@ -248,34 +254,49 @@ public class ShortestPathActivity extends AppCompatActivity {
             });
         }
         else{
-            next.setClickable(true);
-            next.setVisibility(View.VISIBLE);
-            finish.setClickable(false);
-            finish.setVisibility(View.GONE);
+            setUsable(next);
+            setUnusable(finish);
         }
         if(navList.atFirst() && !navList.goingForwards()){
-            back.setClickable(false);
-            back.setVisibility(View.GONE);
+            setUnusable(back);
         }
         else{
-            back.setClickable(true);
-            back.setVisibility(View.VISIBLE);
+            setUsable(back);
         }
         if((navList.endReached() && navList.goingForwards()) || (navList.atFirst() && !navList.goingForwards())){
-            skip.setClickable(false);
-            skip.setVisibility(View.GONE);
+            setUnusable(skip);
         }
         else{
-            skip.setClickable(true);
-            skip.setVisibility(View.VISIBLE);
+            setUsable(skip);
         }
     }
 
+    /*Sets the button to be invisible and not clickable
+    @param button = button to be made unusable
+     */
+    public void setUnusable(Button button){
+        button.setClickable(false);
+        button.setVisibility(View.GONE);
+    }
+
+    /*Sets button to be visible and clickable
+    @param button = button to be made usable
+     */
+    public void setUsable(Button button){
+        button.setClickable(true);
+        button.setVisibility(View.VISIBLE);
+    }
+
+    /* saves exhibit user is at to database
+     */
     protected void saveIndex() {
         int saved = navList.currLocationIndex;
         saveIndex(saved);
     }
 
+    /* Saves specific exhibit in list that user may not necessarily be at to be database
+        @param ind = index of exhibit to be saved
+     */
     protected void saveIndex(int ind) {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
