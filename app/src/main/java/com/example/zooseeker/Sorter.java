@@ -83,4 +83,33 @@ public class Sorter {
         }
         return smallestInd;
     }
+
+    /* Replans the most optimized route using the user's list of exhibits after the user skips an exhibit
+       @param ind = starting index of which exhibits need to be replanned (so if ind = 2 then exhibits
+       2 and on need to be replanned)
+     */
+    public void replan(PlanList plan, int ind){
+        Location gate = plan.deleteLocation(plan.planSize()-1);
+        //Creates a new list containing only the exhibits that need to be replanned
+
+        for (int j=ind; j < plan.planSize()-1;j++){
+            Location curr = plan.get(j);
+            int smallestInd = j+1;
+            double smallestDist = Double.MAX_VALUE;
+
+            //Calculates distance between locations to determine which exhibit is the closest
+            for (int i = j+1; i < plan.planSize(); i++){
+                double dist = plan.zooMap.getShortestPath(curr.getId(), plan.get(i).getId()).getWeight();
+                if (dist < smallestDist){
+                    smallestDist = dist;
+                    smallestInd = i;
+                }
+            }
+            //removes the exhibits that were replanned from the old list and inserts the new exhibit order
+            Location next = plan.deleteLocation(smallestInd);
+            plan.addLocation(j+1, next);
+
+        }
+        plan.add(gate);
+    }
 }

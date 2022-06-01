@@ -13,6 +13,7 @@ public class NavigatePlannedList {
     private PlanList planList;
     public int currLocationIndex;
     public Boolean forwards;
+    public Sorter sorter;
 
     /*Constructor that sets the PlanList to use based on what's passed in
     @param plan = plan to navigate through
@@ -21,7 +22,7 @@ public class NavigatePlannedList {
         this.planList = plan;
         this.currLocationIndex = 0;
         this.forwards = true;
-
+        this.sorter = new Sorter();
     }
 
     /*tells whether the user is at the entrance gate
@@ -258,7 +259,8 @@ public class NavigatePlannedList {
                 return false;
             }
             planList.deleteLocation(currLocationIndex + 1);
-            planList.replan(currLocationIndex);
+            sorter.replan(planList,currLocationIndex);
+
         }
         else{
             if (currLocationIndex - 1 <= 0) {
@@ -279,8 +281,7 @@ public class NavigatePlannedList {
             Location newLoc = planList.get(newLocInd);
             planList.replaceLocationIndex(currLocationIndex+1, newLoc);
             planList.replaceLocationIndex(newLocInd, oldLoc);
-            planList.replan(currLocationIndex+1);
-
+            sorter.replan(planList, currLocationIndex+1);
         }
         return true;
     }
