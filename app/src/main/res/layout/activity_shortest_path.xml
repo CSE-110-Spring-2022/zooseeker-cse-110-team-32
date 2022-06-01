@@ -1,156 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ShortestPathActivity">
+   xmlns:app="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   tools:context=".ShortestPathActivity">
 
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/directions_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Detailed Directions"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.009"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
+   <androidx.appcompat.widget.SwitchCompat
+       android:id="@+id/directions_switch"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Detailed Directions"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.009"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="0.022" />
 
-    <ScrollView
-        android:layout_width="397dp"
-        android:layout_height="554dp"
-        android:layout_marginLeft="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/next_lbl"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/directions_switch"
-        app:layout_constraintVertical_bias="0.366">
+   <ScrollView
+       android:layout_width="wrap_content"
+       android:layout_height="0dp"
+       android:layout_marginLeft="3dp"
+       app:layout_constraintBottom_toTopOf="@+id/lat"
+       app:layout_constraintHorizontal_bias="0.428"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/directions_switch"
+       app:layout_constraintVertical_bias="0.0">
 
-        <TextView
-            android:id="@+id/path_result"
-            android:layout_width="375dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="26dp"
+       <TextView
+           android:id="@+id/path_result"
+           android:layout_width="375dp"
+           android:layout_height="wrap_content"
+           android:text=""
+           android:textSize="26dp"
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </ScrollView>
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintLeft_toLeftOf="parent"
+           app:layout_constraintRight_toRightOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
+   </ScrollView>
 
-    <Button
-        android:id="@+id/back_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BACK"
-        android:clickable="true"
+   <Button
+       android:id="@+id/back_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:clickable="true"
+       android:text="BACK"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.050"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.00" />
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.328"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="1.0" />
 
-    <Button
-        android:id="@+id/next_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NEXT"
+   <Button
+       android:id="@+id/next_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="NEXT"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.950"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.00" />
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.980"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="1.00" />
 
-    <Button
-        android:id="@+id/skip_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SKIP"
+   <Button
+       android:id="@+id/skip_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="SKIP"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.60"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.00" />
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.643"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="1.0" />
 
-    <Button
-        android:id="@+id/finish_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FINISH"
-        android:clickable="false"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.950"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.00" />
+   <Button
+       android:id="@+id/finish_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="FINISH"
+       android:clickable="false"
+       android:visibility="gone"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.950"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="1.00" />
 
-    <TextView
-        android:id="@+id/next_lbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="26dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.950"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.900"/>
+   <TextView
+       android:id="@+id/next_lbl"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text=""
+       android:textSize="26dp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.950"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="0.900"/>
 
-    <EditText
-        android:id="@+id/lat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="lat"
-        android:textSize="26dp"
-        android:inputType="text"
-        android:imeOptions="actionDone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.100"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.800"/>
+   <EditText
+       android:id="@+id/lat"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:hint="Latitude"
+       android:imeOptions="actionDone"
+       android:inputType="numberSigned|numberDecimal"
+       android:textSize="22dp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.020"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="0.77" />
 
-    <EditText
-        android:id="@+id/lng"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="lng"
-        android:textSize="26dp"
-        android:inputType="text"
-        android:imeOptions="actionDone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.100"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.850"/>
+   <EditText
+       android:id="@+id/lng"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:hint="Longitude"
+       android:imeOptions="actionDone"
+       android:inputType="numberSigned|numberDecimal"
+       android:textSize="22dp"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.034"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="0.85" />
 
-    <Button
-        android:id="@+id/mock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="mock"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.100"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.900" />
+   <Button
+       android:id="@+id/mock"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="mock"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.020"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
