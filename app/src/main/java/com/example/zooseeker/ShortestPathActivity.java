@@ -10,9 +10,11 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
@@ -25,9 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jgrapht.*;
-
 import java.util.Arrays;
-
 /*This class loads the pages that display the directions from your current location to the next
 exhibit with a next button (back button to be added) that is clicked when the user wants to go to
 the next exhibit.
@@ -41,7 +41,6 @@ public class ShortestPathActivity extends AppCompatActivity {
     public boolean askedReplan;
     private boolean useLocationService;
     public static final String EXTRA_USE_LOCATION_SERVICE = "use_location_updated";
-
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), perms -> {
                 perms.forEach((perm, isGranted) -> {
@@ -57,12 +56,25 @@ public class ShortestPathActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shortest_path);
+        int locIndex = loadIndex();
 
         //Used for testing different user locations
-        mockLocationSetup();
+        Button mockCoordButton = findViewById(R.id.mock);
+        EditText lngText = findViewById(R.id.lng);
+        EditText latText = findViewById(R.id.lat);
+        mockCoordButton.setOnClickListener(view -> {
+            double mockLng = Double.parseDouble(lngText.getText().toString());
+            double mockLat = Double.parseDouble(latText.getText().toString());
+            Coord mockCoord = new Coord(mockLat, mockLng);
+            mockLocation(mockCoord);
+        });
 
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
+        //make sure it doesn't go over
+        if (locIndex + 2 < plan.planSize()) {
+            navList.currLocationIndex = locIndex;
+        }
         Button next = findViewById(R.id.next_btn);
         Button skip = findViewById(R.id.skip_btn);
         Button back = findViewById(R.id.back_btn);
@@ -134,18 +146,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         });
     }
 
-    private void mockLocationSetup() {
-        Button mockCoordButton = findViewById(R.id.mock);
-        EditText latText = findViewById(R.id.lat);
-        EditText lngText = findViewById(R.id.lng);
-        mockCoordButton.setOnClickListener(view -> {
-            double mockLat = Double.parseDouble(latText.getText().toString());
-            double mockLng = Double.parseDouble(lngText.getText().toString());
-            Coord mockCoord = new Coord(mockLat, mockLng);
-            mockLocation(mockCoord);
-        });
-    }
-
     /* Method that sets up permissions to use the user's location
      */
     private boolean permissionsSetup() {
@@ -165,6 +165,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
+    @param prefix = Prefix to attach to directions
      */
     public void displayTextDirections(){
         TextView textView = findViewById(R.id.path_result);
@@ -203,8 +204,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         displayTextDirections();
     }
 
-    /* Creates new route when user goes off route
-     */
     public void reroute(){
         TextView textView = findViewById(R.id.path_result);
         Location currLoc = navList.getCurrentLocation();
@@ -222,10 +221,6 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
-    /* Controls visibility and whether or not a button is clickable based on where in the exhibit
-       list the user is
-       Checks conditions for next, back, skip, and finish buttons
-     */
     public void buttonVisibility(){
         Button next = findViewById(R.id.next_btn);
         Button skip = findViewById(R.id.skip_btn);
@@ -268,6 +263,28 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        int saved = navList.currLocationIndex;
+        editor.putInt("key", saved);
+        boolean yes = editor.commit();
+        Log.e("Saving", "saved value is " + saved + " " + yes);
+
+    }
+
+    public int loadIndex() {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        int locIndex = preferences.getInt("key", 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+        Log.e("loading", "load value is " + locIndex);
+        return locIndex;
+    }
+
     public void notifyIfOffTrack(AlertDialog.Builder alertBuilder, String message, int newLocInd) {
         alertBuilder
                 .setTitle("Off track!")
@@ -287,9 +304,6 @@ public class ShortestPathActivity extends AppCompatActivity {
     }
 
 
-    /* Creates fake location for testing purposes
-       @param coords = coordinates of mock location
-     */
     @VisibleForTesting
     public void mockLocation(Coord coords) {
         model.mockLocation(coords);
