@@ -1,11 +1,21 @@
 package com.example.zooseeker;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /*This class creates a planned route that visits the exhibits the user selected. Based on where in
 the list of exhibits the user is, they can go to the next or previous exhibit or notifies the user
@@ -19,11 +29,11 @@ public class PlanList {
       select their current location Default to be 0 when the list is initialized.
 
     */
-    public int currLocationIndex;
+    private int currLocationIndex;
     //adding this ZooMap object for future iteration
     private Context context;
     public ZooMap zooMap;
-    public Map<String, ZooData.VertexInfo> zooLocs;
+    private Map<String, ZooData.VertexInfo> zooLocs;
 
     /*Constructor that sets the information of the list of planned exhibits using the data passed in
    @param context = gives information of asset files that need to be loaded
@@ -35,7 +45,6 @@ public class PlanList {
         this.currLocationIndex = 0;
         this.zooLocs = ZooData.loadVertexInfoJSON(context);
     }
-
 
     /* Allows for changing the context (ie changing the asset files used for populating the zooMap
     @param context = gives information of asset files that need to be loaded
@@ -56,12 +65,6 @@ public class PlanList {
         return myList.get(i);
     }
 
-    /* Sets user's planned list (only called when replacing old list with sorted list
-       @param list = sorted list containing myList's exhibits (plus entrance/exit gate)
-     */
-    public void setMyList(List<Location> list){
-        this.myList = list;
-    }
     /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
     exhibit is in their list
     @param curr = the exhibit the user is currently at
@@ -114,20 +117,15 @@ public class PlanList {
         return this.myList.add(e);
     }
 
-    /* Adds given location at given index in user's list of planned exhibits
-       @param index = where the location would be inserted
-       @param location = location to be added to list
-       @return true if added to list, false if otherwise
-     */
-    public boolean addLocation(int index, Location location){
-        if(checkIfInList(location)) return false;
-        this.myList.add(index, location);
-        return true;
-    }
-
+    /*Adds exhibit to user's list of planned exhibits.
+  Checks to see if location has already been added. Returns true if location has not been added
+  before now and location was successfully added, and false otherwise.
+  @param e = name of location (can be Exhibit or other) user wants to see
+  @return whether location was successfully added or not
+   */
     public Boolean addLocation(Location e) {
         if(checkIfInList(e)) return false;
-        return this.myList.add(e);
+        return add(e);
     }
 
 
