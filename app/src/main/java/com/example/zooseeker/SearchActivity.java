@@ -135,7 +135,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
             adapter.setDisplayItems(list);
-            num_exhibits.setText("Number of exhibits: "+ Integer.toString(plan.planSize()));
+            num_exhibits.setText("Number of exhibits: "+ Integer.toString(exhibitList.size()));
             planList = planManager.getPlan();
 
 
