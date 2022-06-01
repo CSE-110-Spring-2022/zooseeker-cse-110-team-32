@@ -137,6 +137,17 @@ public class ZooData {
         return g;
     }
 
+    public static Location getGate(Context context){
+        Map<String, ZooData.VertexInfo> locs = loadVertexInfoJSON(context);
+        Location gate = null;
+        for (Map.Entry<String, ZooData.VertexInfo> entry : locs.entrySet()){
+            if (entry.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
+                gate = new Gate(entry.getKey(), entry.getValue().name, entry.getValue().lat, entry.getValue().lng);
+                return gate;
+            }
+        }
+        return gate;
+    }
     /*Gets names of json files from given context
     Tries to get names of json files from context, if it doesn't work, returns empty HashMap
     @param context = gives information of asset files that need to be loaded

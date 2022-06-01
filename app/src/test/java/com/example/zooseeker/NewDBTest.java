@@ -75,9 +75,11 @@ public class NewDBTest {
         List<Exhibit> exhibits = newPlan.getExhibits();
         List<Exhibit> expected = plan.getExhibits();
 
-        newPlan.clearList(dao);
+        //newPlan.clearList(dao);
         System.out.println(expected.size());
         System.out.println(exhibits.size());
+        System.out.println(plan.planSize());
+        System.out.println(newPlan.planSize());
         for (int i = 0; i < expected.size(); i++) {
             //System.out.println("current index " + i);
             assertEquals(expected.get(i).toString(), exhibits.get(i).toString());
