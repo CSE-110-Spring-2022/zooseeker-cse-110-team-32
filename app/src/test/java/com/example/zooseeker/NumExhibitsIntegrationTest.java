@@ -65,6 +65,44 @@ public class NumExhibitsIntegrationTest {
             numMatcher = numPattern.matcher(numExhibitsStr);
             assertTrue(numMatcher.find());
             assertEquals(2, (int) Integer.valueOf(numMatcher.group(0)));
+
+        });
+    }
+
+    @Test
+    public void exhibitGroupNum(){
+        scenario.moveToState(Lifecycle.State.CREATED);
+
+        scenario.onActivity(activity -> {
+            SearchView searchBar = activity.findViewById(R.id.search_bar);
+            searchBar.setQuery("bird", true);
+            ListView searchView = activity.findViewById(R.id.search_list);
+            TextView numExhibitsView = activity.findViewById(R.id.exhibits_num);
+
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 0, 0);
+            String numExhibitsStr = (String) numExhibitsView.getText();
+            Pattern numPattern = Pattern.compile("\\d+");
+            Matcher numMatcher = numPattern.matcher(numExhibitsStr);
+            assertTrue(numMatcher.find());
+            assertEquals(1, (int) Integer.valueOf(numMatcher.group(0)));
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 1, 0);
+            numExhibitsStr = (String) numExhibitsView.getText();
+            numPattern = Pattern.compile("\\d+");
+            numMatcher = numPattern.matcher(numExhibitsStr);
+            assertTrue(numMatcher.find());
+            assertEquals(2, (int) Integer.valueOf(numMatcher.group(0)));
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 2, 0);
+            numExhibitsStr = (String) numExhibitsView.getText();
+            numPattern = Pattern.compile("\\d+");
+            numMatcher = numPattern.matcher(numExhibitsStr);
+            assertTrue(numMatcher.find());
+            assertEquals(3, (int) Integer.valueOf(numMatcher.group(0)));
+            searchView.performItemClick(searchView.getAdapter().getView(0, null, null), 3, 0);
+            numExhibitsStr = (String) numExhibitsView.getText();
+            numPattern = Pattern.compile("\\d+");
+            numMatcher = numPattern.matcher(numExhibitsStr);
+            assertTrue(numMatcher.find());
+            assertEquals(4, (int) Integer.valueOf(numMatcher.group(0)));
         });
     }
 

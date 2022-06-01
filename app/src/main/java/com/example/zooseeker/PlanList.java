@@ -155,8 +155,6 @@ public class PlanList {
         }
         resetCurrLocationIndex();
         saveList(dao);
-
-
     }
 
     public void resetCurrLocationIndex(){
@@ -179,6 +177,15 @@ public class PlanList {
         }
         return result;
     }
+
+    public void resetDb(ExhibitDao dao){
+        List<Exhibit> temp = dao.getAll();
+        for(Exhibit e: dao.getAll()){
+            dao.delete(e);
+        }
+        saveList(dao);
+    }
+
     /*
         saveList takes a database dao as an argument and it will call get exhibits, and
         store all the current exhibits into the database

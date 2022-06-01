@@ -36,6 +36,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     PlanList plan;
     NavigatePlannedList navList;
     LocationTracker locTracker;
+    public ExhibitDao exhibitDao;
     private LocationModel model;
     private AlertDialog alert;
     public boolean askedReplan;
@@ -70,6 +71,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         });
 
         this.plan = SearchActivity.getPlan();
+        this.exhibitDao = SearchActivity.getDao();
         this.navList = new NavigatePlannedList(plan);
         //make sure it doesn't go over
         if (locIndex < plan.planSize()-1) {
@@ -99,6 +101,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 displayTextDirections();
                 buttonVisibility();
                 saveIndex();
+                plan.resetDb(exhibitDao);
                 askedReplan = false;
             });
         }
@@ -205,6 +208,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     public void replan(int newLocInd){
         navList.replanOffTrack(newLocInd);
         displayTextDirections();
+        plan.resetDb(exhibitDao);
     }
 
     public void reroute(){
@@ -236,6 +240,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             finish.setClickable(true);
             finish.setVisibility(View.VISIBLE);
             finish.setOnClickListener(view -> {
+                saveIndex(0);
                 SearchActivity.getPlan().clearList(SearchActivity.getDao());
                 //navList.getPlanList().clearList(SearchActivity.getDao());
                 SearchActivity.resetPlan();
@@ -267,9 +272,14 @@ public class ShortestPathActivity extends AppCompatActivity {
     }
 
     protected void saveIndex() {
+        int saved = navList.currLocationIndex;
+        saveIndex(saved);
+    }
+
+    protected void saveIndex(int ind) {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        int saved = navList.currLocationIndex;
+        int saved = ind;
         editor.putInt("key", saved);
         boolean yes = editor.commit();
         Log.e("Saving", "saved value is " + saved + " " + yes);
