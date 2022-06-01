@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
    exhibits in the order they plan to visit them and the exhibit they're currently at.
    Database is cleared after the user taps "finish" indicating they're done with their plan
  */
-@Database(entities = {Exhibit.class}, version = 1)
+@Database(entities = {Exhibit.class}, version = 2,exportSchema = false)
 public abstract class ExhibitDatabase extends RoomDatabase {
 
     private static ExhibitDatabase singleton = null;
@@ -55,7 +55,7 @@ public abstract class ExhibitDatabase extends RoomDatabase {
                         });
 
                     }
-                }).build();
+                }).fallbackToDestructiveMigration().build();
     }
 
     /* Allows for using a mock database for testing purposes
