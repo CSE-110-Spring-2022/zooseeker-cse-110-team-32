@@ -41,6 +41,7 @@ public class ShortestPathActivity extends AppCompatActivity {
     public boolean askedReplan;
     private boolean useLocationService;
     public static final String EXTRA_USE_LOCATION_SERVICE = "use_location_updated";
+
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), perms -> {
                 perms.forEach((perm, isGranted) -> {
@@ -58,15 +59,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shortest_path);
 
         //Used for testing different user locations
-        Button mockCoordButton = findViewById(R.id.mock);
-        EditText latText = findViewById(R.id.lat);
-        EditText lngText = findViewById(R.id.lng);
-        mockCoordButton.setOnClickListener(view -> {
-            double mockLat = Double.parseDouble(latText.getText().toString());
-            double mockLng = Double.parseDouble(lngText.getText().toString());
-            Coord mockCoord = new Coord(mockLat, mockLng);
-            mockLocation(mockCoord);
-        });
+        mockLocationSetup();
 
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
@@ -138,6 +131,18 @@ public class ShortestPathActivity extends AppCompatActivity {
             locTracker.setLng(coord.lng);
             checkOffRoute(coord);
             reroute();
+        });
+    }
+
+    private void mockLocationSetup() {
+        Button mockCoordButton = findViewById(R.id.mock);
+        EditText latText = findViewById(R.id.lat);
+        EditText lngText = findViewById(R.id.lng);
+        mockCoordButton.setOnClickListener(view -> {
+            double mockLat = Double.parseDouble(latText.getText().toString());
+            double mockLng = Double.parseDouble(lngText.getText().toString());
+            Coord mockCoord = new Coord(mockLat, mockLng);
+            mockLocation(mockCoord);
         });
     }
 
