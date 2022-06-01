@@ -137,6 +137,10 @@ public class ZooData {
         return g;
     }
 
+    /* Gets the entrance and exit gate from the given data
+    @param context = gives information of asset files that need to be loaded
+    @return Location for gate
+     */
     public static Location getGate(Context context){
         Map<String, ZooData.VertexInfo> locs = loadVertexInfoJSON(context);
         Location gate = null;
@@ -148,6 +152,7 @@ public class ZooData {
         }
         return gate;
     }
+
     /*Gets names of json files from given context
     Tries to get names of json files from context, if it doesn't work, returns empty HashMap
     @param context = gives information of asset files that need to be loaded
