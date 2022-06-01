@@ -27,25 +27,12 @@ public class NavigatePlannedList {
         this.sorter = new Sorter();
     }
 
-    /*tells whether the user is at the entrance gate
-   returns true if the user is at the entrance gate and hasn't seen any exhibits and returns false otherwise
-   @return whether or not user is at beginning of their list
-     */
-    public Boolean atStart(){
-        if (currLocationIndex == 0){
-            return true;
-        }
-        return false;
-    }
-
     /*tells us whether the user is at the first exhibit
     returns true if the user is at the first exhibit and false otherwise
     @return whether or not user is at first exhibit
     */
     public Boolean atFirst(){
-        if (currLocationIndex == 1){
-            return true;
-        }
+        if (currLocationIndex == 1) return true;
         return false;
     }
 
@@ -54,9 +41,7 @@ public class NavigatePlannedList {
    @return whether or not user is at end of their list
     */
     public Boolean endReached(){
-        if (currLocationIndex >= this.planList.planSize()-2){
-            return true;
-        }
+        if (currLocationIndex >= this.planList.planSize()-2) return true;
         return false;
     }
 
@@ -73,17 +58,6 @@ public class NavigatePlannedList {
      */
     public void resetCurrLocationIndex(){
         this.currLocationIndex = 0;
-    }
-
-
-
-    /*based on the Exhibit that was passed in, returns the index of the Exhibit (ie how far down the
-    exhibit is in their list
-    @param curr = the exhibit the user is currently at
-    @return index indicating where the current exhibit is in their list
-     */
-    public int currExhibitIndex(Exhibit curr) {
-        return this.planList.getMyList().indexOf(curr);
     }
 
     /*Returns user's current location
@@ -208,13 +182,6 @@ public class NavigatePlannedList {
         return getPathToNextLocation().getWeight();
     }
 
-    /*Returns distance to location after the next location
-    @return distance to next next location
-     */
-    public double getDistanceToNextNextLocation(){
-        return getPathToNextNextLocation().getWeight();
-    }
-
     /*Moves the user (moves the current index indicating user's location to the next one) to the
     next location in their list
     Returns true if the user was successfully moved to the next location and false if they reached
@@ -257,10 +224,9 @@ public class NavigatePlannedList {
      */
     public Boolean skip(){
         if (forwards) {
-            if (currLocationIndex + 1 >= planList.planSize()) {
-                return false;
-            }
+            if (currLocationIndex + 1 >= planList.planSize()) return false;
             planList.deleteLocation(currLocationIndex + 1);
+
             sorter.replan(planList,currLocationIndex+1);
 
         }
