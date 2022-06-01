@@ -9,9 +9,12 @@ import java.util.Map;
 public class PlanManager {
     private PlanList plan;
     private Map<String, ZooData.VertexInfo> locs;
+    private Sorter sorter;
+
     public PlanManager(Context context, PlanList plan){
         this.plan = plan;
         this.locs = ZooData.loadVertexInfoJSON(context);
+        this.sorter = new Sorter();
     }
 
     public Boolean addLocation(ZooData.VertexInfo v) {
@@ -39,7 +42,7 @@ public class PlanManager {
     }
 
     public PlanList getFinalPlan(){
-        plan.sort();
+        sorter.sort(plan);
         return plan;
     }
 

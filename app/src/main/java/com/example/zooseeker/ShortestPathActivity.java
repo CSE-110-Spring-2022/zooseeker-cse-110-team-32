@@ -2,7 +2,6 @@ package com.example.zooseeker;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,18 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jgrapht.*;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.*;
-import org.jgrapht.nio.json.JSONImporter;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 /*This class loads the pages that display the directions from your current location to the next
 exhibit with a next button (back button to be added) that is clicked when the user wants to go to
 the next exhibit.
@@ -51,6 +37,8 @@ public class ShortestPathActivity extends AppCompatActivity {
     NavigatePlannedList navList;
     LocationTracker locTracker;
     private LocationModel model;
+    private AlertDialog alert;
+    public boolean askedReplan;
     private boolean useLocationService;
     public static final String EXTRA_USE_LOCATION_SERVICE = "use_location_updated";
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
@@ -77,7 +65,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         mockCoordButton.setOnClickListener(view -> {
             double mockLng = Double.parseDouble(lngText.getText().toString());
             double mockLat = Double.parseDouble(latText.getText().toString());
-            Coord mockCoord = new Coord(mockLng, mockLat);
+            Coord mockCoord = new Coord(mockLat, mockLng);
             mockLocation(mockCoord);
         });
 
@@ -100,6 +88,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 navList.advanceLocation();
                 displayTextDirections();
                 buttonVisibility();
+                askedReplan = false;
             });
         }
 
@@ -108,6 +97,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 navList.skip();
                 displayTextDirections();
                 buttonVisibility();
+                askedReplan = false;
             });
         }
 
@@ -115,6 +105,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             navList.previousLocation();
             displayTextDirections();
             buttonVisibility();
+            askedReplan = false;
         });
 
         SwitchCompat directionsToggle = findViewById(R.id.directions_switch);
@@ -139,33 +130,38 @@ public class ShortestPathActivity extends AppCompatActivity {
         // If GPS is enabled, then update the model from the Location service.
         if (useLocationService) {
             // Permissions setup
-            {
-                String[] requiredPermissions = new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                };
-
-                Boolean hasNoLocationPerms = Arrays.stream(requiredPermissions)
-                        .map(perm -> ContextCompat.checkSelfPermission(this, perm))
-                        .allMatch(status -> status == PackageManager.PERMISSION_DENIED);
-                if (hasNoLocationPerms){
-                    requestPermissionLauncher.launch(requiredPermissions);
-                    return;
-                }
-            }
+            if (permissionsSetup()) return;
             LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             String provider = LocationManager.GPS_PROVIDER;
             model.addLocationProviderSource(locationManager, provider);
         }
         this.locTracker = new LocationTracker(this, plan);
+        askedReplan = false;
         model.getLastKnownCoords().observe(this, (coord) -> {
             Log.i("Zooseeker", String.format("Observing location model update to %s", coord));
             locTracker.setLat(coord.lat);
             locTracker.setLng(coord.lng);
-            System.out.println(locTracker.lat);
-            replan(coord);
+            checkOffRoute(coord);
             reroute();
         });
+    }
+
+    /* Method that sets up permissions to use the user's location
+     */
+    private boolean permissionsSetup() {
+        String[] requiredPermissions = new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+
+        boolean hasNoLocationPerms = Arrays.stream(requiredPermissions)
+                .map(perm -> ContextCompat.checkSelfPermission(this, perm))
+                .allMatch(status -> status == PackageManager.PERMISSION_DENIED);
+        if (hasNoLocationPerms){
+            requestPermissionLauncher.launch(requiredPermissions);
+            return true;
+        }
+        return false;
     }
 
     /*Displays the directions from user's current location to the next closes exhibit in their list
@@ -192,13 +188,20 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
-    public void replan(Coord coord) {
+    public void checkOffRoute(Coord coord) {
         LocationTracker laterLoc = new LocationTracker(this, plan);
         laterLoc.setLng(coord.lng);
         laterLoc.setLat(coord.lat);
-        if (laterLoc.aheadOfCurrentLoc(navList.currLocationIndex) != -1) {
-            notifyIfOffTrack(this, "Replan?", laterLoc.aheadOfCurrentLoc(navList.currLocationIndex));
+        if (laterLoc.aheadOfCurrentLoc(navList.currLocationIndex) != -1 && !askedReplan) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            notifyIfOffTrack(alertBuilder, "Replan?", laterLoc.aheadOfCurrentLoc(navList.currLocationIndex));
+            askedReplan = true;
         }
+    }
+
+    public void replan(int newLocInd){
+        navList.replanOffTrack(newLocInd);
+        displayTextDirections();
     }
 
     public void reroute(){
@@ -207,6 +210,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         Location nextLoc = navList.getNextLocation();
         GraphPath<String, IdentifiedWeightedEdge> currPath = plan.getZooMap().getShortestPath(currLoc.getId(), nextLoc.getId());
         String newRoute = locTracker.rerouteTextDirections(currPath);
+        //creates new directions for traversing between exhibits
         if (newRoute != null) {
             String animalsList = "";
             if (nextLoc.getKind() == ZooData.VertexInfo.Kind.EXHIBIT_GROUP) {
@@ -288,9 +292,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 .setTitle("Off track!")
                 .setMessage(message)
                 .setPositiveButton("Yes", (dialog, id) -> {
-                    navList.replanOffTrack(newLocInd);
-                    displayTextDirections();
-
+                    replan(newLocInd);
                 })
                 .setNegativeButton("No", (dialog, id) -> {
                     dialog.cancel();
@@ -299,6 +301,8 @@ public class ShortestPathActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = alertBuilder.create();
         alertDialog.show();
+        alert = alertDialog;
+        System.out.println(alert);
     }
 
 
@@ -306,5 +310,8 @@ public class ShortestPathActivity extends AppCompatActivity {
     public void mockLocation(Coord coords) {
         model.mockLocation(coords);
     }
+
+    @VisibleForTesting
+    public AlertDialog getLastAlertDialog() {return this.alert;}
 
 }

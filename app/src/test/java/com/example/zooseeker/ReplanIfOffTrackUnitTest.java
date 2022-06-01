@@ -43,7 +43,8 @@ public class ReplanIfOffTrackUnitTest {
                 plan.addLocation(exhibit);
             }
         }
-        plan.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(plan);
         planList = plan.getMyList();
     }
 
@@ -56,24 +57,26 @@ public class ReplanIfOffTrackUnitTest {
         navList.advanceLocation();
         alreadyVisited.add(navList.getCurrentLocation());
         navList.advanceLocation();
+        alreadyVisited.add(navList.getCurrentLocation());
 
         assertEquals(3, navList.currLocationIndex);
-        Location currentLoc = plan.get(navList.currLocationIndex);
-        int newLocInd = locTracker.aheadOfCurrentLoc(navList.currLocationIndex);
-        assertTrue(newLocInd > navList.currLocationIndex);
+        Location nextLoc = plan.get(navList.currLocationIndex+1);
+        int newLocInd = locTracker.aheadOfCurrentLoc(navList.currLocationIndex+1);
+        assertTrue(newLocInd > navList.currLocationIndex+1);
         Location newLoc = plan.get(newLocInd);
         navList.replanOffTrack(newLocInd);
 
         // already visted remains unchanged
-        for (int i = 0; i < navList.currLocationIndex; i++) {
+        for (int i = 0; i <= navList.currLocationIndex; i++) {
             assertEquals(alreadyVisited.get(i).getId(), planList.get(i).getId());
         }
+        navList.advanceLocation();
 
         // Remove end gate
         planList.remove(planList.size()-1);
         // For each stop, check that distance to next stop is less than distance to all remaining stops
-        for (int i= navList.currLocationIndex; i < planList.size()-1; i++){
-            Location curr = planList.get(i);
+        for (int i= navList.currLocationIndex+1; i < planList.size()-1; i++){
+            Location curr = navList.getCurrentLocation();
             double dist = navList.getDistanceToNextLocation();
             for(int j=i+2; j<planList.size(); j++){
                 Location alt = planList.get(j);

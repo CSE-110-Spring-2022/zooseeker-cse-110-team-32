@@ -1,12 +1,21 @@
 package com.example.zooseeker;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /*This class creates a planned route that visits the exhibits the user selected. Based on where in
 the list of exhibits the user is, they can go to the next or previous exhibit or notifies the user
@@ -88,103 +97,58 @@ public class PlanList {
         return this.zooMap;
     }
 
-    /*adds exhibit to user's list of planned exhibits.
-   Checks to see if location has already been added. Returns true if location has not been added
-   before now and location was successfully added, and false otherwise.
-   @param e = name of location (can be Exhibit or other) user wants to see
-   @return whether location was successfully added or not
-    */
-    public Boolean addLocation(Location e) {
+    /* Checks if the given location is already in the user's list of exhibits
+       @param location = location to be checked to see if it's already in the list
+       @return true if already in list, false otherwise
+     */
+    public boolean checkIfInList(Location location){
         for (int i=0; i < myList.size(); i++){
-            if (myList.get(i).getId().equals(e.getId())){
-                return false;
+            if (myList.get(i).getId().equals(location.getId())){
+                return true;
             }
         }
+        return false;
+    }
+    /* General method for adding locations to user's list of planned exhibits.
+       @param e = name of location (can be Exhibit or other)
+       @return whether location was successfully added or not
+        */
+    public Boolean add(Location e){
         return this.myList.add(e);
     }
+
+    /*Adds exhibit to user's list of planned exhibits.
+  Checks to see if location has already been added. Returns true if location has not been added
+  before now and location was successfully added, and false otherwise.
+  @param e = name of location (can be Exhibit or other) user wants to see
+  @return whether location was successfully added or not
+   */
+    public Boolean addLocation(Location e) {
+        if(checkIfInList(e)) return false;
+        return add(e);
+    }
+
 
     public void replaceLocationIndex(int index, Location e) {
         myList.set(index, e);
     }
 
-    public void deleteLocation(int i){
-        this.myList.remove(i);
-    }
-
-    public void replan(int ind){
-        Location gate = myList.remove(myList.size()-1);
-        for (int j=ind; j < myList.size()-1;j++){
-            Location curr = myList.get(j);
-            int smallestInd = j+1;
-            double smallestDist = Double.MAX_VALUE;
-            for (int i = j+1; i < myList.size(); i++){
-                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
-                if (dist < smallestDist){
-                    smallestDist = dist;
-                    smallestInd = i;
-                }
-            }
-            Location next = myList.remove(smallestInd);
-            myList.add(j+1,next);
-        }
-        myList.add(gate);
-    }
-
-
-
-    /*Sorts PlanList by starting at the gate, then picking an Exhibit out of the unadded Exhibits
-    with the shortest distance to go next, repeating until all Exhibits have been added. Also
-    appends the gate at the end
+      /* Deletes location from list
+        @param = index of location to be removed in user's list
      */
-    public void sort(){
-        List<Location> sortList = new ArrayList<>();
-        Location startEnd;
-        Boolean gateAdded = false;
-        for (int i = 0; i < planSize(); i++){
-            Location stop = myList.get(i);
-            if (stop.getKind() == ZooData.VertexInfo.Kind.GATE){
-                startEnd = stop;
-                if(!gateAdded) {
-                    sortList.add(startEnd);
-                }
-                myList.remove(i);
-                i--;
-                gateAdded = true;
-            }
-        }
-        Location gate = new Gate("","", 0, 0);
-        if(!gateAdded){
-            for (Map.Entry<String, ZooData.VertexInfo> loc : zooLocs.entrySet()){
-                if (loc.getValue().kind.equals(ZooData.VertexInfo.Kind.GATE)){
-                    gate = new Gate(loc.getKey(), loc.getValue().name, loc.getValue().lat, loc.getValue().lng);
-                    sortList.add(gate);
-                    break;
-                }
-            }
-        }
 
-        while(myList.size() > 0){
-            Location curr = sortList.get(sortList.size()-1);
-            int smallestInd = 0;
-            double smallestDist = Double.MAX_VALUE;
-            for (int i = 0; i < myList.size(); i++){
-                double dist = zooMap.getShortestPath(curr.getId(), myList.get(i).getId()).getWeight();
-                if (dist < smallestDist){
-                    smallestDist = dist;
-                    smallestInd = i;
-                }
-            }
-            sortList.add(myList.get(smallestInd));
-            myList.remove(smallestInd);
-        }
-        this.myList = sortList;
-        myList.add(gate);
+    public Location deleteLocation(int i){
+        return this.myList.remove(i);
     }
+
+
+
 
     public void clearList(ExhibitDao dao){
         this.myList.clear();
         List<Exhibit> temp = dao.getAll();
         for(Exhibit e: dao.getAll()){
+
             dao.delete(e);
         }
         resetCurrLocationIndex();
@@ -201,7 +165,7 @@ public class PlanList {
         List<Exhibit> result = new ArrayList<>();
         for (Location loc : this.myList) {
             if ((loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT))) {
-                result.add((Exhibit)loc);
+                result.add((Exhibit) loc);
             } else if ((loc.kind.equals(ZooData.VertexInfo.Kind.EXHIBIT_GROUP))) {
                 //System.out.println("hi " + loc.getKind() + " " + loc.getName() +" " + loc.getClass());
                 Map<String, Exhibit> animals = ((ExhibitGroup) loc).getAnimals();
@@ -220,7 +184,7 @@ public class PlanList {
     public void saveList(ExhibitDao dao) {
         List<Exhibit> allExhibits = this.getExhibits();
         for (Exhibit ex : allExhibits) {
-            if (dao.get(ex.id) == null ) {
+            if (dao.get(ex.id) == null) {
                 dao.insert(ex);
             }
         }
@@ -264,7 +228,7 @@ public class PlanList {
     public void printList() {
         System.out.println("printing list:");
         for (Location loc : myList) {
-            System.out.print("id: " + loc.getId() + " kind: ");
+            System.out.print("id: " + loc.getKind() + "kind: ");
             System.out.println(loc.getKind());
         }
         System.out.println("Finish printing.");

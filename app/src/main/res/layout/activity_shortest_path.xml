@@ -11,7 +11,7 @@
         android:id="@+id/directions_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Brief/Detailed"
+        android:text="Detailed Directions"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.009"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -111,10 +111,10 @@
         app:layout_constraintVertical_bias="0.900"/>
 
     <EditText
-        android:id="@+id/lng"
+        android:id="@+id/lat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="lng"
+        android:hint="lat"
         android:textSize="26dp"
         android:inputType="text"
         android:imeOptions="actionDone"
@@ -126,10 +126,10 @@
         app:layout_constraintVertical_bias="0.800"/>
 
     <EditText
-        android:id="@+id/lat"
+        android:id="@+id/lng"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="lat"
+        android:hint="lng"
         android:textSize="26dp"
         android:inputType="text"
         android:imeOptions="actionDone"

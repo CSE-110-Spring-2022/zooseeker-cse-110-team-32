@@ -37,7 +37,8 @@ public class PreviousLocationUnitTest {
                 plan.addLocation(exhibit);
             }
         }
-        plan.sort();
+        Sorter sorter = new Sorter();
+        sorter.sort(plan);
         planList = plan.getMyList();
     }
 

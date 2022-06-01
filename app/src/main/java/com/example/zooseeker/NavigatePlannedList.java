@@ -15,6 +15,7 @@ public class NavigatePlannedList {
     private PlanList planList;
     public int currLocationIndex;
     public Boolean forwards;
+    public Sorter sorter;
 
     /*Constructor that sets the PlanList to use based on what's passed in
     @param plan = plan to navigate through
@@ -23,7 +24,7 @@ public class NavigatePlannedList {
         this.planList = plan;
         this.currLocationIndex = 0;
         this.forwards = true;
-
+        this.sorter = new Sorter();
     }
 
     /*tells whether the user is at the entrance gate
@@ -48,8 +49,8 @@ public class NavigatePlannedList {
         return false;
     }
 
-    /*tells whether the end of the exhibit has been reached
-   returns true if the user is at the end of the exhibit and returns false otherwise
+    /*tells whether the end of the plan has been reached (i.e. getting directions to the end gate)
+   returns true if the user is at the end of the planQ and returns false otherwise
    @return whether or not user is at end of their list
     */
     public Boolean endReached(){
@@ -236,6 +237,7 @@ public class NavigatePlannedList {
     /*Moves user to the previous location from their current one
    Returns true if user was successfully moved to the previous location and false if the user is at
    the first location in the list
+    @return whether user was moved to the previous location
     */
     public Boolean previousLocation() {
         if(forwards){
@@ -250,13 +252,17 @@ public class NavigatePlannedList {
         return true;
     }
 
+    /* Skips an exhibit in the user's list (effectively deletes the exhibit and reroutes the user)
+       @return true if the exhibit was successfully skipped and false otherwise
+     */
     public Boolean skip(){
         if (forwards) {
             if (currLocationIndex + 1 >= planList.planSize()) {
                 return false;
             }
             planList.deleteLocation(currLocationIndex + 1);
-            planList.replan(currLocationIndex);
+            sorter.replan(planList,currLocationIndex);
+
         }
         else{
             if (currLocationIndex - 1 <= 0) {
@@ -273,12 +279,11 @@ public class NavigatePlannedList {
             if (currLocationIndex + 1 >= planList.planSize()) {
                 return false;
             }
-            Location oldLoc = planList.get(currLocationIndex);
+            Location oldLoc = planList.get(currLocationIndex+1);
             Location newLoc = planList.get(newLocInd);
-            planList.replaceLocationIndex(currLocationIndex, newLoc);
+            planList.replaceLocationIndex(currLocationIndex+1, newLoc);
             planList.replaceLocationIndex(newLocInd, oldLoc);
-            planList.replan(currLocationIndex);
-
+            sorter.replan(planList, currLocationIndex+1);
         }
         return true;
     }
