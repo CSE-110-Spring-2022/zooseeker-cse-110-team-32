@@ -30,6 +30,7 @@ public class NewDBTest {
     PlanManager helper;
     ZooMap zooMap;
     NavigatePlannedList navList;
+    Sorter sort = new Sorter();
 
     @Before
     public void loadPlan() {
@@ -55,7 +56,7 @@ public class NewDBTest {
             ZooData.VertexInfo v = loc.getValue();
             helper.addLocation(v);
         }
-        plan.sort();
+        sort.sort(plan);
         planList = plan.getMyList();
     }
 

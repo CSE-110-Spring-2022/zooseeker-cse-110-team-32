@@ -285,9 +285,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         return locIndex;
     }
 
-    public void notifyIfOffTrack(Activity activity, String message, int newLocInd) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
-
+    public void notifyIfOffTrack(AlertDialog.Builder alertBuilder, String message, int newLocInd) {
         alertBuilder
                 .setTitle("Off track!")
                 .setMessage(message)
