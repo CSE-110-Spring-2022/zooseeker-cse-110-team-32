@@ -226,7 +226,9 @@ public class NavigatePlannedList {
         if (forwards) {
             if (currLocationIndex + 1 >= planList.planSize()) return false;
             planList.deleteLocation(currLocationIndex + 1);
-            sorter.replan(planList,currLocationIndex);
+
+            sorter.replan(planList,currLocationIndex+1);
+
         }
         else{
             if (currLocationIndex - 1 <= 0) {

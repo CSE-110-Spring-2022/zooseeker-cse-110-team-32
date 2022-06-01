@@ -113,7 +113,7 @@ public class SkipIntegrationTest {
                 assertEquals(true, ((String) directions.getText()).contains("To: Flamingos"));
                 skipBtn.performClick();
                 assertEquals(true, ((String) directions.getText()).contains("From: Entrance and Exit Gate"));
-                assertEquals(true, ((String) directions.getText()).contains("To: Hippos"));
+                assertEquals(true, ((String) directions.getText()).contains("To: Capuchin Monkeys"));
                 nextBtn.performClick();
                 nextBtn.performClick();
                 finishBtn.performClick();
