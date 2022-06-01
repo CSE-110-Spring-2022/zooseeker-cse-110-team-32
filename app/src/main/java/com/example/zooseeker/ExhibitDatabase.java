@@ -55,7 +55,7 @@ public abstract class ExhibitDatabase extends RoomDatabase {
                         });
 
                     }
-                }).build();
+                }).fallbackToDestructiveMigration().build();
     }
 
     /* Allows for using a mock database for testing purposes

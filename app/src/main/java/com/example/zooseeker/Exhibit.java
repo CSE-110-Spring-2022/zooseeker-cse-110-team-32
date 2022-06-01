@@ -47,9 +47,13 @@ public class Exhibit extends Location{
     @Override
     public String toString() {
         return "Exhibit{" +
+                "parentId='" + parentId + '\'' +
+                ", parentName='" + parentName + '\'' +
                 ", id='" + id + '\'' +
                 ", kind=" + kind +
                 ", name='" + name + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
                 '}';
     }
 }

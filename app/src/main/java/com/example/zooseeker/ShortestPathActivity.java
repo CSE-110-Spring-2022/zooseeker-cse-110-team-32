@@ -72,13 +72,13 @@ public class ShortestPathActivity extends AppCompatActivity {
         this.plan = SearchActivity.getPlan();
         this.navList = new NavigatePlannedList(plan);
         //make sure it doesn't go over
-        if (locIndex + 2 < plan.planSize()) {
+        if (locIndex < plan.planSize()-1) {
             navList.currLocationIndex = locIndex;
         }
         Button next = findViewById(R.id.next_btn);
         Button skip = findViewById(R.id.skip_btn);
         Button back = findViewById(R.id.back_btn);
-        if(!navList.endReached()){
+        if(navList.currLocationIndex < plan.planSize()-1){
             displayTextDirections();
             buttonVisibility();
         }
@@ -88,6 +88,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 navList.advanceLocation();
                 displayTextDirections();
                 buttonVisibility();
+                saveIndex();
                 askedReplan = false;
             });
         }
@@ -97,6 +98,7 @@ public class ShortestPathActivity extends AppCompatActivity {
                 navList.skip();
                 displayTextDirections();
                 buttonVisibility();
+                saveIndex();
                 askedReplan = false;
             });
         }
@@ -105,6 +107,7 @@ public class ShortestPathActivity extends AppCompatActivity {
             navList.previousLocation();
             displayTextDirections();
             buttonVisibility();
+            saveIndex();
             askedReplan = false;
         });
 
@@ -263,9 +266,7 @@ public class ShortestPathActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void saveIndex() {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         int saved = navList.currLocationIndex;

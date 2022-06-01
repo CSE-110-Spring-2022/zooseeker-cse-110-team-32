@@ -217,6 +217,9 @@ public class PlanList {
             }
         }
         this.myList = newList;
+        Location gate = ZooData.getGate(context);
+        this.myList.add(0, gate);
+        this.myList.add(gate);
         //this.sort();
     }
 
@@ -230,7 +233,7 @@ public class PlanList {
     public void printList() {
         System.out.println("printing list:");
         for (Location loc : myList) {
-            System.out.print("id: " + loc.getKind() + "kind: ");
+            System.out.print("id: " + loc.getId() + " kind: ");
             System.out.println(loc.getKind());
         }
         System.out.println("Finish printing.");

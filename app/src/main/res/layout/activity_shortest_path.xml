@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ShortestPathActivity">
+   xmlns:app="http://schemas.android.com/apk/res-auto"
+   xmlns:tools="http://schemas.android.com/tools"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   tools:context=".ShortestPathActivity">
 
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/directions_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Detailed Directions"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.009"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
+   <androidx.appcompat.widget.SwitchCompat
+       android:id="@+id/directions_switch"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Detailed Directions"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.009"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="0.022" />
+
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -30,18 +31,19 @@
         app:layout_constraintTop_toBottomOf="@+id/directions_switch"
         app:layout_constraintVertical_bias="0.0">
 
-        <TextView
-            android:id="@+id/path_result"
-            android:layout_width="375dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="26dp"
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </ScrollView>
+       <TextView
+           android:id="@+id/path_result"
+           android:layout_width="375dp"
+           android:layout_height="wrap_content"
+           android:text=""
+           android:textSize="26dp"
+
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintLeft_toLeftOf="parent"
+           app:layout_constraintRight_toRightOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
+   </ScrollView>
 
     <Button
         android:id="@+id/back_btn"
@@ -57,12 +59,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <Button
-        android:id="@+id/next_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NEXT"
-
+   <Button
+       android:id="@+id/next_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="NEXT"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.980"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -70,12 +71,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.00" />
 
-    <Button
-        android:id="@+id/skip_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SKIP"
-
+   <Button
+       android:id="@+id/skip_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="SKIP"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.665"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -83,19 +83,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.00" />
 
-    <Button
-        android:id="@+id/finish_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FINISH"
-        android:clickable="false"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.950"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.00" />
+   <Button
+       android:id="@+id/finish_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="FINISH"
+       android:clickable="false"
+       android:visibility="gone"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintHorizontal_bias="0.950"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="1.00" />
 
     <TextView
         android:id="@+id/next_lbl"
